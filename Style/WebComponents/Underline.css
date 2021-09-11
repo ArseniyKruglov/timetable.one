@@ -1,0 +1,24 @@
+.Underline::after
+{
+    display: block;
+    content: '';
+    border-top: 2px solid var(--Main);
+    transform: translateY(-1px) scaleX(0);
+    transition: transform 250ms;
+}
+
+.Underline:focus-within::after
+{
+    transform: translateY(-1px) scaleX(1);
+}
+
+.Underline > *
+{
+    border: none;
+    border-bottom: var(--Border) !important;
+}
+
+.Underline > *:focus
+{
+    outline: none;
+}

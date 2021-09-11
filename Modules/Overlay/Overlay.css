@@ -1,0 +1,60 @@
+.Overlay
+{
+    --Background02-BackgroundOpacity: 20%;
+    --Background02-AppearanceSpeed: 150ms;
+    --Background02-Padding: 5px;
+}
+
+@media (prefers-color-scheme: dark)
+{
+    .Overlay
+    {
+        --Background02-BackgroundOpacity: 70%;
+        --Background02-AppearanceSpeed: 250ms;
+    }
+}
+
+.Overlay,
+.Overlay > :first-child
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+
+.Overlay > :first-child
+{
+    background: #000000;
+    opacity: var(--Background02-BackgroundOpacity);
+    animation: Overlay_Background var(--Background02-AppearanceSpeed);
+}
+
+@keyframes Overlay_Background
+{
+    0%   { opacity: 0% }
+    100% { opacity: var(--Background02-BackgroundOpacity) }
+}
+
+.Overlay > :last-child
+{
+    z-index: 6;
+    max-width: calc(100% - var(--Background02-Padding) * 2);
+    max-height: calc(100% - var(--Background02-Padding) * 2);
+}
+
+
+
+.Overlay_Rectangular
+{
+    background-color: var(--Background01);
+    border-radius: 5px;
+    overflow: auto;
+    box-shadow: var(--Shadow);
+}

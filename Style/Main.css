@@ -1,0 +1,21 @@
+.EmptyHidden:empty,
+[hidden]
+{
+    display: none !important;
+}
+
+*
+{
+    color: var(--Text);
+    -webkit-tap-highlight-color: transparent;
+}
+
+svg
+{
+    fill: var(--Text);
+}
+
+.js-focus-visible :focus:not(.focus-visible)
+{
+    outline: 0;
+}

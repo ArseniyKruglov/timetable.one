@@ -1,0 +1,26 @@
+@font-face 
+{
+    font-family: GoogleSans;
+    font-weight: 400;
+    src: url(Fonts/GoogleSans-Regular.ttf);
+}
+
+@font-face
+{
+    font-family: GoogleSans;
+    font-weight: 500;
+    src: url(Fonts/GoogleSans-Medium.ttf);
+}
+
+@font-face
+{
+    font-family: GoogleSans;
+    font-weight: 600;
+    src: url(Fonts/GoogleSans-Bold.ttf);
+}
+
+*
+{
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Open Sans', sans-serif;
+    font-family: GoogleSans;
+}

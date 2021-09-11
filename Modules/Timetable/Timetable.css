@@ -1,0 +1,156 @@
+#Timetable
+{
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    overflow: auto;
+
+    gap: 10px;
+
+    background-color: var(--Background01);
+    box-shadow: RGBA(50, 50, 93, 5%) 0 0 100px -20px, RGBA(0, 0, 0, 7.5%) 0 10px 60px -30px;
+}
+
+
+
+#Timetable > div
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px 60px;
+    min-width: max-content;
+
+    font-size: 125%;
+    padding: 40px 100px;
+
+    box-shadow: rgba(100, 100, 111, 0.2) 0 0 10px 0;
+}
+
+@media (min-width: 835px) and (max-height: 600px)
+{
+    #Timetable > div
+    {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 800px)
+{
+    #Timetable > div
+    {
+        grid-template-columns: 100%;
+    }
+
+    #Timetable > divContainer
+    {
+        width: 100%;
+    }
+}
+
+
+
+#Timetable > div.PastWeeks
+{
+    background-color: var(--Gray05);
+    opacity: 70%;
+}
+
+#Timetable > div.CurrentWeek
+{
+    background-color: var(--Main-Transparent);
+}
+
+#Timetable > div.NextWeek
+{
+    background-color: var(--Secondary-Transparent);
+}
+
+
+
+#Timetable > div > div > :first-child
+{
+    font-weight: 600;
+    font-size: 125%;
+    opacity: var(--Gray01-Opacity);
+}
+
+#Timetable > div > .Today > :first-child
+{
+    color: var(--Main);
+    opacity: 100%;
+}
+
+#Timetable > div > .Tomorrow > :first-child
+{
+    color: var(--Secondary);
+    opacity: 100%;
+}
+
+
+
+#Timetable > div > div
+{
+    display: grid;
+    height: fit-content;
+    gap: 2.5px;
+}
+
+#Timetable > div > div > :first-child
+{
+    text-align: left;
+}
+
+#Timetable > div > div > :last-child
+{
+    display: grid;
+    gap: 4px;
+}
+
+#Timetable > div > div > :last-child *
+{
+    max-width: 300px;
+    line-height: 100%;
+}
+
+#Timetable > div > div > :last-child > *
+{
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    width: fit-content;
+}
+
+#Timetable > div > div > :last-child > * > :first-child
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    opacity: var(--Gray00-Opacity);
+}
+
+#Timetable > div > div > :last-child > * > :last-child
+{
+    text-align: left;
+    font-weight: 500;
+}
+
+
+
+#Timetable > div > div > :last-child > .Canceled
+{
+    opacity: 50%;
+}
+
+#Timetable > div > div > :last-child > .Canceled > :last-child
+{
+    text-decoration: line-through;
+}
+
+
+
+#Timetable > div > div > :last-child > .Note > :last-child:after
+{
+    content: '•';
+    margin-left: 5px;
+}

@@ -1,0 +1,104 @@
+custom-checkbox *
+{
+    cursor: pointer;
+}
+
+
+
+custom-checkbox input[type=checkbox]
+{
+    position: absolute;
+    opacity: 0;
+}
+
+custom-checkbox input[type=checkbox].focus-visible:focus + div > :first-child > :nth-child(2),
+custom-checkbox input[type=checkbox].focus-visible:focus + div > :first-child > :nth-child(3)
+{
+    outline: auto;
+}
+
+custom-checkbox input[type=checkbox]:checked + div > :first-child > :nth-child(2),
+custom-checkbox input[type=checkbox]:not(:checked) + div > :first-child > :nth-child(3)
+{
+    display: block;
+}
+
+custom-checkbox input[type=checkbox]:not(:checked) + div > :first-child > :nth-child(2),
+custom-checkbox input[type=checkbox]:checked + div > :first-child > :nth-child(3)
+{
+    display: none;
+}
+
+
+
+custom-checkbox > label
+{
+    width: fit-content;
+}
+
+custom-checkbox > label > div
+{
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    width: fit-content;
+    gap: 5px;
+}
+
+custom-checkbox > label > div > :first-child > svg
+{
+    width: 22px;
+    height: 22px;
+}
+
+
+
+custom-checkbox:not([splash=false]) > label.Checked > div > :nth-child(2),
+custom-checkbox:not([splash=false]) > label.Unchecked > div > :nth-child(2)
+{
+    display: initial !important;
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    clip-path: circle(15px);
+    margin: -4px;
+    z-index: -1;
+}
+
+custom-checkbox:not([splash=false]) > label.Checked > div> :nth-child(2)
+{
+    animation: CheckedCheckboxRipple 500ms;
+}
+
+custom-checkbox:not([splash=false]) > label.Unchecked > div > :nth-child(2)
+{
+    animation: UncheckedCheckboxRipple 500ms;
+}
+
+@keyframes CheckedCheckboxRipple
+{
+    0%   { transform: scale(95%); opacity: 0%; background-color: var(--Gray02); }
+    50%  { transform: scale(100%); opacity: 15%; background-color: var(--Color); }
+    100% { transform: scale(95%); opacity: 0%; background-color: var(--Color); }
+}
+
+@keyframes UncheckedCheckboxRipple
+{
+    0%   { transform: scale(95%); opacity: 0%; background-color: var(--Color); }
+    50%  { transform: scale(100%); opacity: 20%; background-color: var(--Gray02); }
+    100% { transform: scale(95%); opacity: 0%; background-color: var(--Gray02); }
+}
+
+custom-checkbox > label.Checked > div > span > :nth-child(1)
+{
+    display: initial !important;
+    position: absolute;
+    animation: CheckedCheckboxWriting 350ms;
+    clip-path: inset(0 0 0 24px);
+}
+
+@keyframes CheckedCheckboxWriting
+{
+    0%   { clip-path: inset(0 0 0 0); }
+    100% { clip-path: inset(0 0 0 24px); }
+}
