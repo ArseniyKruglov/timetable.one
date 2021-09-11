@@ -7,23 +7,23 @@ function Overlay_Open(sName, Callback_New, Callback_Unhide, Callback_Close)
 
     if (!_aOverlays[sName])
     {
-        let HTML, e;
+        let HTML, eOverlay;
 
         HTML = `<div></div>
                 <div id='${sName}Container'>
                     <div id='${sName}'></div>
                 </div>`;
 
-        e = document.createElement('div');
-        e.className = 'Overlay';
-        e.innerHTML = HTML;
-        e.children[0].addEventListener('click', Callback_Close);
-        e.style.visibility = 'hidden';
-        _aOverlays[sName] = [true, e];
-        document.body.appendChild(e);
+        eOverlay = document.createElement('div');
+        eOverlay.className = 'Overlay';
+        eOverlay.innerHTML = HTML;
+        eOverlay.children[0].addEventListener('click', Callback_Close);
+        eOverlay.style.visibility = 'hidden';
+        _aOverlays[sName] = [true, eOverlay];
+        document.body.appendChild(eOverlay);
         Callback_New();
-        e.removeAttribute('style');
-        FocusDiv(e);
+        eOverlay.removeAttribute('style');
+        FocusDiv(eOverlay);
         _afOverlay_Escapes.push(event =>
         {
             if (event.code == 'Escape')
@@ -50,7 +50,10 @@ function Overlay_Hide(sName)
     document.removeEventListener('keydown', _afOverlay_Escapes.pop());
     document.addEventListener('keydown', _afOverlay_Escapes[_afOverlay_Escapes.length - 1]);
     if (window._eOverlay_LastFocusedElement)
+    {
         _eOverlay_LastFocusedElement.focus();
+        delete _eOverlay_LastFocusedElement;
+    };
 }
 
 function Overlay_Remove(sName)
@@ -60,5 +63,8 @@ function Overlay_Remove(sName)
     document.removeEventListener('keydown', _afOverlay_Escapes.pop());
     document.addEventListener('keydown', _afOverlay_Escapes[_afOverlay_Escapes.length - 1]);
     if (window._eOverlay_LastFocusedElement)
+    {
         _eOverlay_LastFocusedElement.focus();
+        delete _eOverlay_LastFocusedElement;
+    };
 }

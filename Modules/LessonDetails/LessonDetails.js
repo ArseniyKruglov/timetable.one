@@ -12,8 +12,9 @@ function LessonDetails(iNumber, iDate)
 function LessonDetails_Draw(iNumber, iDate)
 {
     let tDate = DaysSince1970ToTime(iDate);
+    let iDayOfTimetable = Time_DateToDayOfTimetable(iDate);
 
-    let sSubject = _aTimetable[Time_DateToDayOfTimetable(iDate)].get(iNumber)[0];
+    let sSubject = _aTimetable[iDayOfTimetable].get(iNumber)[0];
     let sReplacement = null;
     for (let loop_aReplacement of _aWeek[1])
         if (loop_aReplacement[0] === iDate && loop_aReplacement[1] === iNumber)
@@ -23,8 +24,8 @@ function LessonDetails_Draw(iNumber, iDate)
         };
 
     let aAlarms = _mAlarms.get(iNumber);
-    let sLectureHall = _aTimetable[Time_DateToDayOfTimetable(iDate)].get(iNumber)[1];
-    let sTeacher = _aTimetable[Time_DateToDayOfTimetable(iDate)].get(iNumber)[2];
+    let sLectureHall = _aTimetable[iDayOfTimetable].get(iNumber)[1];
+    let sTeacher = _aTimetable[iDayOfTimetable].get(iNumber)[2];
 
     let sHometask = '';
     let aAttachments = [];
@@ -73,9 +74,9 @@ function LessonDetails_Draw(iNumber, iDate)
                 </div>
                 
                 
-                <custom-textarea placeholder='Заметка' value='${sHometask}' oninput='LessonDetails_SetText(${iNumber}, "${sSubject}", ${iDate}, this.value)'></custom-textarea>
+                <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask}' oninput='LessonDetails_SetText(${iNumber}, "${sSubject}", ${iDate}, this.value)'></custom-textarea>
                 
-                <div id='LessonDetails_Attachments' hidden>`;
+                <div id='LessonDetails_Attachments' class='EmptyHidden'>`;
     for (let loop_aAttachment of aAttachments)
         HTML +=     `<div href='/Storage/${loop_aAttachment[1]}/${loop_aAttachment[0]}' target='_blank'>${loop_aAttachment[0]}</div>`;
     HTML +=    `</div>`;
