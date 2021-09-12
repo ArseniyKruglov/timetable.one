@@ -18,6 +18,14 @@ document.body.innerHTML =  `<main>
 
 Timetable_Draw();
 Week_Get();
+
+
+
+function Midnight()
+{
+
+}
+
 setTimeout
 (
     () => { Midnight(); setInterval(Mdinight, 24 * 60 * 60 * 1000); },

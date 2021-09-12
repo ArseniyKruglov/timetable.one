@@ -12,7 +12,7 @@ function LessonDetails(iNumber, iDate)
 function LessonDetails_Draw(iNumber, iDate)
 {
     let tDate = DaysSince1970ToTime(iDate);
-    let iDayOfTimetable = Time_DateToDayOfTimetable(iDate);
+    let iDayOfTimetable = Week_DateToDayOfTimetable(iDate);
 
     let sSubject = _aTimetable[iDayOfTimetable].get(iNumber)[0];
     let sReplacement = null;
@@ -74,7 +74,7 @@ function LessonDetails_Draw(iNumber, iDate)
                 </div>
                 
                 
-                <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask}' oninput='LessonDetails_SetText(${iNumber}, "${sSubject}", ${iDate}, this.value)'></custom-textarea>
+                <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask}' oninput='LessonDetails_SetText("${sSubject}", ${iDate}, this.value)'></custom-textarea>
                 
                 <div id='LessonDetails_Attachments' class='EmptyHidden'>`;
     for (let loop_aAttachment of aAttachments)
@@ -92,7 +92,6 @@ function LessonDetails_Draw(iNumber, iDate)
 function LessonDetails_Close()
 {
     Overlay_Remove('LessonDetails');
-    window.history.pushState('', '', '/');
 }
 
 
@@ -152,7 +151,7 @@ function LessonDetails_SetReplacement(iDate, iNumber, sSubject, sReplacement)
     };
 }
 
-function LessonDetails_SetText(iNumber, sSubject, iDate, sText)
+function LessonDetails_SetText(sSubject, iDate, sText)
 {
     sText = sText.trim();
 
@@ -172,11 +171,12 @@ function LessonDetails_SetText(iNumber, sSubject, iDate, sText)
     if (bExist === false)
         _aWeek[0].push([sSubject, iDate, sText, []]);
 
-    let eLesson = document.querySelector(`[onclick="LessonDetails(${iNumber}, ${iDate});"]`);
-    if (sText === '')
-        eLesson.classList.remove('Note');
-    else
-        eLesson.classList.add('Note');
+    for (let loop_eLesson of document.querySelector(`[onclick="DayDetails(${iDate})"]`).parentElement.children[1].children)
+        if (loop_eLesson.children[1].innerHTML === sSubject)
+            if (sText === '')
+                loop_eLesson.classList.remove('Note');
+            else
+                loop_eLesson.classList.add('Note');
 
     fetch('/Modules/LessonDetails/SetText.php', { method: 'POST', body: formData });
 }

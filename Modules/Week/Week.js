@@ -1,7 +1,7 @@
 function Week_Get()
 {
-    let iWeekFirstDay = new Date().getDaysSince1970() - new Date().getDayOfWeek() + _iWeekOffset * 7;
-    fetch(`/Modules/Week/GetWeek.php?From=${iWeekFirstDay}&To=${iWeekFirstDay + 6}`)
+    let iWeekFirstDay = new Date().getDaysSince1970() - new Date().getDayOfWeek() + _iWeekOffset * 7 - 7 * 2;
+    fetch(`/Modules/Week/GetWeek.php?From=${iWeekFirstDay}&To=${iWeekFirstDay + 7 * 6 - 1}`)
     .then((response) =>
     {
         return response.json();
@@ -21,7 +21,7 @@ function Week_Get()
             let eLesson = document.querySelector(`[onclick="LessonDetails(${loop_aReplacement[1]}, ${loop_aReplacement[0]});"]`);
             if (loop_aReplacement[2] === '')
             {
-                eLesson.children[1].innerHTML = _aTimetable[Time_DateToDayOfTimetable(loop_aReplacement[0])].get(loop_aReplacement[1])[0];
+                eLesson.children[1].innerHTML = _aTimetable[Week_DateToDayOfTimetable(loop_aReplacement[0])].get(loop_aReplacement[1])[0];
                 eLesson.classList.add('Canceled');
             }
             else
@@ -37,14 +37,7 @@ function Week_Get()
     });
 }
 
-// function Week_Previous()
-// {
-//     _iWeekOffset--;
-//     Week_Get();
-// }
-
-// function Week_Next()
-// {
-//     _iWeekOffset++;
-//     Week_Get();
-// }
+function Week_DateToDayOfTimetable(iDate)
+{
+    return (iDate - _iBeginDate) % _aTimetable.length;
+}

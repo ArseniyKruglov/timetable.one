@@ -3,8 +3,8 @@
     --Main: HSL(210, 100%, 56%);
     --Secondary: HSL(348, 83%, 47%);
 
-    --Main-Transparent: HSLA(210, 100%, 56%, 7.5%);
-    --Secondary-Transparent: HSLA(348, 83%, 47%, 5%);
+    --Main-Transparent: HSLA(210, 100%, 56%, 25%);
+    --Secondary-Transparent: HSLA(348, 83%, 47%, 25%);
 
     --Gray00-Opacity: 70%;
     --Gray01-Opacity: 55%;

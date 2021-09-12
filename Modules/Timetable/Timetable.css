@@ -21,14 +21,14 @@
     padding: 40px 100px;
     border-radius: 5px;
     background-color: var(--Background01);
-    box-shadow: RGBA(0, 0, 0, 15%) 0px 2.5px 15px -5px;
+    box-shadow: RGBA(0, 0, 0, 15%) 0 2.5px 15px -5px;
 }
 
 @media (prefers-color-scheme: dark)
 {
     #Timetable > div
     {
-        box-shadow: RGBA(0, 0, 0, 100%) 0px 2.5px 15px -5px;
+        box-shadow: RGBA(0, 0, 0, 100%) 0 2.5px 15px -5px;
     }
 }
 
@@ -62,19 +62,19 @@
 
 #Timetable > div.CurrentWeek
 {
-    background-color: var(--Main-Transparent);
+    box-shadow: var(--Main-Transparent) 0 2.5px 15px 0
 }
 
 #Timetable > div.NextWeek
 {
-    background-color: var(--Secondary-Transparent);
+    box-shadow: var(--Secondary-Transparent) 0 2.5px 15px 0
 }
 
 
 
 #Timetable > div > div > :first-child
 {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 125%;
     opacity: var(--Gray01-Opacity);
 }
@@ -97,6 +97,7 @@
 {
     display: grid;
     height: fit-content;
+    height: -moz-fit-content;
     gap: 2.5px;
 }
 
@@ -123,6 +124,7 @@
     grid-auto-flow: column;
     gap: 10px;
     width: fit-content;
+    width: -moz-fit-content;
 }
 
 #Timetable > div > div > :last-child > * > :first-child
