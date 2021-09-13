@@ -1,11 +1,11 @@
 #Timetable
 {
-    width: 100%;
+    width: calc(100% - 30px);
     display: flex;
     overflow: auto;
 
     gap: 10px;
-    padding: 15px 0;
+    padding: 15px;
 }
 
 
@@ -46,10 +46,24 @@
     {
         grid-template-columns: 100%;
     }
+}
 
-    #Timetable > divContainer
+@media (max-width: 600px)
+{
+    body
     {
-        width: 100%;
+        align-items: initial;
+    }
+
+    #Timetable
+    {
+        flex-direction: column;
+    }
+
+    #Timetable > div
+    {
+        width: calc(100% - 80px);
+        padding: 100px 40px;
     }
 }
 

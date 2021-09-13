@@ -11,13 +11,17 @@ function Language_Get()
 _iWeekOffset = 1;
 _iBeginDate = 18869;
 _iLanguage = Language_Get();
+_oWeek = { 'Hometasks' : [], 'Replacements' : [] };
 
 document.body.innerHTML =  `<main>
                                 <div id='Timetable'></div>
                             </main>`;
 
 Timetable_Draw();
-Week_Get();
+
+let iWeekFirstDay = new Date().getDaysSince1970() - new Date().getDayOfWeek() + _iWeekOffset * 7 - 7 * 2;
+let iWeekLastDay = iWeekFirstDay + 7 * 6 - 1;
+Week_Update(iWeekFirstDay, iWeekLastDay);
 
 
 
@@ -28,7 +32,7 @@ function Midnight()
 
 setTimeout
 (
-    () => { Midnight(); setInterval(Mdinight, 24 * 60 * 60 * 1000); },
+    () => { Midnight(); setInterval(Midnight, 24 * 60 * 60 * 1000); },
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
 

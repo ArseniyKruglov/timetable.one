@@ -1,13 +1,22 @@
 <?
 include '../../PHP/Database.php';
 
-$Subject = $_POST['Subject'];
-$Date = $_POST['Date'];
-$Text = $_POST['Text'];
+$URL = $_POST['URL'];
+$TimetableID = $SQL->query("SELECT TimetableID FROM timetables WHERE Link_FullAccess = '$URL'");
 
-if ($Text == '')
+if ($TimetableID->num_rows === 1)
 {
-    $SQL->query("DELETE FROM hometasks WHERE (Date = $Date) AND (Lesson = '$Subject')");
+    $TimetableID = $TimetableID->fetch_row()[0];
+    $Date = $_POST['Date'];
+    $Subject = $_POST['Subject'];
+    $Text = $_POST['Text'];
+
+    if ($Text == '')
+        $SQL->query("DELETE FROM hometasks WHERE (Date = $Date) AND (Subject = '$Subject') AND (TimetableID = $TimetableID)");
+    else
+        $SQL->query("INSERT INTO hometasks VALUES ($TimetableID, '$Subject', $Date, '$Text', '[]') ON DUPLICATE KEY UPDATE Text = '$Text'");
 }
 else
-    $SQL->query("INSERT INTO hometasks VALUES (1, '$Subject', $Date, '$Text', '[]') ON DUPLICATE KEY UPDATE Text = '$Text'");
+{
+    http_response_code(403);
+};

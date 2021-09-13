@@ -1,16 +1,19 @@
 function Timetable_Draw()
 {
     document.getElementById('Timetable').innerHTML = Timetable_GetIHTML();
-    setTimeout(() => { document.getElementById('Timetable').children[2].scrollIntoView({inline: 'center'}); }, 0);
+    document.getElementById('Timetable').children[2].scrollIntoView({inline: 'center'});
+    document.fonts.ready.then(() => {
+        document.getElementById('Timetable').children[2].scrollIntoView({inline: 'center'});
+    });
 }
 
 function Timetable_GetIHTML()
 {
     let HTML = '';
     let iToday = new Date().getDaysSince1970();
-    let iDate = iToday - new Date().getDayOfWeek() + (_iWeekOffset - 2) * 7;
+    let iDate = iToday - new Date().getDayOfWeek() + (_iWeekOffset - 3) * 7;
 
-    for (let iOffset = -2; iOffset < 4; iOffset++)
+    for (let iOffset = -3; iOffset < 2; iOffset++)
     {
         let sWeekClass = '';
         if (iOffset + _iWeekOffset < 0)

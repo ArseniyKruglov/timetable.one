@@ -1,43 +1,43 @@
-function LessonDetails(iNumber, iDate)
+function LessonDetails(iLessonNumber, iDate)
 {
     Overlay_Open
     (
         'LessonDetails',
-        () => { LessonDetails_Draw(iNumber, iDate) },
+        () => { LessonDetails_Draw(iLessonNumber, iDate) },
         () => {},
         LessonDetails_Close
     );
 }
 
-function LessonDetails_Draw(iNumber, iDate)
+function LessonDetails_Draw(iLessonNumber, iDate)
 {
     let tDate = DaysSince1970ToTime(iDate);
     let iDayOfTimetable = Week_DateToDayOfTimetable(iDate);
 
-    let sSubject = _aTimetable[iDayOfTimetable].get(iNumber)[0];
+    let sSubject = _aTimetable[iDayOfTimetable].get(iLessonNumber)[0];
     let sReplacement = null;
-    for (let loop_aReplacement of _aWeek[1])
-        if (loop_aReplacement[0] === iDate && loop_aReplacement[1] === iNumber)
+    for (let loop_oReplacement of _oWeek['Replacements'])
+        if (loop_oReplacement['Date'] === iDate && loop_oReplacement['LessonNumber'] === iLessonNumber)
         {
-            sReplacement = loop_aReplacement[2];
+            sReplacement = loop_oReplacement['Replacement'];
             break;
         };
 
-    let aAlarms = _mAlarms.get(iNumber);
-    let sLectureHall = _aTimetable[iDayOfTimetable].get(iNumber)[1];
-    let sTeacher = _aTimetable[iDayOfTimetable].get(iNumber)[2];
+    let aAlarms = _mAlarms.get(iLessonNumber);
+    let sLectureHall = _aTimetable[iDayOfTimetable].get(iLessonNumber)[1];
+    let sTeacher = _aTimetable[iDayOfTimetable].get(iLessonNumber)[2];
 
     let sHometask = '';
     let aAttachments = [];
-    for (let loop_aHometask of _aWeek[0])
-        if (loop_aHometask[0] === (sReplacement ? sReplacement : sSubject) && loop_aHometask[1] === iDate)
+    for (let loop_oHometask of _oWeek['Hometasks'])
+        if (loop_oHometask['Subject'] === (sReplacement ? sReplacement : sSubject) && loop_oHometask['Date'] === iDate)
         {
-            sHometask = loop_aHometask[2];
-            aAttachments = loop_aHometask[3];
+            sHometask = loop_oHometask['Text'];
+            aAttachments = loop_oHometask['Attachments'];
             break;
         };
 
-    let HTML = `<custom-textarea placeholder='${sSubject}' value='${sReplacement === null ? sSubject : sReplacement}' oninput='LessonDetails_SetReplacement(${iDate}, ${iNumber}, "${sSubject}", this.value)' id='LessonDetails_Subject'></custom-textarea>
+    let HTML = `<custom-textarea placeholder='${sSubject}' value='${sReplacement === null ? sSubject : sReplacement}' oninput='LessonDetails_SetReplacement(${iDate}, ${iLessonNumber}, "${sSubject}", this.value)' id='LessonDetails_Subject'></custom-textarea>
                 
                 <div id='LessonDetails_Info'>
                     <div>
@@ -85,8 +85,11 @@ function LessonDetails_Draw(iNumber, iDate)
     _aOverlays['LessonDetails'][1].children[1].className = 'Overlay_Rectangular';
 
     if (document.body.hasAttribute('God') === false)
-        for (let loop_aTextarea of document.querySelectorAll(`#LessonDetails textarea`))
-            loop_aTextarea.setAttribute('readonly', '');
+        for (let loop_aTextarea of document.querySelectorAll(`#LessonDetails custom-textarea`))
+        {
+            loop_aTextarea.onfocus = () => { this.blur(); };
+            loop_aTextarea.children[0].children[0].setAttribute('readonly', '');
+        };
 }
 
 function LessonDetails_Close()
@@ -97,11 +100,11 @@ function LessonDetails_Close()
 
 
 
-function LessonDetails_SetReplacement(iDate, iNumber, sSubject, sReplacement)
+function LessonDetails_SetReplacement(iDate, iLessonNumber, sSubject, sReplacement)
 {
     sReplacement = sReplacement.trim();
-    
-    let eLesson = document.querySelector(`[onclick="LessonDetails(${iNumber}, ${iDate});"]`);
+
+    let eLesson = document.querySelector(`[onclick="LessonDetails(${iLessonNumber}, ${iDate});"]`);
     if (sReplacement === '')
     {
         
@@ -116,60 +119,33 @@ function LessonDetails_SetReplacement(iDate, iNumber, sSubject, sReplacement)
 
     if (sSubject === sReplacement)
     {
-        for (let i = 0; i < _aWeek[1].length; i++)
-            if (_aWeek[1][i][0] === iDate && _aWeek[1][i][1] === iNumber)
+        for (let i = 0; i < _oWeek['Replacements'].length; i++)
+            if (_oWeek['Replacements'][i]['Date'] === iDate && _oWeek['Replacements'][i]['LessonNumber'] === iLessonNumber)
             {
-                _aWeek[1].splice(i, 1);
+                _oWeek['Replacements'].splice(i, 1);
                 break;
             };
-
-        let formData  = new FormData();
-        formData.append('Date', iDate);
-        formData.append('Number', iNumber);
-    
-        fetch('/Modules/LessonDetails/RemoveReplacement.php', { method: 'POST', body: formData });
     }
     else
     {
         let bExist = false;
-        for (let loop_aReplacement of _aWeek[1])
-            if (loop_aReplacement[0] === iDate && loop_aReplacement[1] === iNumber)
+        for (let loop_oReplacement of _oWeek['Replacements'])
+            if (loop_oReplacement['Date'] === iDate && loop_oReplacement['LessonNumber'] === iLessonNumber)
             {
-                loop_aReplacement[2] = sReplacement;
+                loop_oReplacement['Replacement'] = sReplacement;
                 bExist = true;
                 break;
             };
         if (bExist === false)
-            _aWeek[1].push([iDate, iNumber, sReplacement]);
-
-        let formData  = new FormData();
-        formData.append('Date', iDate);
-        formData.append('Number', iNumber);
-        formData.append('Replacement', sReplacement);
-    
-        fetch('/Modules/LessonDetails/SetReplacement.php', { method: 'POST', body: formData });
+            _oWeek['Replacements'].push({'Date' : iDate, 'LessonNumber' : iLessonNumber, 'Replacement' : sReplacement});
     };
+
+    SendRequest('/Modules/LessonDetails/SetReplacement.php', {'Date' : iDate, 'LessonNumber' : iLessonNumber, 'Subject' : sSubject, 'Replacement' : sReplacement});
 }
 
 function LessonDetails_SetText(sSubject, iDate, sText)
 {
     sText = sText.trim();
-
-    let formData  = new FormData();
-    formData.append('Subject', sSubject);
-    formData.append('Date', iDate);
-    formData.append('Text', sText);
-
-    let bExist = false;
-    for (let loop_aHometask of _aWeek[0])
-        if (loop_aHometask[0] === sSubject && loop_aHometask[1] === iDate)
-        {
-            loop_aHometask[2] = sText;
-            bExist = true;
-            break;
-        };
-    if (bExist === false)
-        _aWeek[0].push([sSubject, iDate, sText, []]);
 
     for (let loop_eLesson of document.querySelector(`[onclick="DayDetails(${iDate})"]`).parentElement.children[1].children)
         if (loop_eLesson.children[1].innerHTML === sSubject)
@@ -178,5 +154,16 @@ function LessonDetails_SetText(sSubject, iDate, sText)
             else
                 loop_eLesson.classList.add('Note');
 
-    fetch('/Modules/LessonDetails/SetText.php', { method: 'POST', body: formData });
+    let bExist = false;
+    for (let loop_oHometask of _oWeek['Hometasks'])
+        if (loop_oHometask['Subject'] === sSubject && loop_oHometask['Date'] === iDate)
+        {
+            loop_oHometask['Text'] = sText;
+            bExist = true;
+            break;
+        };
+    if (bExist === false)
+        _oWeek['Hometasks'].push({'Subject' : sSubject, 'Date' : iDate, 'Text' : sText, 'Attachments' : []});
+
+    SendRequest('/Modules/LessonDetails/SetText.php', {'Date' : iDate, 'Subject' : sSubject, 'Text' : sText});
 }
