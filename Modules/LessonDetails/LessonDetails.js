@@ -9,7 +9,7 @@ function LessonDetails(iLessonNumber, iDate)
     );
 }
 
-function LessonDetails_Draw(iLessonNumber, iDate)
+function LessonDetails_Draw(iDate, iLessonNumber)
 {
     let tDate = DaysSince1970ToTime(iDate);
     let iDayOfTimetable = Week_DateToDayOfTimetable(iDate);
@@ -104,18 +104,15 @@ function LessonDetails_SetReplacement(iDate, iLessonNumber, sSubject, sReplaceme
 {
     sReplacement = sReplacement.trim();
 
-    let eLesson = document.querySelector(`[onclick="LessonDetails(${iLessonNumber}, ${iDate});"]`);
+    SendRequest('/Modules/LessonDetails/SetReplacement.php', {'Date' : iDate, 'LessonNumber' : iLessonNumber, 'Subject' : sSubject, 'Replacement' : sReplacement});
+
+    let eLesson = document.querySelector(`[onclick="LessonDetails(${iDate}, ${iLessonNumber});"]`).parentElement;
+    eLesson.children[1].children[0].innerHTML = sReplacement;
     if (sReplacement === '')
-    {
-        
-        eLesson.children[1].innerHTML = sSubject;
         eLesson.classList.add('Canceled');
-    }
     else
-    {
-        eLesson.children[1].innerHTML = sReplacement;
         eLesson.classList.remove('Canceled');
-    };
+
 
     if (sSubject === sReplacement)
     {
@@ -137,15 +134,15 @@ function LessonDetails_SetReplacement(iDate, iLessonNumber, sSubject, sReplaceme
                 break;
             };
         if (bExist === false)
-            _oWeek['Replacements'].push({'Date' : iDate, 'LessonNumber' : iLessonNumber, 'Replacement' : sReplacement});
+            _oWeek['Replacements'].push({'Date': iDate, 'LessonNumber': iLessonNumber, 'Replacement': sReplacement});
     };
-
-    SendRequest('/Modules/LessonDetails/SetReplacement.php', {'Date' : iDate, 'LessonNumber' : iLessonNumber, 'Subject' : sSubject, 'Replacement' : sReplacement});
 }
 
 function LessonDetails_SetText(sSubject, iDate, sText)
 {
     sText = sText.trim();
+
+    SendRequest('/Modules/LessonDetails/SetText.php', {'Date' : iDate, 'Subject' : sSubject, 'Text' : sText});
 
     for (let loop_eLesson of document.querySelector(`[onclick="DayDetails(${iDate})"]`).parentElement.children[1].children)
         if (loop_eLesson.children[1].innerHTML === sSubject)
@@ -163,7 +160,5 @@ function LessonDetails_SetText(sSubject, iDate, sText)
             break;
         };
     if (bExist === false)
-        _oWeek['Hometasks'].push({'Subject' : sSubject, 'Date' : iDate, 'Text' : sText, 'Attachments' : []});
-
-    SendRequest('/Modules/LessonDetails/SetText.php', {'Date' : iDate, 'Subject' : sSubject, 'Text' : sText});
+        _oWeek['Hometasks'].push({'Subject': sSubject, 'Date': iDate, 'Text': sText, 'Attachments': []});
 }

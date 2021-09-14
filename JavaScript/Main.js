@@ -8,7 +8,7 @@ function Language_Get()
     return 0;
 }
 
-_iWeekOffset = 1;
+_iWeekOffset = 0;
 _iBeginDate = 18869;
 _iLanguage = Language_Get();
 _oWeek = { 'Hometasks' : [], 'Replacements' : [] };
@@ -19,9 +19,11 @@ document.body.innerHTML =  `<main>
 
 Timetable_Draw();
 
-let iWeekFirstDay = new Date().getDaysSince1970() - new Date().getDayOfWeek() + _iWeekOffset * 7 - 7 * 2;
-let iWeekLastDay = iWeekFirstDay + 7 * 6 - 1;
-Week_Update(iWeekFirstDay, iWeekLastDay);
+{
+    let iWeekFirstDay = new Date().getDaysSince1970() - new Date().getDayOfWeek() + (_iWeekOffset - 2) * 7;
+    let iWeekLastDay = iWeekFirstDay + 4 * 7 - 1;
+    Week_Update(iWeekFirstDay, iWeekLastDay);
+}
 
 
 

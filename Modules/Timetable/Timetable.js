@@ -1,19 +1,35 @@
 function Timetable_Draw()
 {
     document.getElementById('Timetable').innerHTML = Timetable_GetIHTML();
-    document.getElementById('Timetable').children[2].scrollIntoView({inline: 'center'});
-    document.fonts.ready.then(() => {
-        document.getElementById('Timetable').children[2].scrollIntoView({inline: 'center'});
-    });
+
+    function Focus()
+    {
+        if (window.innerWidth <= 600)
+        {
+            let iToday = new Date().getDaysSince1970();
+
+            if (_aTimetable[Week_DateToDayOfTimetable(iToday)].size !== 0)
+                document.querySelector(`[onclick="DayDetails(${iToday})"]`).scrollIntoView({block: 'start'});
+            else
+                document.getElementById('Timetable').children[2].scrollIntoView({block: 'center'});
+        }
+        else
+        {
+            document.getElementById('Timetable').children[2].scrollIntoView({inline: 'center'});
+        };
+    };
+
+    Focus();
+    document.fonts.ready.then(Focus);
 }
 
 function Timetable_GetIHTML()
 {
     let HTML = '';
     let iToday = new Date().getDaysSince1970();
-    let iDate = iToday - new Date().getDayOfWeek() + (_iWeekOffset - 3) * 7;
+    let iDate = iToday - new Date().getDayOfWeek() + (_iWeekOffset - 2) * 7;
 
-    for (let iOffset = -3; iOffset < 2; iOffset++)
+    for (let iOffset = -2; iOffset <= 2; iOffset++)
     {
         let sWeekClass = '';
         if (iOffset + _iWeekOffset < 0)
@@ -38,7 +54,7 @@ function Timetable_GetIHTML()
                 sDate += sDayOfWeek + ', ';
                 
                 if (tDate.getFullYear() === new Date().getFullYear())
-                    sDate += tDate.toLocaleString(navigator.language, { month: 'short', day: 'numeric' });
+                    sDate += tDate.toLocaleString(navigator.language, { month: 'long', day: 'numeric' });
                 else
                     sDate += tDate.toLocaleString(navigator.language, { year: 'numeric', month: 'long', day: '2-digit' });
 
@@ -56,9 +72,12 @@ function Timetable_GetIHTML()
                             <button onclick='DayDetails(${iDate})'>${sDate}</button>
                             <div>`;
                 for (let loop_aLesson of _aTimetable[Week_DateToDayOfTimetable(iDate)])
-                    HTML +=    `<div onclick='LessonDetails(${loop_aLesson[0]}, ${iDate});'>
+                    HTML +=    `<div>
                                     <span>${loop_aLesson[0]}</span>
-                                    <button>${loop_aLesson[1][0]}</button>
+                                    <button onclick='LessonDetails(${iDate}, ${loop_aLesson[0]});'>
+                                        <span></span>
+                                        <span>${loop_aLesson[1][0]}</span>
+                                    </button>
                                 </div>`;
                 HTML +=   `</div>
                         </div>`;

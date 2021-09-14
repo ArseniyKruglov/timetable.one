@@ -33,7 +33,7 @@
         _aTimetable = 
         <?
         $aLessons = array_fill(0, 14, []);
-        foreach ($SQL->query("SELECT DayOfTimetable, LessonNumber, Subject, LectureHall, Educator FROM lessons_timetable WHERE TimetableID = 1 ORDER BY DayOfTimetable, LessonNumber")->fetch_all() as &$aLesson)
+        foreach ($SQL->query("SELECT DayOfTimetable, LessonNumber, Subject, LectureHall, Educator FROM lessons_timetable WHERE TimetableID = $TimetableID ORDER BY DayOfTimetable, LessonNumber")->fetch_all() as &$aLesson)
             array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], [$aLesson[2], $aLesson[3], $aLesson[4]]]);
         echo json_encode($aLessons, JSON_UNESCAPED_UNICODE);
         ?>.map(x => new Map(x));
@@ -41,7 +41,7 @@
         _mAlarms = new Map(
         <?
             $aAlarms = [];
-            foreach ($SQL->query("SELECT LessonNumber, Begin, End FROM alarms")->fetch_all() as &$aAlarm)
+            foreach ($SQL->query("SELECT LessonNumber, Begin, End FROM alarms WHERE TimetableID = $TimetableID")->fetch_all() as &$aAlarm)
                 array_push($aAlarms, [(int) $aAlarm[0], [$aAlarm[1], $aAlarm[2]]]);
             echo json_encode($aAlarms);
         ?>);

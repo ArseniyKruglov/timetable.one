@@ -63,7 +63,7 @@
     #Timetable > div
     {
         width: calc(100% - 80px);
-        padding: 100px 40px;
+        padding: 40px;
     }
 }
 
@@ -76,12 +76,12 @@
 
 #Timetable > div.CurrentWeek
 {
-    box-shadow: var(--Main-Transparent) 0 2.5px 15px 0
+    box-shadow: var(--Main-Transparent) 0 2.5px 15px 0;
 }
 
 #Timetable > div.NextWeek
 {
-    box-shadow: var(--Secondary-Transparent) 0 2.5px 15px 0
+    box-shadow: var(--Secondary-Transparent) 0 2.5px 15px 0;
 }
 
 
@@ -163,9 +163,14 @@
     opacity: 50%;
 }
 
-#Timetable > div > div > :last-child > .Canceled > :last-child
+#Timetable > div > div > :last-child > .Canceled > :last-child > *
 {
     text-decoration: line-through;
+}
+
+#Timetable > div > div > :last-child > * > :last-child > :first-child:not(:empty) + *
+{
+    display: none;
 }
 
 
@@ -173,5 +178,4 @@
 #Timetable > div > div > :last-child > .Note > :last-child:after
 {
     content: '•';
-    margin-left: 5px;
 }
