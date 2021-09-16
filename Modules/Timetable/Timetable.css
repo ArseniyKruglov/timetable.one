@@ -1,32 +1,27 @@
-#Timetable
+/* #Timetable
 {
-    width: calc(100% - 30px);
+    width: calc(100% - 200px);
     display: flex;
     overflow: auto;
 
     gap: 10px;
-    padding: 15px;
+    padding: 100px;
+    justify-content: center;
 }
 
+ */
 
-
-#Timetable > div
+#Timetable
 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px 60px;
     min-width: max-content;
-
-    font-size: 125%;
-    padding: 40px 100px;
-    border-radius: 5px;
-    background-color: var(--Background01);
-    box-shadow: RGBA(0, 0, 0, 15%) 0 2.5px 15px -5px;
 }
 
 @media (prefers-color-scheme: dark)
 {
-    #Timetable > div
+    #Timetable
     {
         box-shadow: RGBA(0, 0, 0, 100%) 0 2.5px 15px -5px;
     }
@@ -34,7 +29,7 @@
 
 @media (min-width: 835px) and (max-height: 600px)
 {
-    #Timetable > div
+    #Timetable
     {
         grid-template-columns: 1fr 1fr 1fr;
     }
@@ -42,7 +37,7 @@
 
 @media (max-width: 800px)
 {
-    #Timetable > div
+    #Timetable
     {
         grid-template-columns: 100%;
     }
@@ -60,7 +55,7 @@
         flex-direction: column;
     }
 
-    #Timetable > div
+    #Timetable
     {
         width: calc(100% - 80px);
         padding: 40px;
@@ -69,37 +64,20 @@
 
 
 
-#Timetable > div.PastWeeks
-{
-    opacity: 60%;
-}
-
-#Timetable > div.CurrentWeek
-{
-    box-shadow: var(--Main-Transparent) 0 2.5px 15px 0;
-}
-
-#Timetable > div.NextWeek
-{
-    box-shadow: var(--Secondary-Transparent) 0 2.5px 15px 0;
-}
-
-
-
-#Timetable > div > div > :first-child
+#Timetable > div > :first-child
 {
     font-weight: 700;
-    font-size: 125%;
+    font-size: 122.5%;
     opacity: var(--Gray01-Opacity);
 }
 
-#Timetable > div > .Today > :first-child
+#Timetable > .Today > :first-child
 {
     color: var(--Main);
     opacity: 100%;
 }
 
-#Timetable > div > .Tomorrow > :first-child
+#Timetable > .Tomorrow > :first-child
 {
     color: var(--Secondary);
     opacity: 100%;
@@ -107,7 +85,7 @@
 
 
 
-#Timetable > div > div
+#Timetable > div
 {
     display: grid;
     height: fit-content;
@@ -115,24 +93,24 @@
     gap: 2.5px;
 }
 
-#Timetable > div > div > :first-child
+#Timetable > div > :first-child
 {
     text-align: left;
 }
 
-#Timetable > div > div > :last-child
+#Timetable > div > :last-child
 {
     display: grid;
     gap: 4px;
 }
 
-#Timetable > div > div > :last-child *
+#Timetable > div > :last-child *
 {
     max-width: 300px;
     line-height: 100%;
 }
 
-#Timetable > div > div > :last-child > *
+#Timetable > div > :last-child > *
 {
     display: grid;
     grid-auto-flow: column;
@@ -141,7 +119,7 @@
     width: -moz-fit-content;
 }
 
-#Timetable > div > div > :last-child > * > :first-child
+#Timetable > div > :last-child > * > :first-child
 {
     display: flex;
     align-items: center;
@@ -150,7 +128,12 @@
     opacity: var(--Gray00-Opacity);
 }
 
-#Timetable > div > div > :last-child > * > :last-child
+#Timetable > div > :last-child > * > :last-child > :first-child
+{
+    color: HSL(39, 100%, 40%);
+}
+
+#Timetable > div > :last-child > * > :last-child
 {
     text-align: left;
     font-weight: 500;
@@ -158,24 +141,24 @@
 
 
 
-#Timetable > div > div > :last-child > .Canceled
+#Timetable > div > :last-child > .Canceled
 {
     opacity: 50%;
 }
 
-#Timetable > div > div > :last-child > .Canceled > :last-child > *
+#Timetable > div > :last-child > .Canceled > :last-child > *
 {
     text-decoration: line-through;
 }
 
-#Timetable > div > div > :last-child > * > :last-child > :first-child:not(:empty) + *
+#Timetable > div > :last-child > * > :last-child > :first-child:not(:empty) + *
 {
     display: none;
 }
 
 
 
-#Timetable > div > div > :last-child > .Note > :last-child:after
+#Timetable > div > :last-child > .Note > :last-child:after
 {
     content: '•';
 }

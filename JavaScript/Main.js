@@ -9,22 +9,31 @@ function Language_Get()
 }
 
 _iWeekOffset = 0;
-_iBeginDate = 18869;
 _iLanguage = Language_Get();
-_oWeek = { 'Hometasks' : [], 'Replacements' : [] };
+_oWeek = { 'Hometasks': [], 'Replacements': []};
 
 document.body.innerHTML =  `<main>
                                 <div id='Timetable'></div>
+                                <div id='Deadlines'></div>
                             </main>`;
-
-Timetable_Draw();
-
+Week_Select();
+document.onkeydown = (event) =>
 {
-    let iWeekFirstDay = new Date().getDaysSince1970() - new Date().getDayOfWeek() + (_iWeekOffset - 2) * 7;
-    let iWeekLastDay = iWeekFirstDay + 4 * 7 - 1;
-    Week_Update(iWeekFirstDay, iWeekLastDay);
-}
+    if (Overlay_IsOpened() === false)
+        switch(event.which) 
+        {
+            case 37:
+                Week_Previous();
+                break;
 
+            case 39:
+                Week_Next();
+                break;
+        }
+};
+
+document.addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) Week_Previous(); });
+document.addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) Week_Next(); });
 
 
 function Midnight()
@@ -38,4 +47,8 @@ setTimeout
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
 
-document.body.hidden = false;
+document.fonts.ready.then(() =>
+{
+    Timetable_Focus();
+    document.body.classList.remove('Unloaded');
+});

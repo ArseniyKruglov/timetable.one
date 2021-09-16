@@ -68,3 +68,10 @@ function Overlay_Remove(sName)
         delete _eOverlay_LastFocusedElement;
     };
 }
+
+
+
+function Overlay_IsOpened()
+{
+    return document.querySelector(`.Overlay:not([style="visibility: hidden;"])`) ? true : false;
+}

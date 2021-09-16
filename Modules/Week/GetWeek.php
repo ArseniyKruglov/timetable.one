@@ -2,25 +2,41 @@
 include '../../PHP/Database.php';
 
 $URL = $_POST['URL'];
-$TimetableID = $SQL->query("SELECT TimetableID FROM timetables WHERE (Link_FullAccess = '$URL') OR (Link_ReadOnly = '$URL')");
+$User = $SQL->query("SELECT * FROM timetables WHERE (Link_FullAccess = '$URL') OR (Link_ReadOnly = '$URL') OR (Link_TimetableOnly = '$URL')");
 
-if ($TimetableID->num_rows === 1)
+if ($User->num_rows === 1)
 {
-    $TimetableID = $TimetableID->fetch_row()[0];
-    $From = $_POST['From'];
-    $To = $_POST['To'];
-    
-    $aHometasks = [];
-    foreach ($SQL->query("SELECT Subject, Date, Text, Attachments FROM hometasks WHERE (Date >= $From) AND (Date <= $To)")->fetch_all() as &$aLesson)
-        array_push($aHometasks, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2], 'Attachments' => json_decode($aLesson[3])]);
-    
+    $User = $User->fetch_row();
+    $TimetableID = $User[0];
+
+    if ($User[3] === $URL)
+        $AccessLevel = 2;
+    else if ($User[4] === $URL)
+        $AccessLevel = 1;
+    else if ($User[5] === $URL)
+        $AccessLevel = 0;
+
+
+
+    // $From = $_POST['From'];
+    // $To = $_POST['To'];
+    $From = 0;
+    $To = 1000000;
+
     $aReplacements = [];
-    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE (Date >= $From) AND (Date <= $To)")->fetch_all() as &$aReplacement)
+    $aHometasks = [];
+
+    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE (TimetableID = $TimetableID) AND (Date >= $From) AND (Date <= $To)")->fetch_all() as &$aReplacement)
         array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
-    
+
+    if ($AccessLevel > 0)
+        foreach ($SQL->query("SELECT Subject, Date, Text FROM hometasks WHERE (TimetableID = $TimetableID) AND (Date >= $From) AND (Date <= $To) ORDER BY Date DESC")->fetch_all() as &$aLesson)
+            array_push($aHometasks, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2]]);
+
     echo json_encode(['Hometasks' => $aHometasks, 'Replacements' => $aReplacements]);
+
 }
 else
 {
-    http_response_code(403);
+    http_response_code(404);
 };

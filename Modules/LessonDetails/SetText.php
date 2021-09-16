@@ -14,7 +14,7 @@ if ($TimetableID->num_rows === 1)
     if ($Text == '')
         $SQL->query("DELETE FROM hometasks WHERE (Date = $Date) AND (Subject = '$Subject') AND (TimetableID = $TimetableID)");
     else
-        $SQL->query("INSERT INTO hometasks VALUES ($TimetableID, '$Subject', $Date, '$Text', '[]') ON DUPLICATE KEY UPDATE Text = '$Text'");
+        $SQL->query("INSERT INTO hometasks VALUES ($TimetableID, '$Subject', $Date, '$Text') ON DUPLICATE KEY UPDATE Text = '$Text'");
 }
 else
 {
