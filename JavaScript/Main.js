@@ -14,9 +14,18 @@ _oWeek = { 'Hometasks': [], 'Replacements': []};
 
 document.body.innerHTML =  `<main>
                                 <div id='Timetable'></div>
-                                <div id='Deadlines'></div>
                             </main>`;
 Week_Select();
+
+{
+    let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
+    if (oQuery['Date'] !== undefined && oQuery['LessonNumber'] !== undefined)
+        LessonDetails(parseInt(oQuery['Date']), parseInt(oQuery['LessonNumber']));
+}
+
+
+addEventListener('focus', () => { Week_Get(true); });
+
 document.onkeydown = (event) =>
 {
     if (Overlay_IsOpened() === false)
@@ -29,9 +38,8 @@ document.onkeydown = (event) =>
             case 39:
                 Week_Next();
                 break;
-        }
+        };
 };
-
 document.addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) Week_Previous(); });
 document.addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) Week_Next(); });
 

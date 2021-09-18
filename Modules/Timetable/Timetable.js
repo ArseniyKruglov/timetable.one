@@ -40,7 +40,7 @@ function Timetable_GetIHTML()
             if (tDate.getFullYear() === new Date().getFullYear())
                 sDate += tDate.toLocaleString(navigator.language, { month: 'long', day: 'numeric' });
             else
-                sDate += tDate.toLocaleString(navigator.language, { year: 'numeric', month: 'long', day: '2-digit' });
+                sDate += tDate.toLocaleString(navigator.language, { year: 'numeric', month: 'short', day: '2-digit' });
 
 
 

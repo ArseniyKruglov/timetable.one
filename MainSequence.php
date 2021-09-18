@@ -10,8 +10,7 @@
 
         <link rel='preconnect' href='https://fonts.googleapis.com'>
         <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&display=swap" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap' rel='stylesheet'>
 
         <link rel='stylesheet' href='/Style/Main.css'>
         <link rel='stylesheet' href='/Style/Colors.css'>
@@ -24,7 +23,6 @@
 
         <link rel='stylesheet' href='/Modules/Overlay/Overlay.css'>
         <link rel='stylesheet' href='/Modules/LessonDetails/LessonDetails.css'>
-        <link rel='stylesheet' href='/Modules/Deadlines/Deadlines.css'>
         <link rel='stylesheet' href='/Modules/Week/Week.css'>
         <link rel='stylesheet' href='/Modules/Timetable/Timetable.css'>
     </head>
@@ -62,7 +60,6 @@
 
     <script src='/Modules/Week/Week.js'></script>
     <script src='/Modules/Overlay/Overlay.js'></script>
-    <script src='/Modules/Deadlines/Deadlines.js'></script>
     <script src='/Modules/LessonDetails/LessonDetails.js'></script>
     <script src='/Modules/Timetable/Timetable.js'></script>
 

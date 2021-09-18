@@ -1,9 +1,14 @@
-function LessonDetails(iLessonNumber, iDate)
+function LessonDetails(iDate, iLessonNumber)
 {
+    window._iLessonDetails_Date = iDate;
+    window._iLessonDetails_LessonNumber = iLessonNumber;
+
+    history.pushState('', '', `${location.pathname}?Date=${iDate}&LessonNumber=${iLessonNumber}`);
+    
     Overlay_Open
     (
         'LessonDetails',
-        () => { LessonDetails_Draw(iLessonNumber, iDate) },
+        () => { LessonDetails_Draw(iDate, iLessonNumber) },
         () => {},
         LessonDetails_Close
     );
@@ -35,7 +40,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
             break;
         };
 
-    let HTML = `<custom-textarea placeholder='${sSubject}' value='${sReplacement === null ? sSubject : sReplacement}' oninput='LessonDetails_SetReplacement(${iDate}, ${iLessonNumber}, "${sSubject}", this.value)' id='LessonDetails_Subject'></custom-textarea>
+    let HTML = `<custom-textarea placeholder='${sSubject}' value='${(sReplacement === null) ? sSubject : sReplacement}' oninput='LessonDetails_SetReplacement(${iDate}, ${iLessonNumber}, "${sSubject}", this.value)' id='LessonDetails_Subject'></custom-textarea>
                 
                 <div id='LessonDetails_Info'>
                     <div>
@@ -72,7 +77,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                 </div>
                 
                 
-                <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask}' oninput='LessonDetails_SetText("${sSubject}", ${iDate}, this.value)'></custom-textarea>`;
+                <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask}' oninput='LessonDetails_SetText("${sSubject}", ${iDate}, this.value)' id='LessonDetails_Text'></custom-textarea>`;
 
     _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
     _aOverlays['LessonDetails'][1].children[1].className = 'Overlay_Rectangular';
@@ -85,6 +90,9 @@ function LessonDetails_Draw(iDate, iLessonNumber)
 function LessonDetails_Close()
 {
     Overlay_Remove('LessonDetails');
+    history.pushState('', '', location.pathname);
+    delete _iLessonDetails_Date;
+    delete _iLessonDetails_LessonNumber;
 }
 
 

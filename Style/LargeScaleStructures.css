@@ -24,7 +24,6 @@ main
 main > *
 {
     font-size: 125%;
-    padding: 40px 50px;
     border-radius: 8px;
     background-color: var(--Background01);
     box-shadow:

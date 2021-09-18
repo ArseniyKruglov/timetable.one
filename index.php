@@ -1,7 +1,7 @@
 <?
 include 'PHP/Database.php';
 
-$URL = substr($_SERVER['REQUEST_URI'], 1);
+$URL = substr(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), 1);
 $User = $SQL->query("SELECT * FROM timetables WHERE (Link_FullAccess = '$URL') OR (Link_ReadOnly = '$URL') OR (Link_TimetableOnly = '$URL')");
 
 if ($User->num_rows === 1)

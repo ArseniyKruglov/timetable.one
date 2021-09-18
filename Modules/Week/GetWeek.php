@@ -34,7 +34,6 @@ if ($User->num_rows === 1)
             array_push($aHometasks, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2]]);
 
     echo json_encode(['Hometasks' => $aHometasks, 'Replacements' => $aReplacements]);
-
 }
 else
 {
