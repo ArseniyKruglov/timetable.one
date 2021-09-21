@@ -12,6 +12,7 @@ _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
 
 document.body.innerHTML =  `<main>
+                                <div id='Information'></div>
                                 <div id='Timetable'></div>
                             </main>`;
 Week_Select();
@@ -24,11 +25,10 @@ Week_Select();
 
 
 addEventListener('focus', Week_Update);
-
-onkeydown = (event) =>
+onkeydown = (Event) =>
 {
     if (Overlay_IsOpened() === false)
-        switch(event.which) 
+        switch(Event.which) 
         {
             case 37:
                 Week_Previous();
@@ -46,20 +46,22 @@ addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) Week_
 
 function Midnight()
 {
-    for (let loop_eDay of document.getElementById('Timetable').children)
-        loop_eDay.className = '';
-
-
-
-    let iToday = new Date().getDaysSince1970();
-
-    let eToday = Timetable_GetDayElement(iToday);
-    if (eToday)
-        eToday.className = 'Today';
-
-    let eTomorrow = Timetable_GetDayElement(iToday + 1);
-    if (eTomorrow)
-        eTomorrow.className = 'Tomorrow';
+    {
+        for (let loop_eDay of document.getElementById('Timetable').children)
+            loop_eDay.className = '';
+    
+    
+    
+        let iToday = new Date().getDaysSince1970();
+    
+        let eToday = Timetable_GetDayElement(iToday);
+        if (eToday)
+            eToday.className = 'Today';
+    
+        let eTomorrow = Timetable_GetDayElement(iToday + 1);
+        if (eTomorrow)
+            eTomorrow.className = 'Tomorrow';
+    }
 }
 
 setTimeout
@@ -67,9 +69,3 @@ setTimeout
     () => { Midnight(); setInterval(Midnight, 24 * 60 * 60 * 1000); },
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
-
-// document.fonts.ready.then(() =>
-// {
-//     Timetable_Focus();
-//     document.body.classList.remove('Unloaded');
-// });

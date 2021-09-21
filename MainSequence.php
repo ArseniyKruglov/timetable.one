@@ -18,6 +18,7 @@
         <link rel='stylesheet' href='/Style/Buttons.css'>
         <link rel='stylesheet' href='/Style/LargeScaleStructures.css'>
 
+        <link rel='stylesheet' href='/Style/Button_Ripple.css'>
         <link rel='stylesheet' href='/Style/WebComponents/Underline.css'>
         <link rel='stylesheet' href='/Style/WebComponents/Textarea/Textarea.css'>
         <link rel='stylesheet' href='/Style/WebComponents/DropDown/DropDown.css'>
@@ -38,6 +39,7 @@
     <script src='/JavaScript/swiped-events.js'></script>
 
     <script src='/Style/Icons.js'></script>
+    <script src='/Style/Button_Ripple.js'></script>
     <script src='/Style/WebComponents/Textarea/Textarea.js'></script>
     <script src='/Style/WebComponents/DropDown/DropDown.js'></script>
     <script src='/Style/WebComponents/RoundButton/RoundButton.js'></script>

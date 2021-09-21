@@ -19,8 +19,3 @@ svg
 {
     outline: 0;
 }
-
-body.Unloaded
-{
-    visibility: hidden;
-}

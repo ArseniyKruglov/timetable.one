@@ -26,7 +26,12 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                 break;
             };
     
-        let HTML = `<custom-textarea placeholder='${sSubject}' value='${(sReplacement === null) ? sSubject : sReplacement}' oninput='LessonDetails_SetReplacement(this.value)' id='LessonDetails_Subject'></custom-textarea>
+        let HTML = `<div id='LessonDetails_Header' hidden>
+                        <span><custom-round-button icon='Arrow Back' scale=28></custom-round-button></span>
+                        <span><custom-round-button icon='Edit' scale=28></custom-round-button></span>
+                    </div>
+                    
+                    <custom-textarea placeholder='${sSubject}' value='${(sReplacement === null) ? sSubject : sReplacement}' oninput='LessonDetails_SetReplacement(this.value)' id='LessonDetails_Subject'></custom-textarea>
                     
                     <div id='LessonDetails_Info'>
                         <div>

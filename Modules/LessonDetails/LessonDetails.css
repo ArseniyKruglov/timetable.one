@@ -13,6 +13,15 @@
 
 
 
+#LessonDetails_Header
+{
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+}
+
+
+
 #LessonDetails_Subject textarea
 {
     font-size: 115%;
