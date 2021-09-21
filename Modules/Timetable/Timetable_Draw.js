@@ -70,6 +70,7 @@ function Timetable_GetIHTML()
 }
 
 
+
 function Timetable_GetDayElement(iDate)
 {
     let eDay = document.querySelector(`[onclick="DayDetails(${iDate})"]`);

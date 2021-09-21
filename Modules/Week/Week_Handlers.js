@@ -1,3 +1,11 @@
+function Week_Select()
+{
+    Timetable_Draw();
+    Week_Draw();
+}
+
+
+
 function Week_Previous()
 {
     _iWeekOffset--;
@@ -14,10 +22,4 @@ function Week_Next()
 {
     _iWeekOffset++;
     Week_Select();    
-}
-
-function Week_Select()
-{
-    Timetable_Draw();
-    Week_Draw();
 }

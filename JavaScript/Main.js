@@ -16,6 +16,8 @@ document.body.innerHTML =  `<main>
                                 <div id='Timetable'></div>
                             </main>`;
 Week_Select();
+Information_Draw();
+setInterval(Information_Draw, 1000);
 
 {
     let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));

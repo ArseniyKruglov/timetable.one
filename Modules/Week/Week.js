@@ -1,12 +1,10 @@
 function Week_Update()
 {
-    SendRequest('/Modules/Week/GetWeek.php', { }, true)
-    .then((aJSON) =>
+    SendRequest('/Modules/Week/GetWeek.php', {}, true).then((aJSON) =>
     {
         _oWeek = aJSON;
 
-        let bLessonDetailsOverlay = (window._LessonDetails_iDate && window._LessonDetails_iLessonNumber);
-        if (bLessonDetailsOverlay)
+        if (window._LessonDetails_iDate && window._LessonDetails_iLessonNumber)
         {
             let sLessonDetails_Subject = Timetable_GetDayTimetable(_LessonDetails_iDate).get(_LessonDetails_iLessonNumber)[0];
             for (let loop_oReplacement of _oWeek['Replacements'])

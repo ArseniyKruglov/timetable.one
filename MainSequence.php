@@ -26,6 +26,7 @@
 
         <link rel='stylesheet' href='/Modules/Overlay/Overlay.css'>
         <link rel='stylesheet' href='/Modules/LessonDetails/LessonDetails.css'>
+        <link rel='stylesheet' href='/Modules/Information/Information.css'>
         <link rel='stylesheet' href='/Modules/Week/Week.css'>
         <link rel='stylesheet' href='/Modules/Timetable/Timetable.css'>
     </head>
@@ -45,6 +46,7 @@
     <script src='/Style/WebComponents/RoundButton/RoundButton.js'></script>
 
     <script src='/Modules/Alarms/Alarms.js'></script>
+    <script src='/Modules/Information/Information.js'></script>
     <script src='/Modules/Week/Week.js'></script>
     <script src='/Modules/Week/Week_Logic.js'></script>
     <script src='/Modules/Week/Week_Handlers.js'></script>
