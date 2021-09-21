@@ -2,7 +2,7 @@
 include '../../PHP/Database.php';
 
 $URL = $_POST['URL'];
-$TimetableID = $SQL->query("SELECT TimetableID FROM timetables WHERE Link_FullAccess = '$URL'");
+$TimetableID = $SQL->query("SELECT UserID FROM users WHERE Link_FullAccess = '$URL'");
 
 if ($TimetableID->num_rows === 1)
 {

@@ -1,0 +1,37 @@
+.DropDown
+{
+    position: absolute;
+    border-radius: 5px;
+    background-color: var(--Background02);
+    z-index: 10;
+    box-shadow: var(--Shadow);
+}
+
+.DropDown > .DropDown_Actions
+{
+    padding: 5px 0;
+    gap: 7.5px;
+    display: grid;
+    zoom: 110%;
+}
+
+.DropDown > .DropDown_Actions > button
+{
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12.5px;
+    padding: 7.5px 10px;
+    width: 100%;
+}
+
+.DropDown > .DropDown_Actions > button:hover
+{
+    background-color: var(--Gray04);
+}
+
+.DropDown > .DropDown_Actions > button > svg
+{
+    fill: var(--Gray00)
+}

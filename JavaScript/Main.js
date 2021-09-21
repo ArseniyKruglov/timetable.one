@@ -8,9 +8,8 @@ function Language_Get()
     return 0;
 }
 
-_iWeekOffset = 0;
+_iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
-_oWeek = { 'Hometasks': [], 'Replacements': []};
 
 document.body.innerHTML =  `<main>
                                 <div id='Timetable'></div>
@@ -24,9 +23,9 @@ Week_Select();
 }
 
 
-addEventListener('focus', () => { Week_Get(true); });
+addEventListener('focus', () => { Week_Update(true); });
 
-document.onkeydown = (event) =>
+onkeydown = (event) =>
 {
     if (Overlay_IsOpened() === false)
         switch(event.which) 
@@ -40,13 +39,27 @@ document.onkeydown = (event) =>
                 break;
         };
 };
-document.addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) Week_Previous(); });
-document.addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) Week_Next(); });
+addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) Week_Next(); });
+addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) Week_Previous(); });
+
 
 
 function Midnight()
 {
+    for (let loop_eDay of document.getElementById('Timetable').children)
+        loop_eDay.className = '';
 
+
+
+    let iToday = new Date().getDaysSince1970();
+
+    let eToday = Timetable_GetDayElement(iToday);
+    if (eToday)
+        eToday.className = 'Today';
+
+    let eTomorrow = Timetable_GetDayElement(iToday + 1);
+    if (eTomorrow)
+        eTomorrow.className = 'Tomorrow';
 }
 
 setTimeout
@@ -55,8 +68,8 @@ setTimeout
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
 
-document.fonts.ready.then(() =>
-{
-    Timetable_Focus();
-    document.body.classList.remove('Unloaded');
-});
+// document.fonts.ready.then(() =>
+// {
+//     Timetable_Focus();
+//     document.body.classList.remove('Unloaded');
+// });

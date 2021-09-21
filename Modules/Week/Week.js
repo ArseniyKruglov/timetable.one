@@ -1,38 +1,4 @@
-function GetDay(iDate)
-{
-    let eDay = document.querySelector(`[onclick="DayDetails(${iDate})"]`);
-    if (eDay)
-        return eDay.parentElement;
-};
-
-function GetLesson(iDate, iLessonNumber)
-{
-    let eLesson = document.querySelector(`[onclick="LessonDetails(${iDate}, ${iLessonNumber});"]`);
-    if (eLesson)
-        return eLesson.parentElement;
-};
-
-function GetLessons(iDate)
-{
-    let eDay = document.querySelector(`[onclick="DayDetails(${iDate})"]`);
-    if (eDay)
-        return GetDay(iDate).children[1].children;
-    else
-        return [];
-}
-
-
-
-function Week_DateToDayOfTimetable(iDate)
-{
-    return (iDate - _iBeginDate) % _aTimetable.length;
-}
-
-
-
-
-
-function Week_Get(bClear)
+function Week_Update(bUpdate)
 {
     let iWeekFirstDay = new Date().getDaysSince1970() - new Date().getDayOfWeek();
     let iWeekLastDay = iWeekFirstDay + 6;
@@ -47,9 +13,9 @@ function Week_Get(bClear)
 
         _oWeek = { 'Hometasks': [], 'Replacements': []};
 
-        if (bClear === true)
+        if (bUpdate === true)
             for (let iDate = iWeekFirstDay; iDate <= iWeekLastDay; iDate++)
-                for (let loop_eLesson of GetLessons(iDate))
+                for (let loop_eLesson of Timetable_GetLessonElements(iDate))
                 {
                     loop_eLesson.children[1].children[0].innerHTML = '';
                     loop_eLesson.classList.remove('Canceled');
@@ -59,15 +25,15 @@ function Week_Get(bClear)
 
 
         // Заполнение
-        let bLessonDetailsOverlay = (window._iLessonDetails_Date && window._iLessonDetails_LessonNumber);
+        let bLessonDetailsOverlay = (window._LessonDetails_iDate && window._LessonDetails_iLessonNumber);
         if (bLessonDetailsOverlay)
-            var sLessonDetails_Subject = _aTimetable[Week_DateToDayOfTimetable(_iLessonDetails_Date)].get(_iLessonDetails_LessonNumber)[0];
+            var sLessonDetails_Subject = Timetable_GetDayTimetable(_LessonDetails_iDate).get(_LessonDetails_iLessonNumber)[0];
 
         for (let loop_oReplacement of aJSON['Replacements'])
         {
             _oWeek['Replacements'].push(loop_oReplacement);
 
-            let eLesson = GetLesson(loop_oReplacement['Date'], loop_oReplacement['LessonNumber']);
+            let eLesson = Timetable_GetLessonElement(loop_oReplacement['Date'], loop_oReplacement['LessonNumber']);
             if (eLesson)
                 if (loop_oReplacement['Replacement'] === '')
                     eLesson.classList.add('Canceled');
@@ -75,7 +41,7 @@ function Week_Get(bClear)
                     eLesson.children[1].children[0].innerHTML = loop_oReplacement['Replacement'];
 
             if (bLessonDetailsOverlay)
-                if (window._iLessonDetails_Date === loop_oReplacement['Date'] && window._iLessonDetails_LessonNumber === loop_oReplacement['LessonNumber'])
+                if (window._LessonDetails_iDate === loop_oReplacement['Date'] && window._LessonDetails_iLessonNumber === loop_oReplacement['LessonNumber'])
                     sLessonDetails_Subject = loop_oReplacement['Replacement'];
         };
 
@@ -91,7 +57,7 @@ function Week_Get(bClear)
         {
             _oWeek['Hometasks'].push(loop_oHometask);
 
-            for (let loop_eLesson of GetLessons(loop_oHometask['Date']))
+            for (let loop_eLesson of Timetable_GetLessonElements(loop_oHometask['Date']))
             {
                 let sReplacement = loop_eLesson.children[1].children[0].innerHTML;
                 let sSubject = loop_eLesson.children[1].children[1].innerHTML;
@@ -100,43 +66,37 @@ function Week_Get(bClear)
             };
 
             if (bLessonDetailsOverlay)
-                if (window._iLessonDetails_Date === loop_oHometask['Date'] && sLessonDetails_Subject === loop_oHometask['Subject'])
+                if (window._LessonDetails_iDate === loop_oHometask['Date'] && sLessonDetails_Subject === loop_oHometask['Subject'])
                     sLessonDetails_Text = loop_oHometask['Text'];
         };
 
         if (bLessonDetailsOverlay)
             document.getElementById('LessonDetails_Text').value = sLessonDetails_Text;
-
-
-
-        Deadlines_Draw();
     });
 }
 
 
-
-
-
-function Week_Previous()
+function Week_Draw()
 {
-    _iWeekOffset--;
-    Week_Select();    
-}
+    for (let loop_oReplacement of _oWeek['Replacements'])
+    {
+        let eLesson = Timetable_GetLessonElement(loop_oReplacement['Date'], loop_oReplacement['LessonNumber']);
+        if (eLesson)
+        {
+            if (loop_oReplacement['Replacement'] === '')
+                eLesson.classList.add('Canceled');
+            else
+                eLesson.children[1].children[0].innerHTML = loop_oReplacement['Replacement'];
+        };
+    };
 
-function Week_Current()
-{
-    _iWeekOffset = 0;
-    Week_Select();    
-}
-
-function Week_Next()
-{
-    _iWeekOffset++;
-    Week_Select();    
-}
-
-function Week_Select()
-{
-    Timetable_Draw();
-    Week_Get();
+    for (let loop_oHometask of _oWeek['Hometasks'])
+        for (let loop_eLesson of Timetable_GetLessonElements(loop_oHometask['Date']))
+        {
+            let sReplacement = loop_eLesson.children[1].children[0].innerHTML;
+            let sSubject = loop_eLesson.children[1].children[1].innerHTML;
+            
+            if ((sReplacement ? sReplacement : sSubject) === loop_oHometask['Subject'])
+                loop_eLesson.classList.add('Note');
+        };
 }

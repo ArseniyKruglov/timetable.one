@@ -25,7 +25,7 @@ body
     --Gray04: HSL(0, 0%, 95%);
     --Gray05: HSL(0, 0%, 97.5%);
 
-    --Background00: HSL(125, 15%, 95%);
+    --Background00: HSL(45, 24%, 92.5%);
     --Background01: #FFFFFF;
     --Background02: #FFFFFF;
 
@@ -42,9 +42,9 @@ body
     --Gray04: HSL(0, 0%, 5%);
     --Gray05: HSL(0, 0%, 2.5%);
 
-    --Background00: HSL(125, 5%, 7.5%);
-    --Background01: HSL(125, 5%, 12.5%);
-    --Background02: HSL(125, 5%, 15%);
+    --Background00: HSL(45, 24%, 7.5%);
+    --Background01: HSL(45, 24%, 12.5%);
+    --Background02: HSL(45, 24%, 15%);
 
     --Text: #FFFFFF;
     --Shadow: HSLA(0, 0%, 10%, 20%) 0px 2px 8px 0px;

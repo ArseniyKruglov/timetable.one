@@ -1,23 +1,17 @@
 function Timetable_Draw()
 {
-    document.getElementById('Timetable').innerHTML = Timetable_GetIHTML();
-}
+    let eTimetable = document.getElementById('Timetable');
+    
+    eTimetable.innerHTML = Timetable_GetIHTML();
 
-function Timetable_Focus()
-{
-    if (window.innerWidth <= 600)
-    {
-        let iToday = new Date().getDaysSince1970();
-
-        if (_aTimetable[Week_DateToDayOfTimetable(iToday)].size !== 0)
-            document.querySelector(`[onclick="DayDetails(${iToday})"]`).scrollIntoView({block: 'start'});
-        else
-            document.getElementById('Timetable').children[0].scrollIntoView({block: 'center'});
-    }
+    if (_iWeekOffset === 0)
+        eTimetable.className = 'Current';
+    else if (_iWeekOffset === 1)
+        eTimetable.className = 'Next';
+    else if (_iWeekOffset < 0)
+        eTimetable.className = 'Past';
     else
-    {
-        document.getElementById('Timetable').children[0].scrollIntoView({inline: 'center'});
-    };
+        eTimetable.className = '';
 }
 
 function Timetable_GetIHTML()
@@ -28,7 +22,9 @@ function Timetable_GetIHTML()
 
     for (let i = 0; i < 7; i++)
     {
-        if (iDate >= _iBeginDate &&_aTimetable[Week_DateToDayOfTimetable(iDate)].size > 0)
+        let mTodayTimetable = Timetable_GetDayTimetable(iDate);
+
+        if (mTodayTimetable !== false && mTodayTimetable.size > 0)
         {
             let sDate = '';
             let tDate = DaysSince1970ToTime(iDate);
@@ -55,13 +51,13 @@ function Timetable_GetIHTML()
             HTML += `<div class='${sDayClass}'>
                         <button onclick='DayDetails(${iDate})'>${sDate}</button>
                         <div>`;
-            for (let loop_aLesson of _aTimetable[Week_DateToDayOfTimetable(iDate)])
+            for (let loop_aLesson of mTodayTimetable)
                 HTML +=    `<div>
                                 <span>${loop_aLesson[0]}</span>
-                                <button onclick='LessonDetails(${iDate}, ${loop_aLesson[0]});'>
+                                <a href='${location.pathname}?Date=${iDate}&LessonNumber=${loop_aLesson[0]}' onclick='event.preventDefault(); LessonDetails(${iDate}, ${loop_aLesson[0]});'>
                                     <span></span>
                                     <span>${loop_aLesson[1][0]}</span>
-                                </button>
+                                </a>
                             </div>`;
             HTML +=   `</div>
                     </div>`;
@@ -71,4 +67,28 @@ function Timetable_GetIHTML()
     };
 
     return HTML;
+}
+
+
+function Timetable_GetDayElement(iDate)
+{
+    let eDay = document.querySelector(`[onclick="DayDetails(${iDate})"]`);
+    if (eDay)
+        return eDay.parentElement;
+};
+
+function Timetable_GetLessonElement(iDate, iLessonNumber)
+{
+    let eLesson = document.querySelector(`[onclick="event.preventDefault(); LessonDetails(${iDate}, ${iLessonNumber});"]`);
+    if (eLesson)
+        return eLesson.parentElement;
+};
+
+function Timetable_GetLessonElements(iDate)
+{
+    let eDay = document.querySelector(`[onclick="DayDetails(${iDate})"]`);
+    if (eDay)
+        return Timetable_GetDayElement(iDate).children[1].children;
+    else
+        return [];
 }

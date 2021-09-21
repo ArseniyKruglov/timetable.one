@@ -2,18 +2,17 @@
 include 'PHP/Database.php';
 
 $URL = substr(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), 1);
-$User = $SQL->query("SELECT * FROM timetables WHERE (Link_FullAccess = '$URL') OR (Link_ReadOnly = '$URL') OR (Link_TimetableOnly = '$URL')");
+$User = $SQL->query("SELECT * FROM users WHERE (Link_FullAccess = '$URL') OR (Link_ReadOnly = '$URL') OR (Link_TimetableOnly = '$URL')");
 
 if ($User->num_rows === 1)
 {
     $User = $User->fetch_row();
-    $TimetableID = $User[0];
 
-    if ($User[3] === $URL)
+    if ($User[1] === $URL)
         $AccessLevel = 2;
-    else if ($User[4] === $URL)
+    else if ($User[2] === $URL)
         $AccessLevel = 1;
-    else if ($User[5] === $URL)
+    else if ($User[3] === $URL)
         $AccessLevel = 0;
 
     include 'MainSequence.php';

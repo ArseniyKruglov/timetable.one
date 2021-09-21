@@ -18,6 +18,29 @@
     grid-gap: 20px 60px;
     min-width: max-content;
     padding: 40px 50px;
+
+    --ShadowColor: 240, 50%, 20%;
+    box-shadow: 0.6px 1.4px 2.2px HSLA(var(--ShadowColor), 0.02),
+                1.3px 3.3px 5.3px HSLA(var(--ShadowColor), 0.028),
+                2.5px 6.3px 10px HSLA(var(--ShadowColor), 0.035),
+                4.5px 11.2px 17.9px HSLA(var(--ShadowColor), 0.042),
+                8.4px 20.9px 33.4px HSLA(var(--ShadowColor), 0.05),
+                20px 50px 80px HSLA(var(--ShadowColor), 0.07);
+}
+
+#Timetable.Past
+{
+    --ShadowColor: 240, 0%, 50%;
+}
+
+#Timetable.Current
+{
+    --ShadowColor: 210, 100%, 56%;
+}
+
+#Timetable.Next
+{
+    --ShadowColor: 348, 83%, 47%;
 }
 
 @media (prefers-color-scheme: dark)
@@ -138,6 +161,7 @@
 {
     text-align: left;
     font-weight: 500;
+    text-decoration: none;
 }
 
 
