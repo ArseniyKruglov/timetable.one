@@ -16,21 +16,16 @@ if ($User->num_rows === 1)
     else if ($User[3] === $URL)
         $AccessLevel = 0;
 
-
-
-    $From = $_POST['From'];
-    $To = $_POST['To'];
-    $From = 0;
-    $To = 1000000;
+        
 
     $aReplacements = [];
     $aHometasks = [];
 
-    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE (UserID = $TimetableID) AND (Date >= $From) AND (Date <= $To)")->fetch_all() as &$aReplacement)
+    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $TimetableID")->fetch_all() as &$aReplacement)
         array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
 
     if ($AccessLevel > 0)
-        foreach ($SQL->query("SELECT Subject, Date, Text FROM hometasks WHERE (UserID = $TimetableID) AND (Date >= $From) AND (Date <= $To) ORDER BY Date DESC")->fetch_all() as &$aLesson)
+        foreach ($SQL->query("SELECT Subject, Date, Text FROM hometasks WHERE UserID = $TimetableID ORDER BY Date DESC")->fetch_all() as &$aLesson)
             array_push($aHometasks, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2]]);
 
     echo json_encode(['Hometasks' => $aHometasks, 'Replacements' => $aReplacements]);

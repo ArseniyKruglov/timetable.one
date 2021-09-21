@@ -23,7 +23,7 @@ Week_Select();
 }
 
 
-addEventListener('focus', () => { Week_Update(true); });
+addEventListener('focus', Week_Update);
 
 onkeydown = (event) =>
 {

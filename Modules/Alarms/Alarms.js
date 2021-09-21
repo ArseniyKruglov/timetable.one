@@ -29,4 +29,4 @@ function Alarms_Draw()
     };
 }
 
-setInterval(Alarms_Draw, 1000);
+// setInterval(Alarms_Draw, 1000);
