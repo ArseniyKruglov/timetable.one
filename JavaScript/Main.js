@@ -18,6 +18,7 @@ document.body.innerHTML =  `<main>
 Week_Select();
 Information_Draw();
 setInterval(Information_Draw, 1000);
+setInterval(() => { if (window._LessonDetails_iDate === undefined && window._LessonDetails_iLessonNumber === undefined) Week_Update(); }, 5000);        // Очень нехорошо
 
 {
     let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));

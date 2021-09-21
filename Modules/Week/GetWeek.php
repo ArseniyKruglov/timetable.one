@@ -7,7 +7,7 @@ $User = $SQL->query("SELECT * FROM users WHERE (Link_FullAccess = '$URL') OR (Li
 if ($User->num_rows === 1)
 {
     $User = $User->fetch_row();
-    $TimetableID = $User[0];
+    $UserID = $User[0];
 
     if ($User[1] === $URL)
         $AccessLevel = 2;
@@ -21,11 +21,11 @@ if ($User->num_rows === 1)
     $aReplacements = [];
     $aHometasks = [];
 
-    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $TimetableID")->fetch_all() as &$aReplacement)
+    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $UserID")->fetch_all() as &$aReplacement)
         array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
 
     if ($AccessLevel > 0)
-        foreach ($SQL->query("SELECT Subject, Date, Text FROM hometasks WHERE UserID = $TimetableID ORDER BY Date DESC")->fetch_all() as &$aLesson)
+        foreach ($SQL->query("SELECT Subject, Date, Text FROM hometasks WHERE UserID = $UserID ORDER BY Date DESC")->fetch_all() as &$aLesson)
             array_push($aHometasks, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2]]);
 
     echo json_encode(['Hometasks' => $aHometasks, 'Replacements' => $aReplacements]);

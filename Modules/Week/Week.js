@@ -4,7 +4,7 @@ function Week_Update()
     {
         _oWeek = aJSON;
 
-        if (window._LessonDetails_iDate && window._LessonDetails_iLessonNumber)
+        if (window._LessonDetails_iDate !== undefined && window._LessonDetails_iLessonNumber !== undefined)
         {
             let sLessonDetails_Subject = Timetable_GetDayTimetable(_LessonDetails_iDate).get(_LessonDetails_iLessonNumber)[0];
             for (let loop_oReplacement of _oWeek['Replacements'])
@@ -19,7 +19,7 @@ function Week_Update()
             document.getElementById('LessonDetails_Text').value = sLessonDetails_Text;
         };
 
-        Week_Draw();
+        Week_Select();
     });
 }
 
