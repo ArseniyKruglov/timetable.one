@@ -1,13 +1,11 @@
 function Week_GetInitialWeekOffset()
 {
-    let iToday = new Date().getDaysSince1970();
-        
-    if (Timetable_GetDayTimetable(iToday).size !== 0)
+    if (Timetable_GetDayTimetable(_iToday).size !== 0)
         return 0;
         
     let iDayOfWeek = new Date().getDayOfWeek();
     let iLastStudyDay;
-    for (let i = iToday - iDayOfWeek + 6; i >= iToday - iDayOfWeek; i--)
+    for (let i = _iToday - iDayOfWeek + 6; i >= _iToday - iDayOfWeek; i--)
         if (Timetable_GetDayTimetable(i).size !== 0)
         {
             iLastStudyDay = i;
@@ -16,17 +14,23 @@ function Week_GetInitialWeekOffset()
 
     if (iLastStudyDay !== undefined)
     {
-        if (iLastStudyDay < iToday)
+        if (iLastStudyDay < _iToday)
             return 1;
         else    
             return 0;
     }
     else
     {
-        for (let i = iToday - iDayOfWeek + 6 + 7; i >= iToday - iDayOfWeek + 7; i--)
+        for (let i = _iToday - iDayOfWeek + 6 + 7; i >= _iToday - iDayOfWeek + 7; i--)
             if (Timetable_GetDayTimetable(i).size !== 0)
                 return 1;
 
         return 0;
     };
+}
+
+function Week_GetPeriod(iWeekOffset)
+{
+    let iWeekBeginDate = _iToday - new Date().getDayOfWeek() + iWeekOffset * 7;    
+    return [iWeekBeginDate, iWeekBeginDate + 6];
 }

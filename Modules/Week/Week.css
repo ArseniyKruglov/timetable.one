@@ -1,0 +1,33 @@
+#Week
+{
+    padding: 15px 17.5px;
+    font-size: 110%;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    width: fit-content;
+    border-radius: 100px;
+    z-index: 1;
+}
+
+#Week_Period
+{
+    min-width: 125px;
+}
+
+#Timetable.Past ~  #Week > #Week_Period
+{
+    opacity: var(--Gray00-Opacity);
+}
+
+#Timetable.Current ~ #Week > #Week_Period
+{
+    color: var(--Main);
+}
+
+#Timetable.Next ~ #Week > #Week_Period
+{
+    color: var(--Secondary);
+}

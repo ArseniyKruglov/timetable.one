@@ -55,3 +55,16 @@
 {
     opacity: var(--Gray00-Opacity);
 }
+
+
+
+body:not([FullAccess]) .Underline > *,
+body:not([FullAccess]) .Underline::after
+{
+    border: none !important;
+}
+
+body[TimetableOnly] #LessonDetails_Text
+{
+    display: none;
+}

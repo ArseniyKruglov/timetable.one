@@ -8,17 +8,24 @@ function Language_Get()
     return 0;
 }
 
+_iToday = new Date().get1970();
 _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
 
 document.body.innerHTML =  `<main>
                                 <div id='Information'></div>
+
                                 <div id='Timetable'></div>
+                                
+                                <div id='Week'>
+                                    <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()'></custom-round-button>
+                                    <button id='Week_Period' onclick='Week_Current()'></button>
+                                    <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()'></custom-round-button>
+                                </div>
                             </main>`;
 Week_Select();
 Information_Draw();
 setInterval(Information_Draw, 1000);
-setInterval(() => { if (window._LessonDetails_iDate === undefined && window._LessonDetails_iLessonNumber === undefined) Week_Update(); }, 5000);        // Очень нехорошо
 
 {
     let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
@@ -49,22 +56,20 @@ addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) Week_
 
 function Midnight()
 {
-    {
-        for (let loop_eDay of document.getElementById('Timetable').children)
-            loop_eDay.className = '';
+    _iToday = new Date().get1970();
+
+
     
-    
-    
-        let iToday = new Date().getDaysSince1970();
-    
-        let eToday = Timetable_GetDayElement(iToday);
-        if (eToday)
-            eToday.className = 'Today';
-    
-        let eTomorrow = Timetable_GetDayElement(iToday + 1);
-        if (eTomorrow)
-            eTomorrow.className = 'Tomorrow';
-    }
+    for (let loop_eDay of document.getElementById('Timetable').children)
+        loop_eDay.classList.remove('Today', 'Tomorrow');
+
+    let eToday = Timetable_GetDayElement(_iToday);
+    if (eToday)
+        eToday.classList.add('Today');
+
+    let eTomorrow = Timetable_GetDayElement(_iToday + 1);
+    if (eTomorrow)
+        eTomorrow.classList.add('Tomorrow');
 }
 
 setTimeout

@@ -2,7 +2,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
 {
     try
     {
-        let tDate = DaysSince1970ToTime(iDate);
+        let tDate = Time_From1970(iDate);
         let mDayTimetable = Timetable_GetDayTimetable(iDate);
     
         let sSubject = mDayTimetable.get(iLessonNumber)[0];
@@ -14,7 +14,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                 break;
             };
     
-        let aAlarms = _mAlarms.get(iLessonNumber);
+        let aAlarms = Alarm_Get(iLessonNumber, iDate);
         let sLectureHall = mDayTimetable.get(iLessonNumber)[1];
         let sTeacher = mDayTimetable.get(iLessonNumber)[2];
     
@@ -36,14 +36,14 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                     <div id='LessonDetails_Info'>
                         <div>
                             <svg ${_Icons['Calendar']}></svg>
-                            <span>${tDate.toLocaleString(navigator.language, { month: 'long', day: 'numeric' })}</span>
+                            <span>${Time_FormatDate(tDate)}</span>
                         </div>
                         
                         ${
                             aAlarms ? 
                            `<div>
                                 <svg ${_Icons['Alarm']}></svg>
-                                <span>${aAlarms[0].toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} – ${aAlarms[1].toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                                <span>${Format(aAlarms[0])} – ${Format(aAlarms[1])}</span>
                             </div>`
                             : ''
                         }

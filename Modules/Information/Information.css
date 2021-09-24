@@ -1,5 +1,24 @@
 #Information
 {
-    padding: 15px 22.5px;
-    font-size: 110%;
+    padding: 15px 20px;
+    font-size: 102.5%;
+    display: grid;
+    gap: 5px;
+}
+
+#Information a
+{
+    text-decoration: none;
+    font-weight: 500;
+}
+
+#Information .Timer
+{
+    display: inline-block;
+    width: 40px;
+}
+
+#Information .Timer.Hours
+{
+    width: 70px;
 }

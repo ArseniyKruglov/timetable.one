@@ -6,7 +6,7 @@
 
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-        <link rel='manifest' href='/manifest.webmanifest'>
+        <link rel='manifest' href='/manifest.php?URL=<? echo $URL ?>'>
 
         <link rel='preconnect' href='https://fonts.googleapis.com'>
         <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
@@ -45,7 +45,7 @@
     <script src='/Style/WebComponents/DropDown/DropDown.js'></script>
     <script src='/Style/WebComponents/RoundButton/RoundButton.js'></script>
 
-    <script src='/Modules/Alarms/Alarms.js'></script>
+    <script src='/Modules/Alarms/Alarms_Get.js'></script>
     <script src='/Modules/Information/Information.js'></script>
     <script src='/Modules/Week/Week.js'></script>
     <script src='/Modules/Week/Week_Logic.js'></script>
@@ -53,8 +53,9 @@
     <script src='/Modules/Overlay/Overlay.js'></script>
     <script src='/Modules/LessonDetails/LessonDetails.js'></script>
     <script src='/Modules/LessonDetails/LessonDetails_Draw.js'></script>
-    <script src='/Modules/LessonDetails/LessonDetails_Handler.js'></script>
+    <script src='/Modules/LessonDetails/LessonDetails_Handlers.js'></script>
     <script src='/Modules/Timetable/Timetable_Logic.js'></script>
+    <script src='/Modules/Timetable/Timetable_Get.js'></script>
     <script src='/Modules/Timetable/Timetable_Draw.js'></script>
 
     <script>
@@ -73,7 +74,7 @@
 
             echo json_encode($aTimetables, JSON_UNESCAPED_UNICODE);
         ?>;
-        _aTimetable.forEach(ArrayElement00 => ArrayElement00[1]['Lessons'] = ArrayElement00[1]['Lessons'].map(ArrayElement01 => new Map(ArrayElement01)) );
+        _aTimetable.forEach(ArrayElement00 => ArrayElement00[1]['Lessons'] = ArrayElement00[1]['Lessons'].map(ArrayElement01 => new Map(ArrayElement01)));
         _aTimetable = new Map(_aTimetable);
 
         _oWeek = 
@@ -91,19 +92,13 @@
             echo json_encode(['Hometasks' => $aHometasks, 'Replacements' => $aReplacements], JSON_UNESCAPED_UNICODE);
         ?>;
 
-        _mAlarms = 
+        _mAlarms = new Map(
         <?
             $aAlarms = [];
             foreach ($SQL->query("SELECT LessonNumber, Begin, End FROM alarms WHERE UserID = $User[0]")->fetch_all() as &$aAlarm)
                 array_push($aAlarms, [(int) $aAlarm[0], [(int) $aAlarm[1], (int) $aAlarm[2]]]);
             echo json_encode($aAlarms, JSON_UNESCAPED_UNICODE);
-        ?>;
-        _mAlarms.forEach(aAlarm =>
-        {
-            aAlarm[1][0] = Alarms_MinutesToTime(aAlarm[1][0]);
-            aAlarm[1][1] = Alarms_MinutesToTime(aAlarm[1][1]);
-        });
-        _mAlarms = new Map(_mAlarms);
+        ?>);
     </script>
 
     <script src='/JavaScript/Main.js'></script>

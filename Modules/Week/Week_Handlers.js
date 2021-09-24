@@ -1,11 +1,3 @@
-function Week_Select()
-{
-    Timetable_Draw();
-    Week_Draw();
-}
-
-
-
 function Week_Previous()
 {
     _iWeekOffset--;
