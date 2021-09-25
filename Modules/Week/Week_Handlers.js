@@ -6,7 +6,7 @@ function Week_Previous()
 
 function Week_Current()
 {
-    _iWeekOffset = 0;
+    _iWeekOffset = Week_GetInitialWeekOffset();
     Week_Select();    
 }
 

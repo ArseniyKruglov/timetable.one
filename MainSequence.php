@@ -38,6 +38,7 @@
     <script src='/JavaScript/focus-visible.js'></script>
     <script src='/JavaScript/XHR.js'></script>
     <script src='/JavaScript/swiped-events.js'></script>
+    <script src='/JavaScript/Language.js'></script>
 
     <script src='/Style/Icons.js'></script>
     <script src='/Style/Button_Ripple.js'></script>
@@ -69,7 +70,7 @@
                 foreach ($SQL->query("SELECT DayOfTimetable, LessonNumber, Subject, LectureHall, Educator FROM lessons_timetable WHERE TimetableID = $User[0] ORDER BY DayOfTimetable, LessonNumber")->fetch_all() as &$aLesson)
                     array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], [$aLesson[2], $aLesson[3], $aLesson[4]]]);
 
-                array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => (int) $aTimetable[1], 'End' => (int) $aTimetable[2], 'AnchorDate' => (int) $aTimetable[3], 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
+                array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : (int) $aTimetable[1], 'End' => $aTimetable[2] === NULL ? NULL : (int) $aTimetable[2], 'AnchorDate' => (int) $aTimetable[3], 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
             };
 
             echo json_encode($aTimetables, JSON_UNESCAPED_UNICODE);

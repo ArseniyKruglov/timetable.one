@@ -43,7 +43,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                             aAlarms ? 
                            `<div>
                                 <svg ${_Icons['Alarm']}></svg>
-                                <span>${Format(aAlarms[0])} – ${Format(aAlarms[1])}</span>
+                                <span>${Time_FormatTime(aAlarms[0])} – ${Time_FormatTime(aAlarms[1])}</span>
                             </div>`
                             : ''
                         }

@@ -1,10 +1,17 @@
 #Information
 {
-    padding: 15px 20px;
+    padding: 15px 22.5px;
     font-size: 102.5%;
     display: grid;
     gap: 5px;
 }
+
+main.NoAlarms > #Information
+{
+    display: none;
+}
+
+
 
 #Information a
 {
@@ -15,10 +22,24 @@
 #Information .Timer
 {
     display: inline-block;
-    width: 40px;
+    width: 42.5px;
+}
+
+#Information .Timer.Days
+{
+    width: 75px;
 }
 
 #Information .Timer.Hours
 {
     width: 70px;
+}
+
+
+
+#Information .Caution
+{
+    color: darkred;
+    font-size: 95%;
+    font-weight: 600;
 }

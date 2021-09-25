@@ -2,9 +2,9 @@
 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 20px 60px;
+    grid-gap: 40px 80px;
     min-width: max-content;
-    padding: 40px 50px;
+    padding: 35px 45px;
     font-size: 125%;
     overflow: auto;
 }
@@ -47,14 +47,6 @@
     }
 }
 
-@media (max-width: 800px)
-{
-    #Timetable
-    {
-        grid-template-columns: 100%;
-    }
-}
-
 @media (max-width: 600px)
 {
     body
@@ -64,13 +56,10 @@
 
     #Timetable
     {
+        grid-template-columns: 100%;
         flex-direction: column;
-    }
-
-    #Timetable
-    {
-        width: calc(100% - 80px);
-        padding: 40px;
+        width: calc(100% - 60px);
+        padding: 30px;
     }
 }
 
@@ -90,7 +79,7 @@
 {
     font-size: 85%;
     font-weight: 600;
-    margin-top: -5px;
+    margin-top: -2.5px;
 }
 
 #Timetable .Day:not(.Today):not(.Tomorrow) > :first-child
@@ -189,7 +178,12 @@
 
 
 
-#Timetable .Lesson.Note > :last-child:after
+#Timetable .Lesson > :last-child::after
 {
     content: '•';
+}
+
+#Timetable .Lesson:not(.Note) > :last-child::after
+{
+    visibility: hidden;
 }

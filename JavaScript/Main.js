@@ -1,21 +1,11 @@
-function Language_Get()
-{
-    let sLanguage = (window.navigator.userLanguage || window.navigator.language).toUpperCase();
-
-    if (sLanguage.includes('RU') || sLanguage.includes('UA') || sLanguage.includes('BE') || sLanguage.includes('KK'))
-        return 1;
-    
-    return 0;
-}
-
 _iToday = new Date().get1970();
 _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
 
-document.body.innerHTML =  `<main>
+document.body.innerHTML =  `<main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''}'>
                                 <div id='Information'></div>
 
-                                <div id='Timetable'></div>
+                                <div id='Timetable' class='${_mAlarms.size === 0 ? 'NoTime' : ''}'></div>
                                 
                                 <div id='Week'>
                                     <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()'></custom-round-button>

@@ -1,8 +1,8 @@
 function Timetable_GetDayTimetable(iDate)
 {
     for (let loop_aTimetable of _aTimetable)
-        if (loop_aTimetable[1]['Begin'] <= iDate && iDate <= loop_aTimetable[1]['End'])
-            return loop_aTimetable[1]['Lessons'][(iDate - loop_aTimetable[1]['AnchorDate']) % loop_aTimetable[1]['Days'].length];
+        if ((loop_aTimetable[1]['Begin'] || Number.MIN_SAFE_INTEGER) <= iDate && iDate <= (loop_aTimetable[1]['End'] || Number.MAX_SAFE_INTEGER))
+            return loop_aTimetable[1]['Lessons'][(iDate - loop_aTimetable[1]['AnchorDate'] % loop_aTimetable[1]['Days'].length + loop_aTimetable[1]['Days'].length) % loop_aTimetable[1]['Days'].length];   
 
     return false;
 }
@@ -12,22 +12,39 @@ function Timetable_GetLessonLinkAttributes(iDate, iLessonNumber)
     return `href='${location.pathname}?Date=${iDate}&LessonNumber=${iLessonNumber}' onclick='event.preventDefault(); LessonDetails(${iDate}, ${iLessonNumber});'`    
 }
 
+function Timetable_GetLessonNumbers(iDate)
+{
+    let mTimetable = Timetable_GetDayTimetable(iDate);
+    if (mTimetable === false)
+        return false;
+
+    let aLessonNumbers = [];
+    for (let loop_aLesson of mTimetable)
+        aLessonNumbers.push(loop_aLesson[0]);
+
+    for (let loop_oReplacement of _oWeek['Replacements'])
+        if (loop_oReplacement['Date'] === iDate && loop_oReplacement['Replacement'] === '')
+            aLessonNumbers.splice(aLessonNumbers.indexOf(loop_oReplacement['LessonNumber']), 1);
+    
+    return aLessonNumbers;
+}
+
 function Timetable_GetPeriod(iDate)
 {
-    let aTimetable = GetTimetable(iDate);
+    let aTimetable = Timetable_GetLessonNumbers(iDate);
     if (aTimetable === false || aTimetable.length === 0)
         return ['Chill', 'Отдых'][_iLanguage];
 
-    let tBegin = Alarm_Get(aTimetable[0][0]);
-    let tEnd = Alarm_Get(aTimetable[aTimetable.length - 1][0]);
+    let tBegin = Alarm_Get(aTimetable[0]);
+    let tEnd = Alarm_Get(aTimetable[aTimetable.length - 1]);
 
     let sBegin;
     if (tBegin)
-        sBegin = Format(tBegin[0]);
+        sBegin = Time_FormatTime(tBegin[0]);
 
     let sEnd;
     if (tEnd)
-        sEnd = Format(tEnd[1]);
+        sEnd = Time_FormatTime(tEnd[1]);
     
-        return `${sBegin || ['Unknown', 'Неизвестно'][_iLanguage]} – ${sEnd || ['Unknown', 'Неизвестно'][_iLanguage]}`;
+    return `${sBegin || ['Unknown', 'Неизвестно'][_iLanguage]} – ${sEnd || ['Unknown', 'Неизвестно'][_iLanguage]}`;
 }

@@ -15,4 +15,6 @@ function LessonDetails_Close()
     history.pushState('', '', location.pathname);
     delete _LessonDetails_iDate;
     delete _LessonDetails_iLessonNumber;
+    delete _LessonDetails_sSubject;
+    delete _LessonDetails_sReplacement;
 }
