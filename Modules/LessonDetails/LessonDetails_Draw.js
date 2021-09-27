@@ -2,25 +2,39 @@ function LessonDetails_Draw(iDate, iLessonNumber)
 {
     try
     {
-        let tDate = Time_From1970(iDate);
-        let mDayTimetable = Timetable_GetDayTimetable(iDate);
-    
-        let sSubject = mDayTimetable.get(iLessonNumber)[0];
-        let sReplacement = null;
-        for (let loop_oReplacement of _oWeek['Replacements'])
-            if (loop_oReplacement['Date'] === iDate && loop_oReplacement['LessonNumber'] === iLessonNumber)
-            {
-                sReplacement = loop_oReplacement['Replacement'];
-                break;
-            };
-    
-        let aAlarms = Alarm_Get(iLessonNumber, iDate);
-        let sLectureHall = mDayTimetable.get(iLessonNumber)[1];
-        let sTeacher = mDayTimetable.get(iLessonNumber)[2];
-    
-        let sHometask = '';
+        let mDayTimetable = Timetable_GetDayTimetable(iDate),
+            bAdded = (mDayTimetable.get(iLessonNumber) === undefined),
+            sSubject,
+            sReplacement, 
+            aAlarms = Alarm_Get(iLessonNumber, iDate),
+            sLectureHall,
+            sTeacher,
+            sHometask;
+
+        if (bAdded === false)
+        {
+            sSubject = mDayTimetable.get(iLessonNumber)[0];
+            for (let loop_oReplacement of _oWeek['Replacements'])
+                if (loop_oReplacement['Date'] === iDate && loop_oReplacement['LessonNumber'] === iLessonNumber)
+                {
+                    sReplacement = loop_oReplacement['Replacement'];
+                    break;
+                };
+            sLectureHall = mDayTimetable.get(iLessonNumber)[1];
+            sTeacher = mDayTimetable.get(iLessonNumber)[2];
+        }
+        else
+        {
+            for (let loop_oAddedLesson of _oWeek['AddedLessons'])
+                if (loop_oAddedLesson['Date'] === iDate && loop_oAddedLesson['LessonNumber'] === iLessonNumber)
+                {
+                    sSubject = loop_oAddedLesson['Subject'];
+                    break;
+                };
+        };
+        
         for (let loop_oHometask of _oWeek['Hometasks'])
-            if (loop_oHometask['Subject'] === (sReplacement ? sReplacement : sSubject) && loop_oHometask['Date'] === iDate)
+            if (loop_oHometask['Subject'] === LessonDetails_DisplayedSubject(sSubject, sReplacement) && loop_oHometask['Date'] === iDate)
             {
                 sHometask = loop_oHometask['Text'];
                 break;
@@ -31,16 +45,16 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         <span><custom-round-button icon='Edit' scale=28></custom-round-button></span>
                     </div>
                     
-                    <custom-textarea placeholder='${sSubject}' value='${(sReplacement === null) ? sSubject : sReplacement}' oninput='LessonDetails_SetReplacement(this.value)' id='LessonDetails_Subject'></custom-textarea>
+                    <custom-textarea placeholder='${sSubject}' value='${(sReplacement !== undefined) ? sReplacement : sSubject}' oninput='LessonDetails_SetReplacement(this.value)' id='LessonDetails_Subject' ${(document.body.hasAttribute('FullAccess') === false) ? 'readonly' : ''}></custom-textarea>
                     
                     <div id='LessonDetails_Info'>
                         <div>
                             <svg ${_Icons['Calendar']}></svg>
-                            <span>${Time_FormatDate(tDate)}</span>
+                            <span>${Time_FormatDate(Time_From1970(iDate))}</span>
                         </div>
                         
                         ${
-                            aAlarms ? 
+                            (aAlarms !== undefined) ? 
                            `<div>
                                 <svg ${_Icons['Alarm']}></svg>
                                 <span>${Time_FormatTime(aAlarms[0])} – ${Time_FormatTime(aAlarms[1])}</span>
@@ -49,7 +63,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         }
     
                         ${
-                            sLectureHall ? 
+                            (sLectureHall !== undefined) ? 
                            `<div>
                                 <svg ${_Icons['Location']}></svg>
                                 <span>${sLectureHall}</span>
@@ -58,7 +72,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         }
     
                         ${
-                            sTeacher ? 
+                            (sTeacher !== undefined) ? 
                            `<div>
                                 <svg ${_Icons['Teacher']}></svg>
                                 <span>${sTeacher}</span>
@@ -68,15 +82,12 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                     </div>
                     
                     
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text'></custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(document.body.hasAttribute('FullAccess') === false) ? 'readonly' : ''} ${(document.body.hasAttribute('TimetableOnly') === true) ? 'hidden' : ''}></custom-textarea>`;
     
         _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
         _aOverlays['LessonDetails'][1].children[1].className = 'Overlay_Rectangular';
-    
-        if (document.body.hasAttribute('FullAccess') === false)
-            for (let loop_aTextarea of document.querySelectorAll(`#LessonDetails custom-textarea`))
-                loop_aTextarea.children[0].children[0].setAttribute('readonly', '');
 
+        window._LessonDetails_bAdded = bAdded;
         window._LessonDetails_iDate = iDate;
         window._LessonDetails_iLessonNumber = iLessonNumber;
         window._LessonDetails_sSubject = sSubject;
@@ -87,7 +98,5 @@ function LessonDetails_Draw(iDate, iLessonNumber)
     catch
     {
         LessonDetails_Close();
-        history.pushState('', '', location.pathname);
-        alert('Сайт окочурился?');
     };
 }

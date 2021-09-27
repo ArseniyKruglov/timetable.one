@@ -16,7 +16,7 @@ custom-round-button > button
     min-width: var(--Radius);
     min-height: var(--Radius);
     margin: -5px;
-    border-radius: 100px;
+    border-radius: 50%;
 }
 
 
@@ -54,7 +54,15 @@ custom-round-button > button:hover > :nth-child(2)
     opacity: 5%;
 }
 
-custom-round-button span.Ripple
+
+
+custom-round-button > button > span
 {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
     background-color: var(--Hover);
+    animation: Ripple 750ms linear;
+    width: var(--Radius);
+    height: var(--Radius);
 }

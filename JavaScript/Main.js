@@ -5,7 +5,7 @@ _iLanguage = Language_Get();
 document.body.innerHTML =  `<main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''}'>
                                 <div id='Information'></div>
 
-                                <div id='Timetable' class='${_mAlarms.size === 0 ? 'NoTime' : ''}'></div>
+                                <div id='Timetable'></div>
                                 
                                 <div id='Week'>
                                     <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()'></custom-round-button>
@@ -14,8 +14,9 @@ document.body.innerHTML =  `<main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''
                                 </div>
                             </main>`;
 Week_Select();
-Information_Draw();
-setInterval(Information_Draw, 1000);
+
+if (_mAlarms.size !== 0)
+    Information_Draw();
 
 {
     let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));

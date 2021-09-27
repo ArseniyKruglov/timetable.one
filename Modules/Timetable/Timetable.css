@@ -70,6 +70,7 @@
     font-weight: 700;
 }
 
+main.NoAlarms #Timetable .Day > :first-child > :last-child,
 #Timetable.NoTime .Day > :first-child > :last-child
 {
     display: none;
@@ -107,9 +108,10 @@
     gap: 4px;
 }
 
-#Timetable .Day.NoTime
+main.NoAlarms #Timetable .Day,
+#Timetable.NoTime .Day
 {
-    gap: 2.5px;
+    gap: 1px;
 }
 
 #Timetable .Day > :first-child
@@ -174,6 +176,13 @@
 #Timetable .Lesson > :last-child > :first-child:not(:empty) + *
 {
     display: none;
+}
+
+
+
+#Timetable .Lesson.Added *
+{
+    color: Green;
 }
 
 

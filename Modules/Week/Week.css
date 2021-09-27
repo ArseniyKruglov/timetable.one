@@ -29,12 +29,6 @@
     --Radius: calc(var(--Scale) + 22px);
 }
 
-#Week custom-round-button .Ripple
-{
-    left: 1.7px !important;
-    top: 2px !important;
-}
-
 
 
 #Week_Period

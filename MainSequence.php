@@ -19,10 +19,11 @@
         <link rel='stylesheet' href='/Style/LargeScaleStructures.css'>
 
         <link rel='stylesheet' href='/Style/Button_Ripple.css'>
-        <link rel='stylesheet' href='/Style/WebComponents/Underline.css'>
-        <link rel='stylesheet' href='/Style/WebComponents/Textarea/Textarea.css'>
-        <link rel='stylesheet' href='/Style/WebComponents/DropDown/DropDown.css'>
-        <link rel='stylesheet' href='/Style/WebComponents/RoundButton/RoundButton.css'>
+        <link rel='stylesheet' href='/WebComponents/Underline.css'>
+        <link rel='stylesheet' href='/WebComponents/Textarea/Textarea.css'>
+        <link rel='stylesheet' href='/WebComponents/Timer/Timer.css'>
+        <link rel='stylesheet' href='/WebComponents/DropDown/DropDown.css'>
+        <link rel='stylesheet' href='/WebComponents/RoundButton/RoundButton.css'>
 
         <link rel='stylesheet' href='/Modules/Overlay/Overlay.css'>
         <link rel='stylesheet' href='/Modules/LessonDetails/LessonDetails.css'>
@@ -42,9 +43,10 @@
 
     <script src='/Style/Icons.js'></script>
     <script src='/Style/Button_Ripple.js'></script>
-    <script src='/Style/WebComponents/Textarea/Textarea.js'></script>
-    <script src='/Style/WebComponents/DropDown/DropDown.js'></script>
-    <script src='/Style/WebComponents/RoundButton/RoundButton.js'></script>
+    <script src='/WebComponents/Textarea/Textarea.js'></script>
+    <script src='/WebComponents/Timer/Timer.js'></script>
+    <script src='/WebComponents/DropDown/DropDown.js'></script>
+    <script src='/WebComponents/RoundButton/RoundButton.js'></script>
 
     <script src='/Modules/Alarms/Alarms_Get.js'></script>
     <script src='/Modules/Information/Information.js'></script>
@@ -81,16 +83,20 @@
         _oWeek = 
         <?
             $aReplacements = [];
+            $aAddedLessons = [];
             $aHometasks = [];
         
             foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $User[0]")->fetch_all() as &$aReplacement)
                 array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
         
+            foreach ($SQL->query("SELECT Date, LessonNumber, Subject FROM added_lessons WHERE UserID = $User[0]")->fetch_all() as &$aAddedLesson)
+                array_push($aAddedLessons, ['Date' => (int) $aAddedLesson[0], 'LessonNumber' => (int) $aAddedLesson[1], 'Subject' => $aAddedLesson[2]]);
+
             if ($AccessLevel > 0)
                 foreach ($SQL->query("SELECT Subject, Date, Text FROM hometasks WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
                     array_push($aHometasks, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2]]);
         
-            echo json_encode(['Hometasks' => $aHometasks, 'Replacements' => $aReplacements], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['Hometasks' => $aHometasks, 'AddedLessons' => $aAddedLessons, 'Replacements' => $aReplacements], JSON_UNESCAPED_UNICODE);
         ?>;
 
         _mAlarms = new Map(

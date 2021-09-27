@@ -25,6 +25,10 @@ function Timetable_GetLessonNumbers(iDate)
     for (let loop_oReplacement of _oWeek['Replacements'])
         if (loop_oReplacement['Date'] === iDate && loop_oReplacement['Replacement'] === '')
             aLessonNumbers.splice(aLessonNumbers.indexOf(loop_oReplacement['LessonNumber']), 1);
+            
+    for (let loop_aAddedLesson of _oWeek['AddedLessons'])
+        if (loop_aAddedLesson['Date'] === iDate)
+            aLessonNumbers.push(loop_aAddedLesson['LessonNumber']);
     
     return aLessonNumbers;
 }
@@ -35,8 +39,8 @@ function Timetable_GetPeriod(iDate)
     if (aTimetable === false || aTimetable.length === 0)
         return ['Chill', 'Отдых'][_iLanguage];
 
-    let tBegin = Alarm_Get(aTimetable[0]);
-    let tEnd = Alarm_Get(aTimetable[aTimetable.length - 1]);
+    let tBegin = Alarm_Get(Math.min(...aTimetable));
+    let tEnd = Alarm_Get(Math.max(...aTimetable));
 
     let sBegin;
     if (tBegin)

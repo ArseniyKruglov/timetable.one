@@ -13,8 +13,14 @@ function LessonDetails_Close()
 {
     Overlay_Remove('LessonDetails');
     history.pushState('', '', location.pathname);
+    delete _LessonDetails_bAdded;
     delete _LessonDetails_iDate;
     delete _LessonDetails_iLessonNumber;
     delete _LessonDetails_sSubject;
     delete _LessonDetails_sReplacement;
+}
+
+function LessonDetails_DisplayedSubject(sSubject, sReplcement)
+{
+    return sReplcement ? sReplcement : sSubject;    
 }

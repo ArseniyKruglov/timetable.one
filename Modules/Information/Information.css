@@ -19,27 +19,12 @@ main.NoAlarms > #Information
     font-weight: 500;
 }
 
-#Information .Timer
-{
-    display: inline-block;
-    width: 42.5px;
-}
-
-#Information .Timer.Days
-{
-    width: 75px;
-}
-
-#Information .Timer.Hours
-{
-    width: 70px;
-}
-
 
 
 #Information .Caution
 {
-    color: darkred;
+    color: Darkred;
     font-size: 95%;
     font-weight: 600;
+    line-height: 100%;
 }

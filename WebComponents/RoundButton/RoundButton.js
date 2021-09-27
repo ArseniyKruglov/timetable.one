@@ -7,7 +7,12 @@ class RoundButton extends HTMLElement
                                 <svg ${_Icons[this.getAttribute('icon')]}></svg>
                                 <div></div>
                             </button>`;
-        Ripple_AddListener(this.children[0]);
+        this.addEventListener('click', () =>
+        {
+            let esCircle = document.createElement('span');
+            this.children[0].append(esCircle);
+            setTimeout(() => { esCircle.remove() }, 750);
+        });
     }
 }
 

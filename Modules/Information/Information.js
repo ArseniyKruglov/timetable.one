@@ -26,7 +26,11 @@ function Information_Draw()
                         break;
                     };
 
-        return aTimetable;
+        for (let loop_aAddedLesson of _oWeek['AddedLessons'])
+            if (loop_aAddedLesson['Date'] === iDate)
+                aTimetable.push([loop_aAddedLesson['LessonNumber'], loop_aAddedLesson['Subject']]);
+
+        return aTimetable.sort((a, b) => { return a[0] > b[0]; });
     };
 
 
@@ -40,30 +44,22 @@ function Information_Draw()
 
     function Timer(tDate)
     {
-        let iTimeLeft = tDate - new Date();
-
-        let iSeconds = Math.floor((iTimeLeft / 1000) % 60);
-        let iMinutes =  Math.floor(iSeconds / 60);
-        let iHours =  Math.floor(iHours / 60);
-        let iDays =  Math.floor(iHours / 24);
-
-        let sClass = '';
-        if (iDays > 0)
-            sClass = 'Days';
-        else if (iHours > 0)
-            sClass = 'Hours';
-
-        return `<span class='Timer ${sClass}'>${iDays > 0 ? `${iDays}:` : ''}${iHours > 0 ? `${DoubleDigits(iHours)}:` : ''}${DoubleDigits(iMinutes)}:${DoubleDigits(iSeconds)}</span>`
+        return `<custom-timer time=${tDate.getTime()}></custom-timer>`;
     }
 
     function Difference(tDate00, tDate01)
     {
         let iTimeLeft = tDate01 - tDate00;
 
+        let iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
         let iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
-        let iHours = Math.floor(iMinutes / 60);
 
         return `<span>${iHours > 0 ? `${iHours} ${[(iHours === 1 ? 'hour' : 'hours'), ['час', 'часа', 'часов'][Language_RussianNumberDeclension(iHours)]]}` : ''} ${iMinutes} ${[(iMinutes === 1 ? 'minute' : 'minutes'), ['минута', 'минуты', 'минут'][Language_RussianNumberDeclension(iMinutes)]][_iLanguage]}</span>`
+    }
+
+    function Timeout(tDate)
+    {
+        setTimeout(Information_Draw, tDate - new Date().getTime());    
     }
 
 
@@ -73,6 +69,8 @@ function Information_Draw()
         HTML +=    `<div>
                         Сегодня к ${Time_FormatTime(Alarm_Get(aTodayTimetable[0][0])[0])} на <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[0][0])}>${aTodayTimetable[0][1]}</a>${aTodayTimetable[0][2] ? ` (${aTodayTimetable[0][2]})` : ''}, осталось ${Timer(Alarm_Get(aTodayTimetable[0][0])[0])}
                     </div>`;
+
+        Timeout(Alarm_Get(aTodayTimetable[0][0])[0]);
     }
 
     function OnLessons()
@@ -92,6 +90,8 @@ function Information_Draw()
                 else
                     HTML += `<div>Затем свобода</div>`;
 
+                Timeout(Alarm_Get(aTodayTimetable[i][0])[1]);
+
                 break;
             };
 
@@ -104,6 +104,8 @@ function Information_Draw()
                             <div>
                                 Затем <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''} в ${Time_FormatTime(Alarm_Get(aTodayTimetable[i + 1][0])[0])}
                             </div>`;
+
+                Timeout(Alarm_Get(aTodayTimetable[i + 1][0])[0]);
 
                 break;
             };
@@ -124,6 +126,10 @@ function Information_Draw()
                         </div>`;
         else
             HTML +=    `<div>Отдых</div>`;
+
+        let tTomorrow = new Date();
+        tTomorrow.setHours(24, 0, 0, 0);
+        Timeout(tTomorrow);
     }
 
 

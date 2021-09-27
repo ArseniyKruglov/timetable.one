@@ -1,0 +1,15 @@
+custom-timer
+{
+    display: inline-block;
+    width: 42.5px;
+}
+
+custom-timer.Days
+{
+    width: 75px;
+}
+
+custom-timer.Hours
+{
+    width: 70px;
+}
