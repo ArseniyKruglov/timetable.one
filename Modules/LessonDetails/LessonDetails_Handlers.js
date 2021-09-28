@@ -110,6 +110,9 @@ function LessonDetails_SetReplacement(sValue)
 
                 // Закрывание окна
                 LessonDetails_Close();
+
+                // Костылек
+                setTimeout(Week_Update, 100);       // TO DO
             }
             else
             {

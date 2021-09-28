@@ -85,7 +85,7 @@ main.NoAlarms #Timetable .Day > :first-child > :last-child,
 
 #Timetable .Day:not(.Today):not(.Tomorrow) > :first-child
 {
-    opacity: var(--Gray01-Opacity);
+    opacity: 65%;
 }
 
 #Timetable .Day.Today > :first-child > *

@@ -54,7 +54,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         </div>
                         
                         ${
-                            (aAlarms !== undefined) ? 
+                            aAlarms ? 
                            `<div>
                                 <svg ${_Icons['Alarm']}></svg>
                                 <span>${Time_FormatTime(aAlarms[0])} – ${Time_FormatTime(aAlarms[1])}</span>
@@ -63,7 +63,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         }
     
                         ${
-                            (sLectureHall !== undefined) ? 
+                            sLectureHall ? 
                            `<div>
                                 <svg ${_Icons['Location']}></svg>
                                 <span>${sLectureHall}</span>
@@ -72,7 +72,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         }
     
                         ${
-                            (sTeacher !== undefined) ? 
+                            sTeacher ? 
                            `<div>
                                 <svg ${_Icons['Teacher']}></svg>
                                 <span>${sTeacher}</span>
