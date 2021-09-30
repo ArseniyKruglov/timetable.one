@@ -129,9 +129,10 @@ function Week_Fill(aWeekPeriod)
 
 function Week_Select()
 {
-    let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
-
     Timetable_Draw();
+    document.fonts.ready.then(Timetable_Scroll);
+
+    let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
     Week_Fill(aWeekPeriod);
     document.getElementById('Week_Period').innerHTML = `${Time_FormatDate_Short(Time_From1970(aWeekPeriod[0]))} – ${Time_FormatDate_Short(Time_From1970(aWeekPeriod[1]))}`;
 }

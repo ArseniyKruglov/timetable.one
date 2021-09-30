@@ -52,3 +52,26 @@ function Timetable_GetIHTML(iWeekOffset)
 
     return HTML;
 }
+
+function Timetable_Scroll()
+{
+    if (_iWeekOffset === 0)
+    {
+        let eToday = Timetable_GetDayElement(_iToday);
+        if (eToday !== null)
+            eToday.scrollIntoView();
+
+        let eTomorrow = Timetable_GetDayElement(_iToday + 1);
+        if (eTomorrow !== null)
+            eTomorrow.scrollIntoView();
+    }
+    else if (_iWeekOffset > 0)
+    {
+        document.getElementById('Timetable').scrollTop = 0;
+    }
+    else if (_iWeekOffset < 0)
+    {
+        eTimetable = document.getElementById('Timetable');
+        eTimetable.scrollTop = eTimetable.scrollHeight;
+    };
+}
