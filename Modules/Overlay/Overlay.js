@@ -59,7 +59,7 @@ function Overlay_Hide(sName)
 function Overlay_Remove(sName)
 {
     _aOverlays[sName][1].remove();
-    _aOverlays[sName] = undefined;
+    delete _aOverlays[sName];
     document.removeEventListener('keydown', _afOverlay_Escapes.pop());
     document.addEventListener('keydown', _afOverlay_Escapes[_afOverlay_Escapes.length - 1]);
     if (window._eOverlay_LastFocusedElement)
@@ -73,5 +73,9 @@ function Overlay_Remove(sName)
 
 function Overlay_IsOpened()
 {
-    return document.querySelector(`.Overlay:not([style="visibility: hidden;"])`) ? true : false;
+    for (let loop_sOverlay in _aOverlays)
+        if (_aOverlays[loop_sOverlay][0] === true)
+            return true;
+
+    return false;
 }

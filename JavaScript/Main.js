@@ -8,9 +8,9 @@ document.body.innerHTML =  `<main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''
                                 <div id='Timetable'></div>
                                 
                                 <div id='Week'>
-                                    <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()'></custom-round-button>
+                                    <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()' hover-color='Green'></custom-round-button>
                                     <button id='Week_Period' onclick='Week_Current()'></button>
-                                    <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()'></custom-round-button>
+                                    <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()' hover-color='Green'></custom-round-button>
                                 </div>
                             </main>`;
 Week_Select();
@@ -32,16 +32,16 @@ onkeydown = (Event) =>
         switch(Event.which) 
         {
             case 37:
-                Week_Previous();
+                document.getElementById('Week').children[0].click();
                 break;
 
             case 39:
-                Week_Next();
+                document.getElementById('Week').children[2].click();
                 break;
         };
 };
-addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) Week_Next(); });
-addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) Week_Previous(); });
+addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[0].click(); });
+addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[2].click(); });
 
 
 

@@ -28,8 +28,9 @@ function Week_Update()
                 for (let loop_oReplacement of _oWeek['Replacements'])
                     if (window._LessonDetails_iDate === loop_oReplacement['Date'] && window._LessonDetails_iLessonNumber === loop_oReplacement['LessonNumber'])
                         sLessonDetails_Subject = loop_oReplacement['Replacement'];
-                document.getElementById('LessonDetails_Subject').value = sLessonDetails_Subject || _LessonDetails_sSubject;
                 _LessonDetails_sReplacement = sLessonDetails_Subject;
+                document.getElementById('LessonDetails_Subject').value = (_LessonDetails_sReplacement !== undefined) ? _LessonDetails_sReplacement : _LessonDetails_sSubject;
+                document.getElementById('LessonDetails_Reset').hidden = (_LessonDetails_sReplacement === undefined || _iAccessLevel < 2);
             };
 
             if (window._LessonDetails_iDate !== undefined && window._LessonDetails_iLessonNumber !== undefined)

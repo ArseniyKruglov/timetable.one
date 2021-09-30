@@ -5,9 +5,11 @@ function LessonDetails_SetReplacement(sValue)
         //// Закулисное
         // Обновление переменной
         _LessonDetails_sReplacement = sValue.trim();
+        if (_LessonDetails_sSubject === _LessonDetails_sReplacement)
+            _LessonDetails_sReplacement = undefined;
     
         // Отправка на сервер
-        SendRequest('/Modules/LessonDetails/SetReplacement.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject, 'Replacement' : _LessonDetails_sReplacement});
+        SendRequest('/Modules/LessonDetails/SetReplacement.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject, 'Replacement' : sValue.trim()});
 
         // Изменение или удаление из массива недели
         if (_LessonDetails_sSubject === _LessonDetails_sReplacement)
@@ -47,6 +49,9 @@ function LessonDetails_SetReplacement(sValue)
         //// Внешнее
         let eLesson = Timetable_GetLessonElement(_LessonDetails_iDate, _LessonDetails_iLessonNumber);
 
+        // Кнопка сброса
+        document.getElementById('LessonDetails_Reset').hidden = (_LessonDetails_sReplacement === undefined);
+
         // Отображение новой заметки
         document.getElementById('LessonDetails_Text').value = sText;
         if (eLesson !== null)
@@ -65,7 +70,7 @@ function LessonDetails_SetReplacement(sValue)
             else
                 eLesson.classList.remove('Canceled');
     
-            if (_LessonDetails_sSubject === _LessonDetails_sReplacement)
+            if (_LessonDetails_sReplacement === undefined)
                 eLesson.children[1].children[0].innerHTML = '';
             else
                 eLesson.children[1].children[0].innerHTML = _LessonDetails_sReplacement;      
@@ -167,6 +172,13 @@ function LessonDetails_SetReplacement(sValue)
         if (eLesson !== null)
             eLesson.children[1].children[1].innerHTML = _LessonDetails_sSubject;
     };
+}
+
+function LessonDetails_Reset(eButton)
+{
+    LessonDetails_SetReplacement(_LessonDetails_sSubject);
+    document.getElementById('LessonDetails_Subject').value = _LessonDetails_sSubject;
+    eButton.hidden = true;
 }
 
 function LessonDetails_SetText(sText)

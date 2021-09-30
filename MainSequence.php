@@ -32,7 +32,7 @@
         <link rel='stylesheet' href='/Modules/Timetable/Timetable.css'>
     </head>
 
-    <body <? echo ['TimetableOnly', 'ReadOnly', 'FullAccess'][$AccessLevel]; ?>></body>
+    <body></body>
 
     <script src='/JavaScript/Time.js'></script>
     <script src='/JavaScript/Element.js'></script>
@@ -62,6 +62,8 @@
     <script src='/Modules/Timetable/Timetable_Draw.js'></script>
 
     <script>
+        _iAccessLevel = <? echo $AccessLevel ?>;
+
         _aTimetable = 
         <?
             $aTimetables = [];

@@ -45,8 +45,9 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         <span><custom-round-button icon='Edit' scale=28></custom-round-button></span>
                     </div>
                     
-                    <custom-textarea placeholder='${sSubject}' value='${(sReplacement !== undefined) ? sReplacement : sSubject}' oninput='LessonDetails_SetReplacement(this.value)' id='LessonDetails_Subject' ${(document.body.hasAttribute('FullAccess') === false) ? 'readonly' : ''}></custom-textarea>
-                    
+                    <custom-textarea placeholder='${sSubject}' value='${(sReplacement !== undefined) ? sReplacement : sSubject}' oninput='LessonDetails_SetReplacement(this.value)' id='LessonDetails_Subject' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
+                    <button id='LessonDetails_Reset' ${(sReplacement === undefined || _iAccessLevel < 2) ? 'hidden' : ''} onclick='LessonDetails_Reset(this)'>Убрать замену</button>
+
                     <div id='LessonDetails_Info'>
                         <div>
                             <svg ${_Icons['Calendar']}></svg>
@@ -82,7 +83,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                     </div>
                     
                     
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(document.body.hasAttribute('FullAccess') === false) ? 'readonly' : ''} ${(document.body.hasAttribute('TimetableOnly') === true) ? 'hidden' : ''}></custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
     
         _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
         _aOverlays['LessonDetails'][1].children[1].className = 'Overlay_Rectangular';
