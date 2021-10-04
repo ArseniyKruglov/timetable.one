@@ -35,20 +35,24 @@ function Timetable_GetLessonNumbers(iDate)
 
 function Timetable_GetPeriod(iDate)
 {
+    let aPeriod = Timetable_GetPeriod_Raw(iDate);
+    
+    if (aPeriod === false)
+        return ['Chill', 'Отдых'][_iLanguage];
+    else if (aPeriod[0] === undefined && aPeriod[1] === undefined)
+        return ['Unknown', 'Неизвестно'][_iLanguage]
+    else
+        return `${aPeriod[0] || ['Unknown', 'Неизвестно'][_iLanguage]} – ${aPeriod[1] || ['Unknown', 'Неизвестно'][_iLanguage]}`;
+}
+
+function Timetable_GetPeriod_Raw(iDate)
+{
     let aTimetable = Timetable_GetLessonNumbers(iDate);
     if (aTimetable === false || aTimetable.length === 0)
-        return ['Chill', 'Отдых'][_iLanguage];
+        return false;
 
-    let tBegin = Alarm_Get(Math.min(...aTimetable));
-    let tEnd = Alarm_Get(Math.max(...aTimetable));
+    let tBegin = Alarm_Get(Math.min(...aTimetable)),
+        tEnd = Alarm_Get(Math.max(...aTimetable));
 
-    let sBegin;
-    if (tBegin)
-        sBegin = Time_FormatTime(tBegin[0]);
-
-    let sEnd;
-    if (tEnd)
-        sEnd = Time_FormatTime(tEnd[1]);
-    
-    return `${sBegin || ['Unknown', 'Неизвестно'][_iLanguage]} – ${sEnd || ['Unknown', 'Неизвестно'][_iLanguage]}`;
+    return [tBegin ? Time_FormatTime(tBegin[0]) : undefined, tEnd ? Time_FormatTime(tEnd[1]) : undefined];
 }

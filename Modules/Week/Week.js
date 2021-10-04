@@ -9,9 +9,11 @@ function Week_Update()
             if (window._LessonDetails_bAdded === true)
             {
                 let sLessonDetails_Subject;
+
                 for (let loop_aAddedLesson of _oWeek['AddedLessons'])
                     if (window._LessonDetails_iDate === loop_aAddedLesson['Date'] && window._LessonDetails_iLessonNumber === loop_aAddedLesson['LessonNumber'])
                         sLessonDetails_Subject = loop_aAddedLesson['Subject'];
+
                 if (sLessonDetails_Subject === undefined)
                 {
                     LessonDetails_Close();
@@ -25,9 +27,11 @@ function Week_Update()
             else
             {
                 let sLessonDetails_Subject;
+
                 for (let loop_oReplacement of _oWeek['Replacements'])
                     if (window._LessonDetails_iDate === loop_oReplacement['Date'] && window._LessonDetails_iLessonNumber === loop_oReplacement['LessonNumber'])
                         sLessonDetails_Subject = loop_oReplacement['Replacement'];
+
                 _LessonDetails_sReplacement = sLessonDetails_Subject;
                 document.getElementById('LessonDetails_Subject').value = (_LessonDetails_sReplacement !== undefined) ? _LessonDetails_sReplacement : _LessonDetails_sSubject;
                 document.getElementById('LessonDetails_Reset').hidden = (_LessonDetails_sReplacement === undefined || _iAccessLevel < 2);
@@ -36,32 +40,51 @@ function Week_Update()
             if (window._LessonDetails_iDate !== undefined && window._LessonDetails_iLessonNumber !== undefined)
             {
                 let sLessonDetails_Text;
-                for (let loop_oHometask of _oWeek['Hometasks'])
-                    if (window._LessonDetails_iDate === loop_oHometask['Date'] && (_LessonDetails_sReplacement ? _LessonDetails_sReplacement : _LessonDetails_sSubject) === loop_oHometask['Subject'])
-                        sLessonDetails_Text = loop_oHometask['Text'];
+
+                for (let loop_oLessonNote of _oWeek['LessonNotes'])
+                    if (window._LessonDetails_iDate === loop_oLessonNote['Date'] && (_LessonDetails_sReplacement ? _LessonDetails_sReplacement : _LessonDetails_sSubject) === loop_oLessonNote['Subject'])
+                        sLessonDetails_Text = loop_oLessonNote['Text'];
+
                 document.getElementById('LessonDetails_Text').value = sLessonDetails_Text || '';
             };
+        };
+
+        if (window._DayDetails_iDate !== undefined)
+        {
+            let sNote;
+
+            for (let loop_oDayNote of _oWeek['DayNotes'])
+                if (loop_oDayNote['Date'] === _DayDetails_iDate)
+                {
+                    sNote = loop_oDayNote['Note'];
+                    break;
+                };
+
+            document.getElementById('DayDetails_Text').value = sNote || '';
         };
 
 
 
         let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
 
-        for (let loop_eLesson of document.querySelectorAll('.Lesson'))
-            if (loop_eLesson.classList.contains('Added'))
-            {
-                loop_eLesson.remove();
-            }
-            else
-            {
-                loop_eLesson.classList.remove('Note', 'Canceled');
-                loop_eLesson.children[1].children[0].innerHTML = '';
-            };
+        for (let loop_eDay of document.querySelectorAll('.Day.Note'))
+            loop_eDay.classList.remove('Note');
 
-        let eTimetable = document.getElementById('Timetable');
-        for (let i = 0; i < 7; i++)
-            if (eTimetable.children[i] !== undefined)
-                eTimetable.children[i].children[0].children[1] = Week_GetPeriod(aWeekPeriod[0] + i);
+        for (let iDate = aWeekPeriod[0]; iDate <= aWeekPeriod[1]; iDate++)
+        {
+            let eDay = Timetable_GetDayElement(iDate);
+            if (eDay !== null)
+                eDay.children[0].children[1] = Week_GetPeriod(iDate);
+        };
+
+        for (let loop_eLesson of document.querySelectorAll('.Lesson'))
+            loop_eLesson.children[1].children[0].innerHTML = '';
+
+        for (let loop_eLesson of document.querySelectorAll('.Lesson.Note'))
+            loop_eLesson.classList.remove('Note');
+
+        for (let loop_eLesson of document.querySelectorAll('.Lesson.Added'))
+            loop_eLesson.remove();
 
         Week_Fill(aWeekPeriod);
         Information_Draw();
@@ -116,15 +139,23 @@ function Week_Fill(aWeekPeriod)
                 Timetable_GetDayElement(loop_oAddedLesson['Date']).children[1].insertBefore(eLesson, eAfter);
         };
 
-    for (let loop_oHometask of _oWeek['Hometasks'])
-        if (aWeekPeriod[0] <= loop_oHometask['Date'] && loop_oHometask['Date'] <= aWeekPeriod[1])
-            for (let loop_eLesson of Timetable_GetLessonElements(loop_oHometask['Date']))
+    for (let loop_oLessonNote of _oWeek['LessonNotes'])
+        if (aWeekPeriod[0] <= loop_oLessonNote['Date'] && loop_oLessonNote['Date'] <= aWeekPeriod[1])
+            for (let loop_eLesson of Timetable_GetLessonElements(loop_oLessonNote['Date']))
             {
                 let sReplacement = loop_eLesson.children[1].children[0].innerHTML;
                 let sSubject = loop_eLesson.children[1].children[1].innerHTML;
-                if ((sReplacement ? sReplacement : sSubject) === loop_oHometask['Subject'])
+                if ((sReplacement ? sReplacement : sSubject) === loop_oLessonNote['Subject'])
                     loop_eLesson.classList.add('Note');
             };
+
+    for (let loop_oDayNote of _oWeek['DayNotes'])
+        if (aWeekPeriod[0] <= loop_oDayNote['Date'] && loop_oDayNote['Date'] <= aWeekPeriod[1])
+        {
+            let eDay = Timetable_GetDayElement(loop_oDayNote['Date']);
+            if (eDay !== null)
+                eDay.classList.add('Note');
+        };
 }
 
 function Week_Select()

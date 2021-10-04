@@ -20,8 +20,13 @@ if (_mAlarms.size !== 0)
 
 {
     let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
-    if (oQuery['Date'] !== undefined && oQuery['LessonNumber'] !== undefined)
-        LessonDetails(parseInt(oQuery['Date']), parseInt(oQuery['LessonNumber']));
+    if (oQuery['Date'] !== undefined)
+    {
+        if (oQuery['LessonNumber'] !== undefined)
+            LessonDetails(parseInt(oQuery['Date']), parseInt(oQuery['LessonNumber']));
+        else
+            DayDetails(parseInt(oQuery['Date']));
+    }
 }
 
 

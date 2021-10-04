@@ -9,14 +9,5 @@
     color: var(--Text);
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
-}
-
-svg
-{
-    fill: var(--Text);
-}
-
-.js-focus-visible :focus:not(.focus-visible)
-{
-    outline: 0;
+    overscroll-behavior: none;
 }

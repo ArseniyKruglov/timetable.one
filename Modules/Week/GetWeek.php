@@ -1,8 +1,9 @@
 <?
 include '../../PHP/Database.php';
 
-$URL = $_POST['URL'];
+$URL = substr(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), 1);
 $User = $SQL->query("SELECT * FROM users WHERE (Link_FullAccess = '$URL') OR (Link_ReadOnly = '$URL') OR (Link_TimetableOnly = '$URL')");
+
 
 if ($User->num_rows === 1)
 {
@@ -17,22 +18,28 @@ if ($User->num_rows === 1)
         $AccessLevel = 0;
 
         
-
+        
     $aReplacements = [];
     $aAddedLessons = [];
-    $aHometasks = [];
+    $aLessonNotes = [];
+    $aDayNotes = [];
 
-    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $UserID")->fetch_all() as &$aReplacement)
+    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $User[0]")->fetch_all() as &$aReplacement)
         array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
 
-    foreach ($SQL->query("SELECT Date, LessonNumber, Subject FROM added_lessons WHERE UserID = $UserID")->fetch_all() as &$aAddedLesson)
+    foreach ($SQL->query("SELECT Date, LessonNumber, Subject FROM AddedLessons WHERE UserID = $User[0]")->fetch_all() as &$aAddedLesson)
         array_push($aAddedLessons, ['Date' => (int) $aAddedLesson[0], 'LessonNumber' => (int) $aAddedLesson[1], 'Subject' => $aAddedLesson[2]]);
 
     if ($AccessLevel > 0)
-        foreach ($SQL->query("SELECT Subject, Date, Text FROM hometasks WHERE UserID = $UserID ORDER BY Date DESC")->fetch_all() as &$aLesson)
-            array_push($aHometasks, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2]]);
+    {
+        foreach ($SQL->query("SELECT Subject, Date, Text FROM LessonNotes WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
+            array_push($aLessonNotes, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2]]);
 
-    echo json_encode(['Hometasks' => $aHometasks, 'AddedLessons' => $aAddedLessons, 'Replacements' => $aReplacements]);
+        foreach ($SQL->query("SELECT Date, Note FROM DayNotes WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
+            array_push($aDayNotes, ['Date' => (int) $aLesson[0], 'Note' => $aLesson[1]]);
+    };
+
+    echo json_encode(['LessonNotes' => $aLessonNotes, 'AddedLessons' => $aAddedLessons, 'Replacements' => $aReplacements, 'DayNotes' => $aDayNotes], JSON_UNESCAPED_UNICODE);
 }
 else
 {

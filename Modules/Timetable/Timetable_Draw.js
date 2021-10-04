@@ -42,7 +42,7 @@ function Timetable_GetIHTML(iWeekOffset)
                                 <span>${loop_aLesson[0]}</span>
                                 <a ${Timetable_GetLessonLinkAttributes(iDate, loop_aLesson[0])}>
                                     <span></span>
-                                    <span>${loop_aLesson[1][0]}</span>
+                                    <span>${loop_aLesson[1]['Subject']}</span>
                                 </a>
                             </div>`;
             HTML +=   `</div>
@@ -57,13 +57,75 @@ function Timetable_Scroll()
 {
     if (_iWeekOffset === 0)
     {
-        let eToday = Timetable_GetDayElement(_iToday);
-        if (eToday !== null)
-            eToday.scrollIntoView();
+        if (document.body.clientWidth >= 600)
+        {
+            const iWeekBeginDate = Week_GetPeriod(0)[0];
+            for (let i = new Date().getDayOfWeek(); i < 7; i++)
+            {
+                const eDay = Timetable_GetDayElement(i + iWeekBeginDate);
+                if (eDay)
+                {
+                    eDay.scrollIntoView();
+                    break;
+                };
+            };
+        }
+        else
+        {
+            const eToday = Timetable_GetDayElement(_iToday);
+            const eTomorrow = Timetable_GetDayElement(_iToday + 1);
+            const iTimetableHeight = document.getElementById('Timetable').clientHeight;
 
-        let eTomorrow = Timetable_GetDayElement(_iToday + 1);
-        if (eTomorrow !== null)
-            eTomorrow.scrollIntoView();
+            if (eToday)
+            {
+                if (eTomorrow)
+                {
+                    if (eToday.clientHeight + eTomorrow.clientHeight + 50 <= iTimetableHeight)
+                        eTomorrow.scrollIntoView({block: 'end'});
+                    else
+                        eToday.scrollIntoView();
+                }
+                else
+                {
+                    if (eToday.clientHeight + 50 <= iTimetableHeight)
+                        eToday.scrollIntoView({block: 'end'});
+                    else
+                        eToday.scrollIntoView();
+                };
+            }
+            else if (eTomorrow)
+            {
+                if (eTomorrow.clientHeight + 50 <= iTimetableHeight)
+                    eTomorrow.scrollIntoView({block: 'end'});
+                else
+                    eTomorrow.scrollIntoView();
+            }
+            else
+            {
+                const iWeekBeginDate = Week_GetPeriod(0)[0];
+                let bBreak = false;
+                for (let i = new Date().getDayOfWeek() + 2; i < 7; i++)
+                {
+                    const eDay = Timetable_GetDayElement(i + iWeekBeginDate);
+                    if (eDay)
+                    {
+                        if (eDay.clientHeight + 50 <= iTimetableHeight)
+                            eDay.scrollIntoView({block: 'end'});
+                        else
+                            eDay.scrollIntoView();
+                            
+                        bBreak = true;
+                        break;
+                    };
+                };
+
+                if (bBreak === false)
+                {
+                    eTimetable = document.getElementById('Timetable');
+                    eTimetable.scrollTop = eTimetable.scrollHeight;
+                };
+            };
+        };
     }
     else if (_iWeekOffset > 0)
     {

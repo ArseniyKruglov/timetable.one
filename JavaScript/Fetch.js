@@ -1,8 +1,6 @@
 function SendRequest(sURL, oData, bCallback)
 {
     let formData  = new FormData();
-
-    formData.append('URL', window.location.pathname.slice(1));
     for (let loop_sField in oData)
         formData.append(loop_sField, oData[loop_sField]);
 

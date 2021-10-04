@@ -9,7 +9,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
             aAlarms = Alarm_Get(iLessonNumber, iDate),
             sLectureHall,
             sTeacher,
-            sHometask;
+            sNote;
 
         if (bAdded === false)
         {
@@ -33,10 +33,10 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                 };
         };
         
-        for (let loop_oHometask of _oWeek['Hometasks'])
-            if (loop_oHometask['Subject'] === LessonDetails_DisplayedSubject(sSubject, sReplacement) && loop_oHometask['Date'] === iDate)
+        for (let loop_oLessonNote of _oWeek['LessonNotes'])
+            if (loop_oLessonNote['Subject'] === LessonDetails_DisplayedSubject(sSubject, sReplacement) && loop_oLessonNote['Date'] === iDate)
             {
-                sHometask = loop_oHometask['Text'];
+                sNote = loop_oLessonNote['Text'];
                 break;
             };
     
@@ -83,7 +83,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                     </div>
                     
                     
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sHometask || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sNote || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
     
         _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
         _aOverlays['LessonDetails'][1].children[1].className = 'Overlay_Rectangular';

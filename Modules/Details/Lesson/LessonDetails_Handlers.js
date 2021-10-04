@@ -9,10 +9,10 @@ function LessonDetails_SetReplacement(sValue)
             _LessonDetails_sReplacement = undefined;
     
         // Отправка на сервер
-        SendRequest('/Modules/LessonDetails/SetReplacement.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject, 'Replacement' : sValue.trim()});
+        SendRequest('/Modules/Details/Lesson/SetReplacement.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject, 'Replacement' : sValue.trim()});
 
         // Изменение или удаление из массива недели
-        if (_LessonDetails_sSubject === _LessonDetails_sReplacement)
+        if (_LessonDetails_sReplacement === undefined)
         {
             for (let i = 0; i < _oWeek['Replacements'].length; i++)
                 if (_oWeek['Replacements'][i]['Date'] === _LessonDetails_iDate && _oWeek['Replacements'][i]['LessonNumber'] === _LessonDetails_iLessonNumber)
@@ -37,10 +37,10 @@ function LessonDetails_SetReplacement(sValue)
 
         // Поиск заметки к измененному предмету
         let sText = '';
-        for (let loop_oHometask of _oWeek['Hometasks'])
-            if (loop_oHometask['Subject'] === (_LessonDetails_sReplacement ? _LessonDetails_sReplacement : _LessonDetails_sSubject) && loop_oHometask['Date'] === _LessonDetails_iDate)
+        for (let loop_oLessonNote of _oWeek['LessonNotes'])
+            if (loop_oLessonNote['Subject'] === (_LessonDetails_sReplacement ? _LessonDetails_sReplacement : _LessonDetails_sSubject) && loop_oLessonNote['Date'] === _LessonDetails_iDate)
             {
-                sText = loop_oHometask['Text'];
+                sText = loop_oLessonNote['Text'];
                 break;
             };
 
@@ -70,10 +70,7 @@ function LessonDetails_SetReplacement(sValue)
             else
                 eLesson.classList.remove('Canceled');
     
-            if (_LessonDetails_sReplacement === undefined)
-                eLesson.children[1].children[0].innerHTML = '';
-            else
-                eLesson.children[1].children[0].innerHTML = _LessonDetails_sReplacement;      
+            eLesson.children[1].children[0].innerHTML = (_LessonDetails_sReplacement === undefined) ? '' : _LessonDetails_sReplacement;
         };
 
         // Обновление времени учебы
@@ -96,7 +93,7 @@ function LessonDetails_SetReplacement(sValue)
             {
                 //// Закулисное
                 // Отправка на сервер
-                SendRequest('/Modules/LessonDetails/SetSubject.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject});
+                SendRequest('/Modules/Details/Lesson/SetSubject.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject});
                 
                 // Удаление из массива недели
                 for (let i = 0; i < _oWeek['AddedLessons'].length; i++)
@@ -146,10 +143,10 @@ function LessonDetails_SetReplacement(sValue)
             
         // Поиск заметки к измененному предмету
         let sText = '';
-        for (let loop_oHometask of _oWeek['Hometasks'])
-            if (loop_oHometask['Subject'] === _LessonDetails_sSubject && loop_oHometask['Date'] === _LessonDetails_iDate)
+        for (let loop_oLessonNote of _oWeek['LessonNotes'])
+            if (loop_oLessonNote['Subject'] === _LessonDetails_sSubject && loop_oLessonNote['Date'] === _LessonDetails_iDate)
             {
-                sText = loop_oHometask['Text'];
+                sText = loop_oLessonNote['Text'];
                 break;
             };
 
@@ -187,30 +184,30 @@ function LessonDetails_SetText(sText)
     sText = sText.trim();
 
     // Отправка на сервер
-    SendRequest('/Modules/LessonDetails/SetText.php', {'Date' : _LessonDetails_iDate, 'Subject' : LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Text' : sText});
+    SendRequest('/Modules/Details/Lesson/SetText.php', {'Date' : _LessonDetails_iDate, 'Subject' : LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Text' : sText});
     
     // Изменение или удаление из массива недели
     if (sText === '')
     {
-        for (let i = 0; i < _oWeek['Hometasks'].length; i++)
-            if (_oWeek['Hometasks'][i]['Date'] === _LessonDetails_iDate && _oWeek['Hometasks'][i]['Subject'] === LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement))
+        for (let i = 0; i < _oWeek['LessonNotes'].length; i++)
+            if (_oWeek['LessonNotes'][i]['Date'] === _LessonDetails_iDate && _oWeek['LessonNotes'][i]['Subject'] === LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement))
             {
-                _oWeek['Hometasks'].splice(i, 1);
+                _oWeek['LessonNotes'].splice(i, 1);
                 break;
             };
     }
     else
     {
         let bExist = false;
-        for (let loop_oHometask of _oWeek['Hometasks'])
-            if (loop_oHometask['Subject'] === LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement) && loop_oHometask['Date'] === _LessonDetails_iDate)
+        for (let loop_oLessonNote of _oWeek['LessonNotes'])
+            if (loop_oLessonNote['Subject'] === LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement) && loop_oLessonNote['Date'] === _LessonDetails_iDate)
             {
-                loop_oHometask['Text'] = sText;
+                loop_oLessonNote['Text'] = sText;
                 bExist = true;
                 break;
             };
         if (bExist === false)
-            _oWeek['Hometasks'].push({'Subject': LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Date': _LessonDetails_iDate, 'Text': sText});
+            _oWeek['LessonNotes'].push({'Subject': LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Date': _LessonDetails_iDate, 'Text': sText});
     };
 
 

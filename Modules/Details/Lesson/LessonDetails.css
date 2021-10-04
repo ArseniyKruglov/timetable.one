@@ -1,0 +1,31 @@
+#LessonDetails_Header
+{
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+}
+
+
+
+#LessonDetails_Subject textarea
+{
+    font-size: 115%;
+    font-weight: 500;
+
+}
+
+#LessonDetails_Subject textarea::placeholder
+{
+    text-decoration: line-through;
+}
+
+
+
+#LessonDetails_Reset
+{
+    margin-top: -12.5px;
+    font-size: 85%;
+    justify-self: flex-end;
+    font-weight: 600;
+    color: var(--Main);
+}

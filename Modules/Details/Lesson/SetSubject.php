@@ -1,7 +1,7 @@
 <?
 include '../../PHP/Database.php';
 
-$URL = $_POST['URL'];
+$URL = substr(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), 1);
 $UserID = $SQL->query("SELECT UserID FROM users WHERE Link_FullAccess = '$URL'");
 
 if ($UserID->num_rows === 1)
@@ -12,9 +12,9 @@ if ($UserID->num_rows === 1)
     $Subject = $_POST['Subject'];
 
     if ($Subject === '')
-        $SQL->query("DELETE FROM added_lessons WHERE (Date = $Date) AND (LessonNumber = $LessonNumber) AND (UserID = $UserID)");
+        $SQL->query("DELETE FROM AddedLessons WHERE (Date = $Date) AND (LessonNumber = $LessonNumber) AND (UserID = $UserID)");
     else
-        $SQL->query("UPDATE added_lessons SET Subject = '$Subject' WHERE (Date = $Date) AND (LessonNumber = $LessonNumber) AND (UserID = $UserID)");
+        $SQL->query("UPDATE AddedLessons SET Subject = '$Subject' WHERE (Date = $Date) AND (LessonNumber = $LessonNumber) AND (UserID = $UserID)");
 }
 else
 {
