@@ -8,7 +8,7 @@
 #LessonDetails
 {
     display: grid;
-    gap: 15px;
+    gap: 20px;
     padding: 15px;
     font-size: 120%;
 }
@@ -36,4 +36,18 @@
 #LessonDetails_Info > * > svg
 {
     opacity: var(--Gray00-Opacity);
+}
+
+
+
+#LessonDetails_Attachments > *
+{
+    border: var(--Border);
+    padding: 5px 17.5px;
+    border-radius: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background-color: var(--Gray04);
+    width: fit-content;
+    max-width: 200px;
 }

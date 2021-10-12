@@ -9,7 +9,7 @@ function Information_Draw()
         let aTimetable = [];
         for (let loop_aLesson of mTimetable)
             if (_mAlarms.has(loop_aLesson[0]) === true)
-                aTimetable.push([loop_aLesson[0], loop_aLesson[1][0], loop_aLesson[1][1]])
+                aTimetable.push([loop_aLesson[0], loop_aLesson[1]['Subject'], loop_aLesson[1]['LectureHall']])
             else
                 bLessonsWithoutAlarms = true;
 
@@ -33,14 +33,7 @@ function Information_Draw()
         return aTimetable.sort((a, b) => { return a[0] > b[0]; });
     };
 
-
-    function DoubleDigits(i)
-    {
-        if (i < 10)
-            return `0${i}`;
-        else
-            return i;
-    }
+    
 
     function Timer(tDate)
     {
@@ -85,7 +78,7 @@ function Information_Draw()
 
                 if (i + 1 < aTodayTimetable.length)
                     HTML +=    `<div>
-                                    Затем перерыв ${Difference(Alarm_Get(aTodayTimetable[i][0])[1], Alarm_Get(aTodayTimetable[i + 1][0])[0])} и <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''} в ${Time_FormatTime(Alarm_Get(aTodayTimetable[i + 1][0])[0])}
+                                    Затем перерыв ${Difference(Alarm_Get(aTodayTimetable[i][0])[1], Alarm_Get(aTodayTimetable[i + 1][0])[0])} и <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}}
                                 </div>`;
                 else
                     HTML += `<div>Затем свобода</div>`;

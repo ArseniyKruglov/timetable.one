@@ -200,28 +200,28 @@
         }
 
         /* Replacements */
-            #Timetable .Lesson > :last-child > :first-child:empty,
-            #Timetable .Lesson > :last-child > :first-child:not(:empty) + *
-            {
-                display: none;
-            }
+        #Timetable .Lesson > :last-child > :first-child:empty,
+        #Timetable .Lesson > :last-child > :first-child:not(:empty) + *
+        {
+            display: none;
+        }
 
-            /* Orange */
-            #Timetable .Lesson > :last-child > :first-child
-            {
-                color: HSL(39, 100%, 40%);
-            }
+        /* Orange */
+        #Timetable .Lesson > :last-child > :first-child
+        {
+            color: HSL(39, 100%, 40%);
+        }
 
-            /* Crossed Out */
-            #Timetable .Lesson.Canceled
-            {
-                opacity: 50%;
-            }
+        /* Crossed Out */
+        #Timetable .Lesson.Canceled
+        {
+            opacity: 50%;
+        }
 
-            #Timetable .Lesson.Canceled > :last-child > *
-            {
-                text-decoration: line-through;
-            }
+        #Timetable .Lesson.Canceled > :last-child > *
+        {
+            text-decoration: line-through;
+        }
 
         /* Added */
         #Timetable .Lesson.Added *

@@ -8,17 +8,19 @@ custom-textarea[readonly] .Underline::after
 custom-textarea textarea
 {
     display: block;
-    width: 100%;
+    width: calc(100% - 20px);
     font-size: 100%;
-    padding: 0;
+    padding: 10px;
     resize: none;
-    overflow: hidden;
-    background: none;
+    border-radius: 5px 5px 0 0;
+    background: var(--Gray05);
 }
 
 custom-textarea[readonly] textarea
 {
     cursor: default;
+    border-radius: 5px;
+    background: var(--Gray04);
 }
   
 
@@ -33,4 +35,25 @@ custom-textarea.Name textarea
 custom-textarea.Note textarea
 {
     font-size: 105%;
+}
+
+
+
+custom-textarea > button
+{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    font-weight: 500;
+    font-size: 85%;
+}
+
+custom-textarea > button > span
+{
+    color: var(--Gray00);
+}
+
+custom-textarea > button > svg
+{
+    fill: var(--Gray00);
 }

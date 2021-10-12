@@ -6,17 +6,17 @@ class Textarea extends HTMLElement
                                 <textarea placeholder='${this.getAttribute('placeholder')}' ${this.hasAttribute('readonly') ? 'readonly' : ''}>${this.getAttribute('value') || ''}</textarea>
                             </div>
                             
-                            <button>
-                                <span></span>
-                                <svg width=18px height=18px ${_Icons['Expand_Less']}></svg>
-                            </button>`;
+                            <button></button>`;
 
         this.etTextarea = this.children[0].children[0];
         this.ebExpand = this.children[1];
+
+        this.iMinimized = 150;
+        this.iLimit = this.iMinimized + 35;
         
         this.Resize();
         
-        this.bExpanded = parseInt(this.etTextarea.style.height) < 65;
+        this.bExpanded = parseInt(this.etTextarea.style.height) < this.iLimit;
         this.ExpandHandler();
         this.etTextarea.addEventListener('input', () => { this.ExpandHandler(); });
         addEventListener('resize', () => { this.ExpandHandler(); });
@@ -25,29 +25,31 @@ class Textarea extends HTMLElement
             this.bExpanded = !this.bExpanded;
             this.ExpandHandler();
         });
+        document.fonts.addEventListener('ready', () => { this.ExpandHandler(); });
+        this.etTextarea.setSelectionRange((this.getAttribute('value') || '').length, (this.getAttribute('value') || '').length);
     }
 
     ExpandHandler()
     {
         this.Resize();
 
-        if (parseInt(this.etTextarea.style.height) < 65)
+        if (parseInt(this.etTextarea.style.height) < this.iLimit)
         {
             this.ebExpand.hidden = true;
         }
         else
         {
-            this.etTextarea.style.maxHeight = this.bExpanded ? '' : '65px';
+            this.etTextarea.style.maxHeight = this.bExpanded ? '' : `${this.iMinimized}px`;
             this.ebExpand.hidden = false;
-            this.ebExpand.className = this.bExpanded ? 'InnerGray Text Less' : 'InnerGray Text More';
-            this.ebExpand.children[0].innerHTML = (this.bExpanded ? ['Show less', 'Свернуть'] : ['Show full', 'Показать полностью'])[_iLanguage];
+            this.ebExpand.innerHTML =  `<span>${(this.bExpanded ? ['Show less', 'Свернуть'] : ['Show full', 'Показать полностью'])[_iLanguage]}</span>
+                                        <svg width=18px height=18px ${_Icons[(this.bExpanded ? 'Expand_Less' : 'Expand_More')]}></svg>`;
         };
     }
 
     Resize()
     {
         this.etTextarea.style.height = 0;
-        this.etTextarea.style.height = (this.etTextarea.scrollHeight + 2) + 'px';
+        this.etTextarea.style.height = (this.etTextarea.scrollHeight - 20) + 'px';
     }
 
     get value()
@@ -65,14 +67,6 @@ class Textarea extends HTMLElement
     {
         this.etTextarea.setAttribute('placeholder', sValue);
     }
-
-    // attributeChangedCallback(sName, xOldValue, xNewValue)
-    // {
-    //     if (this.innerHTML)
-    //         this.etTextarea.setAttribute('placeholder', xNewValue || '');
-    // }
-
-    // static get observedAttributes() { return ['placeholder'] }
 }
 
 customElements.define('custom-textarea', Textarea);

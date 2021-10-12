@@ -8,20 +8,21 @@ function LessonDetails_Draw(iDate, iLessonNumber)
             sReplacement, 
             aAlarms = Alarm_Get(iLessonNumber, iDate),
             sLectureHall,
-            sTeacher,
-            sNote;
+            sEducator,
+            sNote,
+            aAttachments = [];
 
         if (bAdded === false)
         {
-            sSubject = mDayTimetable.get(iLessonNumber)[0];
+            sSubject = mDayTimetable.get(iLessonNumber)['Subject'];
             for (let loop_oReplacement of _oWeek['Replacements'])
                 if (loop_oReplacement['Date'] === iDate && loop_oReplacement['LessonNumber'] === iLessonNumber)
                 {
                     sReplacement = loop_oReplacement['Replacement'];
                     break;
                 };
-            sLectureHall = mDayTimetable.get(iLessonNumber)[1];
-            sTeacher = mDayTimetable.get(iLessonNumber)[2];
+            sLectureHall = mDayTimetable.get(iLessonNumber)['LectureHall'];
+            sEducator = mDayTimetable.get(iLessonNumber)['Educator'];
         }
         else
         {
@@ -37,6 +38,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
             if (loop_oLessonNote['Subject'] === LessonDetails_DisplayedSubject(sSubject, sReplacement) && loop_oLessonNote['Date'] === iDate)
             {
                 sNote = loop_oLessonNote['Text'];
+                aAttachments = loop_oLessonNote['Attachments'];
                 break;
             };
     
@@ -73,17 +75,26 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                         }
     
                         ${
-                            sTeacher ? 
+                            sEducator ? 
                            `<div>
                                 <svg ${_Icons['Teacher']}></svg>
-                                <span>${sTeacher}</span>
+                                <span>${sEducator}</span>
                             </div>`
                             : ''
                         }
                     </div>
                     
                     
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sNote || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sNote || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>
+                    
+                    <div id='LessonDetails_Attachments' class='EmptyHidden'>
+                        ${ (_iAccessLevel === 2) ? `<button>${['Attach file', 'Прекрепить файл'][_iLanguage]}</button>` : '' }`;
+                        
+        for (let loop_aAttachment of aAttachments)
+            HTML +=    `<div>
+                            <a href='https://527010.selcdn.ru/timetable.one Dev/${loop_aAttachment[1]}/${loop_aAttachment[0]}' target='_blank'>${loop_aAttachment[0]}</a>
+                        </div>`;
+        HTML +=    `</div>`;
     
         _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
         _aOverlays['LessonDetails'][1].children[1].className = 'Overlay_Rectangular';
