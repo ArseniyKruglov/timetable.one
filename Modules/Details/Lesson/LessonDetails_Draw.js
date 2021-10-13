@@ -88,8 +88,15 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                     <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sNote || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>
                     
                     <div id='LessonDetails_Attachments' class='EmptyHidden'>
-                        ${ (_iAccessLevel === 2) ? `<button>${['Attach file', 'Прекрепить файл'][_iLanguage]}</button>` : '' }`;
-                        
+                        ${
+                            (_iAccessLevel === 2) ?
+                           `<button>
+                                <svg ${_Icons['Attach']}></svg>
+                                ${['Attach file', 'Прикрепить файл'][_iLanguage]}
+                            </button>`
+                            : ''
+                        }`;
+
         for (let loop_aAttachment of aAttachments)
             HTML +=    `<div>
                             <a href='https://527010.selcdn.ru/timetable.one Dev/${loop_aAttachment[1]}/${loop_aAttachment[0]}' target='_blank'>${loop_aAttachment[0]}</a>

@@ -40,6 +40,12 @@
 
 
 
+#LessonDetails_Attachments
+{
+    display: grid;
+    gap: 2.5px;
+}
+
 #LessonDetails_Attachments > *
 {
     border: var(--Border);
@@ -47,7 +53,30 @@
     border-radius: 100px;
     text-overflow: ellipsis;
     overflow: hidden;
-    background-color: var(--Gray04);
+    background-color: var(--Background01);
     width: fit-content;
     max-width: 200px;
+}
+
+#LessonDetails_Attachments > button
+{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: center;
+    font-size: 85%;
+    padding: 10px 25px 10px 17.5px;
+    font-weight: 500;
+    border: 1px solid var(--Main);
+    max-width: initial;
+}
+
+#LessonDetails_Attachments > button:hover
+{
+    background-color: var(--Main-Transparent);
+}
+
+#LessonDetails_Attachments > div:hover
+{
+    background-color: var(--Gray05);
 }

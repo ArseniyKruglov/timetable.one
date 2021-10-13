@@ -9,5 +9,6 @@ _Icons =
     'Arrow Back' : `height='24px' viewBox='0 0 24 24' width='24px'><path d='M0 0h24v24H0V0z' fill='none'/><path d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'/`,
     'Edit' : `height='24px' viewBox='0 0 24 24' width='24px'><path d='M0 0h24v24H0V0z' fill='none'/><path d='M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z'/`,
     'Chevron Left' : `height='24px' viewBox='0 0 24 24' width='24px'><path d='M0 0h24v24H0V0z' fill='none' opacity='.87'/><path d='M17.51 3.87L15.73 2.1 5.84 12l9.9 9.9 1.77-1.77L9.38 12l8.13-8.13z'/`,
-    'Chevron Right' : `height='24px' viewBox='0 0 24 24' width='24px' fill='#000000'><g><path d='M0,0h24v24H0V0z' fill='none'/></g><g><polygon points='6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12'/></g`,
+    'Chevron Right' : `height='24px' viewBox='0 0 24 24' width='24px'><g><path d='M0,0h24v24H0V0z' fill='none'/></g><g><polygon points='6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12'/></g`,
+    'Attach' : `height='24px' viewBox='0 0 24 24' width='24px'><path d='M0 0h24v24H0V0z' fill='none'/><path d='M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z'/`
 }

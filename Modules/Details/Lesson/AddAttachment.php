@@ -23,5 +23,13 @@
         $Subject = $_POST['Subject'];
         $Files = $_FILES['file'];
 
-    }
+        for ($i = 0; $i < count($files['name']); $i++)
+        {
+            $File = fopen($Files['tmp_name'][$i], 'r');;
+            $Filename = $Files['name'][$i];
+            $Folder = GenerateName(64);
+
+            $SFTP->put("/timetable.one Dev/$Folder/$Filename",  $File);
+        };
+    };
 ?>
