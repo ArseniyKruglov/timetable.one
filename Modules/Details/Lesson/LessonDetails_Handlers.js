@@ -225,3 +225,14 @@ function LessonDetails_SetText(sText)
                 loop_eLesson.classList.add('Note');
     };
 }
+
+function LessonDetails_AddAttachment(aFiles)
+{
+    Form = new FormData();
+    for (let i = 0; i < aFiles.length; i++)
+        Form.append(`File[${i}]`, aFiles[i]);
+                   
+    let req = new XMLHttpRequest();
+    req.open('POST', '/Modules/Details/Lesson/AddAttachment.php');
+    req.send(Form);
+}

@@ -67,13 +67,14 @@
     font-size: 85%;
     padding: 10px 25px 10px 17.5px;
     font-weight: 500;
-    border: 1px solid var(--Main);
+    background-color: var(--Gray05);
+    border: none;
     max-width: initial;
 }
 
 #LessonDetails_Attachments > button:hover
 {
-    background-color: var(--Main-Transparent);
+    background-color: var(--Gray04);
 }
 
 #LessonDetails_Attachments > div:hover

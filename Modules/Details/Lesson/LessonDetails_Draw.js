@@ -90,7 +90,8 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                     <div id='LessonDetails_Attachments' class='EmptyHidden'>
                         ${
                             (_iAccessLevel === 2) ?
-                           `<button>
+                           `<input type='file' hidden onchange='LessonDetails_AddAttachment([...this.files])'>
+                            <button onclick='this.previousSibling.previousElementSibling.click()'>
                                 <svg ${_Icons['Attach']}></svg>
                                 ${['Attach file', 'Прикрепить файл'][_iLanguage]}
                             </button>`

@@ -27,6 +27,7 @@ body
 main
 {
     display: grid;
+    overflow: auto;
     justify-items: center;
     gap: 5px;
     min-height: min(700px, calc(100% - 10px));
