@@ -3,8 +3,10 @@
     --Main: HSL(210, 100%, 56%);
     --Secondary: HSL(348, 83%, 47%);
 
-    --Main-Transparent: HSLA(210, 100%, 56%, 35%);
+    --Main-Transparent: HSLA(210, 100%, 45%, 50%);
     --Secondary-Transparent: HSLA(348, 83%, 47%, 25%);
+
+    --Main-Dark: HSL(210, 100%, 47.5%);
 
     --Gray00-Opacity: 70%;
     --Gray01-Opacity: 55%;
@@ -31,6 +33,7 @@ body
 
     --Text: #000000;
     --Shadow: HSLA(0, 0%, 40%, 20%) 0px 2px 8px 0px;
+    --Shadow: HSLA(0, 0%, 40%, 10%) 0px 2px 8px 0px, HSLA(0, 0%, 40%, 40%) -0.1px 1px 2px 0px !important;
 }
 
 @media (prefers-color-scheme: dark) { body

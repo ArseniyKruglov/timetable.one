@@ -13,7 +13,8 @@ if ($UserID->num_rows === 1)
     if ($Note == '')
         $SQL->query("DELETE FROM DayNotes WHERE (Date = $Date) AND (UserID = $UserID)");
     else
-        $SQL->query("INSERT INTO DayNotes VALUES ($UserID, $Date, '$Note') ON DUPLICATE KEY UPDATE Note = '$Note'");
+        $SQL->query("INSERT INTO DayNotes VALUES ($UserID, $Date, '$Note')
+                        ON DUPLICATE KEY UPDATE Note = '$Note'");
 }
 else
 {

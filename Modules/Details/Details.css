@@ -8,9 +8,19 @@
 #LessonDetails
 {
     display: grid;
-    gap: 20px;
-    padding: 15px;
+    gap: 25px;
+    padding: 17.5px 15px;
     font-size: 120%;
+}
+
+
+
+#DayDetails_Header,
+#LessonDetails_Header
+{
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
 }
 
 
@@ -40,44 +50,111 @@
 
 
 
-#LessonDetails_Attachments
+#LessonDetails_Attachments,
+#LessonDetails_Attachments_List
 {
     display: grid;
     gap: 2.5px;
 }
 
-#LessonDetails_Attachments > *
+#LessonDetails_Attachments
 {
-    border: var(--Border);
-    padding: 5px 17.5px;
-    border-radius: 100px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    background-color: var(--Background01);
-    width: fit-content;
-    max-width: 200px;
+    box-shadow: var(--Shadow);
+    border-radius: 5px;
+    padding: 5px;
 }
+
+#LessonDetails_Attachments_List
+{
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#LessonDetails_Attachments > button,
+#LessonDetails_Attachments_List > * > *
+{
+    border-radius: 5px;
+    font-size: 90%;
+    padding: 8px;
+}
+
+
 
 #LessonDetails_Attachments > button
 {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
+    grid-auto-flow: column;
     align-items: center;
-    font-size: 85%;
-    padding: 10px 25px 10px 17.5px;
     font-weight: 500;
-    background-color: var(--Gray05);
-    border: none;
-    max-width: initial;
+    gap: 7.5px;
+    justify-content: center;
+    text-align: center;
 }
 
 #LessonDetails_Attachments > button:hover
 {
+    background-color: HSLA(210, 100%, 45%, 7.5%);
+}
+
+#LessonDetails_Attachments > button > div
+{
+    transition: 250ms;
+    position: absolute;
+    height: 100%;
+    background-color: var(--Main-Transparent);
+}
+
+#LessonDetails_Attachments > button > svg
+{
+    width: 20px;
+    height: 20px;
+}
+
+#LessonDetails_Attachments > button > span
+{
+    color: var(--Main);
+    z-index: 1;
+}
+
+
+
+#LessonDetails_Attachments > hr
+{
+    width: 100%;
+    margin: 5px 0;
+    opacity: 50%;
+}
+
+
+
+#LessonDetails_Attachments_List > *
+{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 5px;
+}
+
+#LessonDetails_Attachments_List > * > :hover
+{
     background-color: var(--Gray04);
 }
 
-#LessonDetails_Attachments > div:hover
+#LessonDetails_Attachments_List > * > a
 {
-    background-color: var(--Gray05);
+    width: calc(100% - 16px);
+    height: max-content;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#LessonDetails_Attachments_List > * > button
+{
+    display: flex;
+}
+
+#LessonDetails_Attachments_List > * > button:not(:hover) > svg
+{
+    opacity: var(--Gray00-Opacity);
 }

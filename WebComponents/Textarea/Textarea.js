@@ -49,7 +49,7 @@ class Textarea extends HTMLElement
     Resize()
     {
         this.etTextarea.style.height = 0;
-        this.etTextarea.style.height = (this.etTextarea.scrollHeight - 20) + 'px';
+        this.etTextarea.style.height = (this.etTextarea.scrollHeight - 20 + 2) + 'px';
     }
 
     get value()

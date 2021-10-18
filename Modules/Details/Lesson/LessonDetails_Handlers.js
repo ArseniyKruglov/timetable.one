@@ -231,8 +231,78 @@ function LessonDetails_AddAttachment(aFiles)
     Form = new FormData();
     for (let i = 0; i < aFiles.length; i++)
         Form.append(`File[${i}]`, aFiles[i]);
+    Form.append('Date', _LessonDetails_iDate);
+    Form.append('Subject', _LessonDetails_sSubject);
                    
-    let req = new XMLHttpRequest();
-    req.open('POST', '/Modules/Details/Lesson/AddAttachment.php');
-    req.send(Form);
+    let XHR = new XMLHttpRequest();
+    XHR.open('POST', '/Modules/Details/Lesson/AddAttachment.php');
+    let eProgressBar = document.getElementById('LessonDetails_Attachments').children[1].children[0];
+    XHR.upload.onprogress = (event) => { eProgressBar.style = `width: ${event.loaded / event.total * 100}%; opacity: 100%`; };
+    XHR.onreadystatechange = () =>
+    {
+        if (XHR.readyState === 4)
+        {
+            eProgressBar.style = `width: 100%; opacity: 0%`;
+            
+            let aFolders = JSON.parse(XHR.response);
+
+            let eAttachmentsList = document.getElementById('LessonDetails_Attachments_List');
+            if (eAttachmentsList === null)
+            {
+                eAttachmentsList = document.createElement('div');
+                eAttachmentsList.id = 'LessonDetails_Attachments_List';
+
+                eAttachments = document.getElementById('LessonDetails_Attachments');
+                eHR = document.createElement('hr');
+                eAttachments.insertBefore(eHR, eAttachments.firstChild);
+                eAttachments.insertBefore(eAttachmentsList, eHR);
+            };
+
+            for (let i = 0; i < aFolders.length; i++)
+            {
+                eAttachment = document.createElement('div');
+                eAttachment.innerHTML = Details_GetAttachmentIHTML(aFolders[i], aFiles[i].name);
+                eAttachmentsList.append(eAttachment);
+            };
+        };
+    };
+    XHR.send(Form);
+}
+
+function LessonDetails_RemoveAttachment(eElement, sFolder, sFilename)
+{
+    if (confirm(`${['Remove', 'Удалить'][_iLanguage]} ${sFilename}?`) === true)
+    {
+        //// Закулисное
+        // Отправка на сервер
+        SendRequest('/Modules/Details/Lesson/RemoveAttachment.php', {'Date' : _LessonDetails_iDate, 'Subject' : LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Folder' : sFolder});
+    
+        // Удаление из массива недели
+        for (let loop_oLessonNote of _oWeek['LessonNotes'])
+            if (loop_oLessonNote['Subject'] === LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement) && loop_oLessonNote['Date'] === _LessonDetails_iDate)
+            {
+                for (let i = 0; i < loop_oLessonNote['Attachments'].length; i++)
+                    if (loop_oLessonNote['Attachments'][i][0] === sFolder)
+                    {
+                        loop_oLessonNote['Attachments'].splice(i, 1);
+                        break;
+                    };
+    
+                break;
+            };
+    
+    
+            
+        //// Внешнее
+        // Удаление элемента
+        if (eElement.parentElement.parentElement.children.length === 1)
+        {
+            eElement.parentElement.parentElement.parentElement.children[1].remove();
+            eElement.parentElement.parentElement.parentElement.children[0].remove();
+        }
+        else
+        {
+            eElement.parentElement.remove();
+        };
+    };
 }

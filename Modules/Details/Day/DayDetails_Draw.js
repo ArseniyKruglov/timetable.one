@@ -12,7 +12,12 @@ function DayDetails_Draw(iDate)
                 break;
             };
     
-        HTML +=    `<div id='DayDetails_Date'>${Time_FormatDate(Time_From1970(iDate))}</div>
+        HTML +=    `<div id='DayDetails_Header'>
+                        <span><custom-round-button icon='Arrow Back' scale=26 onclick='DayDetails_Close()'></custom-round-button></span>
+                        <span><custom-round-button icon='More' scale=26 onclick='DayDetails_OpenMenu(this)'></custom-round-button></span>
+                    </div>
+    
+                    <div id='DayDetails_Date'>${Time_FormatDate(Time_From1970(iDate))}</div>
     
                     <div id='DayDetails_Info'>
                         <div>
@@ -34,4 +39,24 @@ function DayDetails_Draw(iDate)
     {
         DayDetails_Close();
     };
+}
+
+function DayDetails_AddLesson_Draw()
+{
+    let HTML = '';
+
+    HTML +=    `<custom-textarea placeholder='${['Subject', 'Предмет'][_iLanguage]}'></custom-textarea>
+    
+                <div id='DayDetails_AddLesson_Date' class='Input'>
+                    <svg ${_Icons['Calendar']}></svg>
+                    <input type=date value='${Time_From1970(_DayDetails_iDate).toISOString().slice(0, 10)}'>
+                </div>
+                
+                <div class='Input'>
+                    <svg ${_Icons['Alarm']}></svg>
+                    <input type=number value=1>
+                </div>`;
+
+    _aOverlays['DayDetails_AddLesson'][1].children[1].children[0].innerHTML = HTML;
+    _aOverlays['DayDetails_AddLesson'][1].children[1].className = 'Overlay_Rectangular';
 }

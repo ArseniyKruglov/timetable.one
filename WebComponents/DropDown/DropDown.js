@@ -14,11 +14,10 @@ function DropDown(ebButton, HTML, sID)
             _eNotes_Details_DropDown.style.top = 0;
             _eNotes_Details_DropDown.style.left = 0;
 
-            let fZoom = GetElementZoom(ebButton);
             let BoundingClientRect = ebButton.getBoundingClientRect();
 
-            let fTop = BoundingClientRect.bottom * fZoom + 5;
-            let fLeft = BoundingClientRect.right * fZoom - _eNotes_Details_DropDown.clientWidth;
+            let fTop = BoundingClientRect.bottom  + 5;
+            let fLeft = BoundingClientRect.right - _eNotes_Details_DropDown.clientWidth;
 
             if (fTop + _eNotes_Details_DropDown.clientHeight > window.innerHeight)
                 fTop = window.innerHeight - _eNotes_Details_DropDown.clientHeight;

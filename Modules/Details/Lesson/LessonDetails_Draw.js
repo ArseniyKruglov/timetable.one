@@ -9,7 +9,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
             aAlarms = Alarm_Get(iLessonNumber, iDate),
             sLectureHall,
             sEducator,
-            sNote,
+            sNote = '',
             aAttachments = [];
 
         if (bAdded === false)
@@ -56,54 +56,60 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                             <span>${Time_FormatDate(Time_From1970(iDate))}</span>
                         </div>
                         
-                        ${
-                            aAlarms ? 
-                           `<div>
-                                <svg ${_Icons['Alarm']}></svg>
-                                <span>${Time_FormatTime(aAlarms[0])} – ${Time_FormatTime(aAlarms[1])}</span>
-                            </div>`
-                            : ''
-                        }
-    
-                        ${
-                            sLectureHall ? 
-                           `<div>
-                                <svg ${_Icons['Location']}></svg>
-                                <span>${sLectureHall}</span>
-                            </div>`
-                            : ''
-                        }
-    
-                        ${
-                            sEducator ? 
-                           `<div>
-                                <svg ${_Icons['Teacher']}></svg>
-                                <span>${sEducator}</span>
-                            </div>`
-                            : ''
-                        }
+                    ${
+                        aAlarms ? 
+                        `<div>
+                            <svg ${_Icons['Alarm']}></svg>
+                            <span>${Time_FormatTime(aAlarms[0])} – ${Time_FormatTime(aAlarms[1])}</span>
+                        </div>`
+                        : ''
+                    }
+
+                    ${
+                        sLectureHall ? 
+                        `<div>
+                            <svg ${_Icons['Location']}></svg>
+                            <span>${sLectureHall}</span>
+                        </div>`
+                        : ''
+                    }
+
+                    ${
+                        sEducator ? 
+                        `<div>
+                            <svg ${_Icons['Teacher']}></svg>
+                            <span>${sEducator}</span>
+                        </div>`
+                        : ''
+                    }
                     </div>
                     
                     
                     <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${sNote || ''}' oninput='LessonDetails_SetText(this.value)' id='LessonDetails_Text' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>
                     
-                    <div id='LessonDetails_Attachments' class='EmptyHidden'>
-                        ${
-                            (_iAccessLevel === 2) ?
-                           `<input type='file' hidden onchange='LessonDetails_AddAttachment([...this.files])'>
-                            <button onclick='this.previousSibling.previousElementSibling.click()'>
-                                <svg ${_Icons['Attach']}></svg>
-                                ${['Attach file', 'Прикрепить файл'][_iLanguage]}
-                            </button>`
-                            : ''
-                        }`;
+                    <div id='LessonDetails_Attachments' class='EmptyHidden'>`;
+        if (aAttachments.length !== 0)
+        {
+            HTML +=     `<div id='LessonDetails_Attachments_List'>`;
+            for (let loop_aAttachment of aAttachments)
+                HTML +=    `<div>${Details_GetAttachmentIHTML(loop_aAttachment[0], loop_aAttachment[1])}</div>`;
+            HTML +=     `</div>`;
 
-        for (let loop_aAttachment of aAttachments)
-            HTML +=    `<div>
-                            <a href='https://527010.selcdn.ru/timetable.one Dev/${loop_aAttachment[1]}/${loop_aAttachment[0]}' target='_blank'>${loop_aAttachment[0]}</a>
-                        </div>`;
+            if (_iAccessLevel === 2)
+                HTML += `<hr>`;
+        };
+
+        if (_iAccessLevel === 2)
+            HTML +=     `<input type='file' hidden onchange='LessonDetails_AddAttachment([...this.files])'>
+                         <button onclick='this.previousSibling.previousElementSibling.click()'>
+                            <div></div>
+                            <svg ${_Icons['Attach']}></svg>
+                            <span>${['Attach file', 'Прикрепить файл'][_iLanguage]}</span>
+                         </button>`;
+
         HTML +=    `</div>`;
     
+
         _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
         _aOverlays['LessonDetails'][1].children[1].className = 'Overlay_Rectangular';
 
@@ -119,4 +125,12 @@ function LessonDetails_Draw(iDate, iLessonNumber)
     {
         LessonDetails_Close();
     };
+}
+
+function Details_GetAttachmentIHTML(sFolder, sName)
+{
+    return `<a href='https://527010.selcdn.ru/timetable.one Dev/${sFolder}/${sName}' target='_blank'>${sName}</a>
+            <button onclick='LessonDetails_RemoveAttachment(this, "${sFolder}", "${sName}")'>
+                <svg ${_Icons['RemoveForever']}></svg>
+            </button>`;
 }

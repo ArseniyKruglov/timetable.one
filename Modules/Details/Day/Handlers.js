@@ -42,3 +42,8 @@ function DayDetails_SetNote(sNote)
         else
             eDay.classList.add('Note');
 }
+
+function DayDetails_OpenMenu(eButton)
+{
+    DropDown(eButton, DropDown_GetActionsHTML([['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], 'DayDetails_AddLesson()']]), 'LessonDetails_Menu')
+}

@@ -10,7 +10,7 @@ Date.prototype.get1970 = function()
 
 function Time_From1970(iDaysSince1970)
 {
-    return new Date(iDaysSince1970 * 24 * 60 * 60 * 1000 + new Date().getTimezoneOffset());    
+    return new Date(iDaysSince1970 * 24 * 60 * 60 * 1000);
 }
 
 function Time_FormatDate(tDate)
