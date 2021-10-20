@@ -100,7 +100,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
         };
 
         if (_iAccessLevel === 2)
-            HTML +=     `<input type='file' hidden onchange='LessonDetails_AddAttachment([...this.files])'>
+            HTML +=     `<input type='file' hidden onchange='LessonDetails_AddAttachment([...this.files])' multiple>
                          <button onclick='this.previousSibling.previousElementSibling.click()'>
                             <div></div>
                             <svg ${_Icons['Attach']}></svg>
@@ -130,7 +130,12 @@ function LessonDetails_Draw(iDate, iLessonNumber)
 function Details_GetAttachmentIHTML(sFolder, sName)
 {
     return `<a href='https://527010.selcdn.ru/timetable.one Dev/${sFolder}/${sName}' target='_blank'>${sName}</a>
-            <button onclick='LessonDetails_RemoveAttachment(this, "${sFolder}", "${sName}")'>
+
+        ${ 
+            _iAccessLevel === 2 ?
+           `<button onclick='LessonDetails_RemoveAttachment(this, "${sFolder}", "${sName}")'>
                 <svg ${_Icons['RemoveForever']}></svg>
-            </button>`;
+            </button>`
+            : ''
+        }`;
 }

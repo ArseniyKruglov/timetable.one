@@ -41,22 +41,7 @@ function DayDetails_Draw(iDate)
     };
 }
 
-function DayDetails_AddLesson_Draw()
+function DayDetails_OpenMenu(eButton)
 {
-    let HTML = '';
-
-    HTML +=    `<custom-textarea placeholder='${['Subject', 'Предмет'][_iLanguage]}'></custom-textarea>
-    
-                <div id='DayDetails_AddLesson_Date' class='Input'>
-                    <svg ${_Icons['Calendar']}></svg>
-                    <input type=date value='${Time_From1970(_DayDetails_iDate).toISOString().slice(0, 10)}'>
-                </div>
-                
-                <div class='Input'>
-                    <svg ${_Icons['Alarm']}></svg>
-                    <input type=number value=1>
-                </div>`;
-
-    _aOverlays['DayDetails_AddLesson'][1].children[1].children[0].innerHTML = HTML;
-    _aOverlays['DayDetails_AddLesson'][1].children[1].className = 'Overlay_Rectangular';
+    DropDown(eButton, DropDown_GetActionsHTML([['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], 'DayDetails_AddLesson()']]), 'LessonDetails_Menu')
 }

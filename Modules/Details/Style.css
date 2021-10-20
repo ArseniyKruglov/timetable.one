@@ -1,0 +1,49 @@
+#DayDetailsContainer,
+#LessonDetailsContainer
+{
+    width: 400px;
+}
+
+#DayDetails,
+#LessonDetails
+{
+    display: grid;
+    gap: 25px;
+    padding: 17.5px 15px;
+    font-size: 120%;
+}
+
+
+
+#DayDetails_Header,
+#LessonDetails_Header
+{
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+}
+
+
+
+#DayDetails_Info,
+#LessonDetails_Info
+{
+    display: grid;
+    gap: 5px;
+}
+
+#DayDetails_Info > *,
+#LessonDetails_Info > *
+{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12.5px;
+    align-items: center;
+    line-height: 100%;
+}
+
+#DayDetails_Info > * > svg,
+#LessonDetails_Info > * > svg
+{
+    opacity: var(--Gray00-Opacity);
+}

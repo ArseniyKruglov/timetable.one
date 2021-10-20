@@ -78,7 +78,7 @@ function Information_Draw()
 
                 if (i + 1 < aTodayTimetable.length)
                     HTML +=    `<div>
-                                    Затем перерыв ${Difference(Alarm_Get(aTodayTimetable[i][0])[1], Alarm_Get(aTodayTimetable[i + 1][0])[0])} и <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}}
+                                    Затем перерыв ${Difference(Alarm_Get(aTodayTimetable[i][0])[1], Alarm_Get(aTodayTimetable[i + 1][0])[0])} и <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}
                                 </div>`;
                 else
                     HTML += `<div>Затем свобода</div>`;

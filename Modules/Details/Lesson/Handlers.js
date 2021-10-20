@@ -131,7 +131,7 @@ function LessonDetails_SetReplacement(sValue)
 
         //// Закулисное
         // Отправка на сервер
-        SendRequest('/Modules/LessonDetails/SetSubject.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject});
+        SendRequest('/Modules/Details/Lesson/SetSubject.php', {'Date' : _LessonDetails_iDate, 'LessonNumber' : _LessonDetails_iLessonNumber, 'Subject' : _LessonDetails_sSubject});
 
         // Изменение массива недели
         for (let loop_oAddedLesson of _oWeek['AddedLessons'])
@@ -213,17 +213,7 @@ function LessonDetails_SetText(sText)
 
     //// Внешнее
     // Обновление элемента расписания
-    for (let loop_eLesson of Timetable_GetLessonElements(_LessonDetails_iDate))
-    {
-        let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
-        let loop_sSubject = loop_eLesson.children[1].children[1].innerHTML;
-
-        if (LessonDetails_DisplayedSubject(loop_sSubject, loop_sReplacement) === LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement))
-            if (sText === '')
-                loop_eLesson.classList.remove('Note');
-            else
-                loop_eLesson.classList.add('Note');
-    };
+    LessonDetails_DrawDot();
 }
 
 function LessonDetails_AddAttachment(aFiles)
@@ -304,5 +294,40 @@ function LessonDetails_RemoveAttachment(eElement, sFolder, sFilename)
         {
             eElement.parentElement.remove();
         };
+    };
+}
+
+function LessonDetails_DrawDot()
+{
+    function IsDot()
+    {
+        if (document.getElementById('LessonDetails_Text').value.trim() !== '')
+            return true;
+
+        let eAttachments = document.getElementById('LessonDetails_Attachments_List');
+        if (eAttachments === null)
+        {
+            return false;
+        }
+        else
+        {
+            if (eAttachment.children.length !== 0)
+                return true;
+            else
+                return false;
+        };
+    };
+    let bDot = IsDot();
+
+    for (let loop_eLesson of Timetable_GetLessonElements(_LessonDetails_iDate))
+    {
+        let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
+        let loop_sSubject = loop_eLesson.children[1].children[1].innerHTML;
+
+        if (LessonDetails_DisplayedSubject(loop_sSubject, loop_sReplacement) === LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement))
+            if (bDot === true)
+                loop_eLesson.classList.add('Note');
+            else
+                loop_eLesson.classList.remove('Note');
     };
 }

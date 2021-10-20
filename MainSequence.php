@@ -25,61 +25,38 @@
         <meta name='msapplication-TileImage' content='/Style/Icons/ms-icon-144x144.png'>
         <meta name='theme-color' content='#FFFFFF'>
 
-        <link rel='stylesheet' href='/Style/Main.css'>
-        <link rel='stylesheet' href='/Style/Colors.css'>
-        <link rel='stylesheet' href='/Style/Fonts.css'>
-        <link rel='stylesheet' href='/Style/Buttons.css'>
-        <link rel='stylesheet' href='/Style/LargeScaleStructures.css'>
+        <? 
+        $Files_JS = [];
+        $Files_CSS = [];
+        
+        function GetFiles($Path)
+        {
+            foreach (glob($Path . '*', GLOB_ONLYDIR) as &$Folder)
+                GetFiles(str_replace((__DIR__ . '/'), '', $Folder) . '/');
 
-        <link rel='stylesheet' href='/System/focus-visible.css'>
-        <link rel='stylesheet' href='/Style/Button_Ripple.css'>
-        <link rel='stylesheet' href='/Style/Icons.css'>
-        <link rel='stylesheet' href='/WebComponents/Underline.css'>
-        <link rel='stylesheet' href='/WebComponents/Textarea/Textarea.css'>
-        <link rel='stylesheet' href='/WebComponents/Timer/Timer.css'>
-        <link rel='stylesheet' href='/WebComponents/DropDown/DropDown.css'>
-        <link rel='stylesheet' href='/WebComponents/RoundButton/RoundButton.css'>
+            global $Files_JS;
+            foreach (glob("$Path*.js") as &$File_JS)
+                if (strpos($File_JS, 'Main.js') === false)
+                    array_push($Files_JS, $File_JS);
 
-        <link rel='stylesheet' href='/Modules/Overlay/Overlay.css'>
-        <link rel='stylesheet' href='/Modules/Details/Details.css'>
-        <link rel='stylesheet' href='/Modules/Details/Day/DayDetails.css'>
-        <link rel='stylesheet' href='/Modules/Details/Lesson/LessonDetails.css'>
-        <link rel='stylesheet' href='/Modules/Information/Information.css'>
-        <link rel='stylesheet' href='/Modules/Week/Week.css'>
-        <link rel='stylesheet' href='/Modules/Timetable/Timetable.css'>
+            global $Files_CSS;
+            foreach (glob("$Path*.css") as &$File_CSS)
+                array_push($Files_CSS, $File_CSS);
+        };
+
+        GetFiles('');
+
+        foreach ($Files_CSS as &$File_CSS)
+            echo "<link rel='stylesheet' href='/$File_CSS'>\r\n";
+        ?>
     </head>
 
     <body></body>
 
-    <script src='/JavaScript/Time.js'></script>
-    <script src='/JavaScript/Element.js'></script>
-    <script src='/JavaScript/Fetch.js'></script>
-    <script src='/JavaScript/swiped-events.js'></script>
-    <script src='/JavaScript/Language.js'></script>
-
-    <script src='/Style/Icons.js'></script>
-    <script src='/System/focus-visible.js'></script>
-    <script src='/Style/Button_Ripple.js'></script>
-    <script src='/WebComponents/Textarea/Textarea.js'></script>
-    <script src='/WebComponents/Timer/Timer.js'></script>
-    <script src='/WebComponents/DropDown/DropDown.js'></script>
-    <script src='/WebComponents/RoundButton/RoundButton.js'></script>
-
-    <script src='/Modules/Alarms/Alarms_Get.js'></script>
-    <script src='/Modules/Information/Information.js'></script>
-    <script src='/Modules/Week/Week.js'></script>
-    <script src='/Modules/Week/Week_Logic.js'></script>
-    <script src='/Modules/Week/Week_Handlers.js'></script>
-    <script src='/Modules/Overlay/Overlay.js'></script>
-    <script src='/Modules/Details/Day/DayDetails.js'></script>
-    <script src='/Modules/Details/Day/DayDetails_Draw.js'></script>
-    <script src='/Modules/Details/Day/Handlers.js'></script>
-    <script src='/Modules/Details/Lesson/LessonDetails.js'></script>
-    <script src='/Modules/Details/Lesson/LessonDetails_Draw.js'></script>
-    <script src='/Modules/Details/Lesson/LessonDetails_Handlers.js'></script>
-    <script src='/Modules/Timetable/Timetable_Logic.js'></script>
-    <script src='/Modules/Timetable/Timetable_Get.js'></script>
-    <script src='/Modules/Timetable/Timetable_Draw.js'></script>
+    <?
+    foreach ($Files_JS as &$File_JS)
+        echo "<script src='/$File_JS'></script>\r\n";
+    ?>
 
     <script>
         _iAccessLevel = <? echo $AccessLevel ?>;

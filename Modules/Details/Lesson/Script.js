@@ -20,6 +20,8 @@ function LessonDetails_Close()
     delete _LessonDetails_sReplacement;
 }
 
+
+
 function LessonDetails_DisplayedSubject(sSubject, sReplcement)
 {
     return sReplcement ? sReplcement : sSubject;    
