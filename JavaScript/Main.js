@@ -30,7 +30,7 @@ if (_mAlarms.size !== 0)
 }
 
 
-addEventListener('focus', Week_Update);
+// addEventListener('focus', Week_Update);
 onkeydown = (Event) =>
 {
     if (Overlay_IsOpened() === false)

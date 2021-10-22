@@ -34,11 +34,13 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                 };
         };
         
+        window._LessonDetails_oWeekElement = null;
         for (let loop_oLessonNote of _oWeek['LessonNotes'])
             if (loop_oLessonNote['Subject'] === LessonDetails_DisplayedSubject(sSubject, sReplacement) && loop_oLessonNote['Date'] === iDate)
             {
                 sNote = loop_oLessonNote['Text'];
                 aAttachments = loop_oLessonNote['Attachments'];
+                _LessonDetails_oWeekElement = loop_oLessonNote;
                 break;
             };
     
