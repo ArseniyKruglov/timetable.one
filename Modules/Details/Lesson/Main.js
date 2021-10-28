@@ -14,61 +14,154 @@ function LessonDetails_Close()
     Overlay_Remove('LessonDetails');
 
     history.pushState('', '', location.pathname);
-
-    delete _LessonDetails;
 }
 
 class Lesson
 {
     constructor(iDate, iLessonNumber)
     {
-        this.iDate = iDate;
-        this.iLessonNumber = iLessonNumber;
+        this.Date = iDate;
+        this.LessonNumber = iLessonNumber;
 
-        let mDayTimetable = Timetable_GetDayTimetable(iDate);
 
-        if (!mDayTimetable)
-            this.bAdded = false;
-        else
-            this.bAdded = (mDayTimetable.get(this.iLessonNumber) === undefined);
 
-        if (this.bAdded === false)
+        let mDayTimetable = Timetable_GetDayTimetable(this.Date);
+
+        if (mDayTimetable)
         {
-            this.sSubject = mDayTimetable.get(this.iLessonNumber)['Subject'];
-            for (let loop_oReplacement of _oWeek['Replacements'])
-                if (loop_oReplacement['Date'] === iDate && loop_oReplacement['LessonNumber'] === this.iLessonNumber)
-                {
-                    this.sReplacement = loop_oReplacement['Replacement'];
-                    break;
-                };
-            this.sLectureHall = mDayTimetable.get(this.iLessonNumber)['LectureHall'];
-            this.sEducator = mDayTimetable.get(this.iLessonNumber)['Educator'];
+            let oLesson = mDayTimetable.get(this.LessonNumber);
+
+            if (oLesson)
+            {
+                this.Subject = oLesson.Subject;
+                this.Filelds = { 'LectureHall': oLesson.LectureHall, 'Educator': oLesson.Educator };
+            }
+            else
+            {
+                this.Filelds = {};
+            };
         }
         else
         {
-            for (let loop_oAddedLesson of _oWeek['AddedLessons'])
-                if (loop_oAddedLesson['Date'] === iDate && loop_oAddedLesson['LessonNumber'] === this.iLessonNumber)
-                {
-                    this.sSubject = loop_oAddedLesson['Subject'];
-                    break;
-                };
+            this.Filelds = {};
         };
 
+        this.findInWeek_Replacement();
+        this.findInWeek_Note();
+    }
 
 
-        for (let loop_oLessonNote of _oWeek['LessonNotes'])
-            if (loop_oLessonNote['Subject'] === LessonDetails_DisplayedSubject(this.sSubject, this.sReplacement) && loop_oLessonNote['Date'] === this.iDate)
+
+
+
+    findInWeek_Note()
+    {
+        for (let loop_oNote of _oWeek.LessonNotes)
+            if (loop_oNote.Subject === this.DefaultSubject && loop_oNote.Date === this.Date)
             {
-                this.oInWeek = loop_oLessonNote;
-                break;
+                this.oInWeek_Note = loop_oNote;
+                return;
             };
+
+        this.oInWeek_Note = null;
+    }
+
+    findInWeek_Replacement()
+    {
+        for (let loop_oReplacement of _oWeek.Replacements)
+            if (loop_oReplacement.Date === this.Date && loop_oReplacement.LessonNumber === this.LessonNumber)
+            {
+                this.oInWeek_Replacement = loop_oReplacement;
+                return;
+            };
+
+        this.oInWeek_Replacement = null;
+    }
+
+
+
+
+    get Alarms()
+    {
+        return Alarm_Get(this.LessonNumber, this.Date);
+    }
+
+
+
+    get Replacement()
+    {
+        return (this.oInWeek_Replacement && !this.Canceled) ? this.oInWeek_Replacement.Replacement : null;
+    }
+
+    set Replacement(sReplacement)
+    {
+        let bWasCanceled = this.Canceled;
+        
+        if (sReplacement === this.Subject)
+        {    
+            if (this.oInWeek_Replacement)
+                _oWeek.Replacements.removeWhere({ 'Date': this.Date, 'LessonNumber': this.LessonNumber }, true);
+
+            this.oInWeek_Replacement = null;
+        }
+        else
+        {
+            if (this.oInWeek_Replacement)
+            {
+                this.oInWeek_Replacement.Replacement = sReplacement;
+            }
+            else
+            {
+                this.oInWeek_Replacement = 
+                {
+                    'Date': this.Date,
+                    'LessonNumber': this.LessonNumber,
+                    'Replacement': sReplacement
+                };
+
+                _oWeek.Replacements.push(this.oInWeek_Replacement);                
+            };
+        };
+
+        SendRequest('/Modules/Details/Lesson/SetReplacement.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : this.Subject, 'Replacement' : this.DefaultSubject});
+
+        if (this.Element)
+        {
+            if (this.Canceled)
+                this.Element.classList.add('Canceled');
+            else
+                this.Element.classList.remove('Canceled');
+    
+            this.Element.children[1].children[0].innerHTML = this.Replacement ?? '';
+        };
+
+        Information_Draw();
+        if (this.Canceled !== bWasCanceled)
+        {
+            let eDay = Timetable_GetDayElement(this.Date);
+            if (eDay)
+                eDay.children[0].children[1].innerHTML = Timetable_GetPeriod(this.Date);
+        };
+
+        this.findInWeek_Note();
+        this.showPoint();
+        document.getElementById('LessonDetails_Text').value = this.Note;
+    }
+
+    get Canceled()
+    {
+        if (this.oInWeek_Replacement)
+            if (this.oInWeek_Replacement.Replacement === '')
+                return true
+
+        return false;
     }
 
 
 
     get Note()
     {
-        return this.oInWeek ? this.oInWeek.Text : '';
+        return this.oInWeek_Note ? this.oInWeek_Note.Text : '';
     }
 
     set Note(sNote)
@@ -77,203 +170,69 @@ class Lesson
 
         if (sNote || this.Attachments.length)
         {
-            if (this.oInWeek)
+            if (this.oInWeek_Note)
             {
-                this.oInWeek.Text = sNote;
+                this.oInWeek_Note.Text = sNote;
             }
             else
             {
-                this.oInWeek = 
+                this.oInWeek_Note = 
                 {
                     'Subject': this.DefaultSubject,
-                    'Date': this.iDate,
+                    'Date': this.Date,
                     'Text': sNote,
                     'Attachments': []
                 };
 
-                _oWeek.LessonNotes.push(this.oInWeek);                
+                _oWeek.LessonNotes.push(this.oInWeek_Note);                
             };
         }
         else
         {
-            this.oInWeek = null;
+            if (this.oInWeek_Note)
+                _oWeek.LessonNotes.removeWhere({ 'Date': this.Date, 'Subject': this.DefaultSubject }, true);
 
-            if (this.oInWeek)
-                for (let i = 0; i < _oWeek.LessonNotes.length; i++)
-                    if (_oWeek.LessonNotes[i]['Date'] === this.iDate && _oWeek.LessonNotes[i]['Subject'] === this.DefaultSubject)
-                    {
-                        _oWeek.LessonNotes.splice(i, 1);
-                        break;
-                    };
+            this.oInWeek_Note = null;
         };
 
-
-        SendRequest('/Modules/Details/Lesson/SetText.php', {'Date' : this.iDate, 'Subject' : this.DefaultSubject, 'Note' : this.Note});
+        SendRequest('/Modules/Details/Lesson/SetText.php', {'Date' : this.Date, 'Subject' : this.DefaultSubject, 'Note' : this.Note});
 
         this.showPoint();
+    }
+
+
+
+    get Element()
+    {
+        return Timetable_GetLessonElement(this.Date, this.LessonNumber);
     }
 
 
 
     get Attachments()
     {
-        return this.oInWeek ? this.oInWeek.Attachments : [];
-    }
-
-    set Attachments(aAttachments)
-    {
-        if (this.Text || aAttachments.length)
-        {
-            if (this.oInWeek)
-            {
-                this.oInWeek.Attachments = aAttachments;
-            }
-            else
-            {
-                this.oInWeek = 
-                {
-                    'Subject': this.DefaultSubject,
-                    'Date': this.iDate,
-                    'Text': '',
-                    'Attachments': aAttachments
-                };
-
-                _oWeek.LessonNotes.push(this.oInWeek);                
-            };
-        }
-        else
-        {
-            this.oInWeek = null;
-
-            if (this.oInWeek)
-                for (let i = 0; i < _oWeek.LessonNotes.length; i++)
-                    if (_oWeek.LessonNotes[i]['Date'] === this.iDate && _oWeek.LessonNotes[i]['Subject'] === this.DefaultSubject)
-                    {
-                        _oWeek.LessonNotes.splice(i, 1);
-                        break;
-                    };
-        };
-
-        this.showPoint();
-    }
-
-    uploadFiles(aFiles)
-    {
-        let Form = new FormData();
-        for (let i = 0; i < aFiles.length; i++)
-            Form.append(`File[${i}]`, aFiles[i]);
-        Form.append('Date', this.iDate);
-        Form.append('Subject', this.DefaultSubject);
-                    
-        let XHR = new XMLHttpRequest();
-        XHR.open('POST', '/Modules/Details/Lesson/AddAttachment.php');
-
-        let eProgressBar = document.getElementById('LessonDetails_Attachments').lastElementChild.children[0];
-        XHR.upload.onprogress = (event) => { eProgressBar.style = `width: ${event.loaded / event.total * 100}%; opacity: 100%`; };
-
-        XHR.onreadystatechange = () => { if (XHR.readyState === 4)
-        {
-            if (XHR.status === 200)
-            {
-                eProgressBar.style = `width: 100%; opacity: 0%`;
-                
-                let aFolders = JSON.parse(XHR.response);
-                if (aFolders.length)
-                {
-                    // Получение или создание элемента списка файлов
-                    let eAttachmentsList = document.getElementById('LessonDetails_Attachments_List');
-                    if (eAttachmentsList === null)
-                    {
-                        // Cоздание элемента списка файлов
-                        eAttachmentsList = document.createElement('div');
-                        eAttachmentsList.id = 'LessonDetails_Attachments_List';
-        
-                        // Вставка элемента списка файлов и разделителя
-                        let eAttachments = document.getElementById('LessonDetails_Attachments');
-                        eAttachments.insertBefore(eAttachmentsList, eAttachments.insertBefore(document.createElement('hr'), eAttachments.firstChild));
-                    };
-        
-                    let aNewAttachments = [];
-                    for (let i = 0; i < aFolders.length; i++)
-                    {
-                        // Создание и вставка элемента
-                        let eAttachment = document.createElement('div');
-                        eAttachment.innerHTML = Details_GetAttachmentIHTML(aFolders[i], aFiles[i].name);
-                        eAttachmentsList.append(eAttachment);
-        
-                        // Добавление в массив
-                        aNewAttachments.push([aFolders[i], aFiles[i].name]);
-                    };
-                    this.Attachments = this.Attachments.concat(aNewAttachments);
-                };
-            }
-            else if (XHR.status === 403)
-            {
-                alert('Отказано в доступе');
-            };
-        }; };
-        XHR.send(Form);
-    }
-
-    removeAttachment(eElement, sFolder, sFilename)
-    {
-        if (confirm(`${['Remove', 'Удалить'][_iLanguage]} ${sFilename}?`) === true)
-        {
-            SendRequest('/Modules/Details/Lesson/RemoveAttachment.php', {'Date' : this.iDate, 'Subject' : this.DefaultSubject, 'Folder' : sFolder});
-        
-            let bNowEmpty = (this.Attachments.length === 1);
-    
-            //  Массив недели
-            if (bNowEmpty === true)
-            {
-                this.Attachments = [];
-            }
-            else
-            {
-                let aAttachments = this.Attachments;
-                for (let i = 0; i < aAttachments.length; i++)
-                    if (aAttachments[i][0] === sFolder)
-                    {
-                        aAttachments.splice(i, 1);
-                        break;
-                    };
-                
-                this.Attachments = aAttachments;
-            };
-        
-        
-            
-            if (bNowEmpty === true)
-            {
-                eElement.parentElement.parentElement.parentElement.children[1].remove();
-                eElement.parentElement.parentElement.parentElement.children[0].remove();
-            }
-            else
-            {
-                eElement.parentElement.remove();
-            };
-        };
+        return [];
     }
 
 
 
     get DefaultSubject()
     {
-        return this.sReplcement ? this.sReplcement : this.sSubject;
+        return this.Added || (this.Replacement ?? this.Subject);
     }
 
     showPoint()
     {
-        for (let loop_eLesson of Timetable_GetLessonElements(this.iDate))
+        for (let loop_eLesson of Timetable_GetLessonElements(this.Date))
         {
             let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
             let loop_sSubject = loop_eLesson.children[1].children[1].innerHTML;
 
-            if (LessonDetails_DisplayedSubject(loop_sSubject, loop_sReplacement) === this.DefaultSubject)
-                if (this.oInWeek)
+            if ((loop_sReplacement || loop_sSubject) === this.DefaultSubject)
+                if (this.oInWeek_Note)
                     loop_eLesson.classList.add('Note');
                 else
                     loop_eLesson.classList.remove('Note');
         };
-    }v
+    }
 }
