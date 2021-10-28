@@ -9,9 +9,9 @@ if ($UserID->num_rows === 1)
     $UserID = $UserID->fetch_row()[0];
     $Date = $_POST['Date'];
     $Subject = $_POST['Subject'];
-    $Text = $_POST['Text'];
+    $Note = $_POST['Note'];
 
-    $SQL->multi_query( "INSERT INTO LessonNotes VALUES ($UserID, $Date, '$Subject', '$Text', '[]')
+    $SQL->multi_query( "INSERT INTO LessonNotes VALUES ($UserID, $Date, '$Subject', '$Note', '[]')
                             ON DUPLICATE KEY UPDATE Text = '$Text';
 
                         DELETE FROM LessonNotes WHERE (UserID = $UserID) AND (Text = '') AND (Attachments = '[]')");

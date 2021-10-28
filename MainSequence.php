@@ -36,7 +36,7 @@
 
             global $Files_JS;
             foreach (glob("$Path*.js") as &$File_JS)
-                if (strpos($File_JS, 'Main.js') === false)
+                if ($File_JS !== 'JavaScript/Main.js')
                     array_push($Files_JS, $File_JS);
 
             global $Files_CSS;
