@@ -1,13 +1,13 @@
 function LessonDetails_Draw(iDate, iLessonNumber)
 {
-    let cLesson = new Lesson(iDate, iLessonNumber);
+    window.cLesson = new Lesson(iDate, iLessonNumber);
 
     let HTML = `<div id='LessonDetails_Header'>
                     <span><custom-round-button icon='Arrow Back' scale=28></custom-round-button></span>
                     <span><custom-round-button icon='More' scale=28></custom-round-button></span>
                 </div>
                 
-                <custom-textarea id='LessonDetails_Subject' placeholder='${cLesson.Subject}' value='${(cLesson.Replacement) !== null ? cLesson.Replacement : cLesson.Subject}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
+                <custom-textarea id='LessonDetails_Subject' placeholder='${cLesson.Subject}' value='${cLesson.Added || ((cLesson.Replacement || cLesson.Canceled) ? cLesson.Replacement : cLesson.Subject)}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
 
                 <div id='LessonDetails_Info'>
                     <div>
@@ -55,15 +55,20 @@ function LessonDetails_Draw(iDate, iLessonNumber)
         let aActions =
         [
             ['Edit', ['Edit instance', 'Редактировать экземпляр'][_iLanguage], '()'],
-            ['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], '()']
+            ['', ['Show in timetable', 'Показать в расписании'][_iLanguage], '()']
         ];
 
+        if (!cLesson.Added)
+            aActions.push(['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], '()']);
+        else
+            aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], 'cLesson.removeAdded()']);
+
         if (cLesson.Replacement || this.Canceled)
-            aActions.push(['Restore', ['', 'Убрать замену'][_iLanguage], '()']);
+            aActions.push(['Restore', ['', 'Убрать замену'][_iLanguage], 'cLesson.restoreReplacement()']);
         
         DropDown(Event.target, DropDown_GetActionsHTML(aActions));
     });
-    document.getElementById('LessonDetails_Subject').addEventListener('input', (Event) => { cLesson.Replacement = Event.target.value; });
+    document.getElementById('LessonDetails_Subject').addEventListener('input', (Event) => { if (cLesson.Added) cLesson.Added = Event.target.value; else cLesson.Replacement = Event.target.value; });
     document.getElementById('LessonDetails_Text').addEventListener('input', (Event) => { cLesson.Note = Event.target.value; });
 
 

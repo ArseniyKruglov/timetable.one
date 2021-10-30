@@ -13,7 +13,7 @@ function LessonDetails_Close()
 {
     Overlay_Remove('LessonDetails');
 
-    history.pushState('', '', location.pathname);
+    delete _cLesson;
 }
 
 class Lesson
@@ -38,13 +38,17 @@ class Lesson
             }
             else
             {
+                this.findInWeek_Added();
                 this.Filelds = {};
             };
         }
         else
         {
+            this.findInWeek_Added();
             this.Filelds = {};
         };
+
+
 
         this.findInWeek_Replacement();
         this.findInWeek_Note();
@@ -56,34 +60,77 @@ class Lesson
 
     findInWeek_Note()
     {
-        for (let loop_oNote of _oWeek.LessonNotes)
-            if (loop_oNote.Subject === this.DefaultSubject && loop_oNote.Date === this.Date)
-            {
-                this.oInWeek_Note = loop_oNote;
-                return;
-            };
-
-        this.oInWeek_Note = null;
+        if (this.oInWeek_Note)
+        {
+            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.DefaultSubject }, true) || null;
+            
+            this.showPoint();
+            document.getElementById('LessonDetails_Text').value = this.Note;
+        }
+        else
+        {
+            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.DefaultSubject }, true) || null;
+        };
     }
 
     findInWeek_Replacement()
     {
-        for (let loop_oReplacement of _oWeek.Replacements)
-            if (loop_oReplacement.Date === this.Date && loop_oReplacement.LessonNumber === this.LessonNumber)
-            {
-                this.oInWeek_Replacement = loop_oReplacement;
-                return;
-            };
+        this.oInWeek_Replacement = _oWeek.Replacements.selectWhere({ 'Date': this.Date, 'LessonNumber': this.LessonNumber }, true) || null;
+    }
 
-        this.oInWeek_Replacement = null;
+    findInWeek_Added()
+    {
+        this.oInWeek_Added = _oWeek.AddedLessons.selectWhere({ 'Date': this.Date, 'LessonNumber': this.LessonNumber }, true) || null;
     }
 
 
 
-
-    get Alarms()
+    get Added()
     {
-        return Alarm_Get(this.LessonNumber, this.Date);
+        return this.oInWeek_Added ? this.oInWeek_Added.Subject : null;
+    }
+
+    set Added(sSubject)
+    {
+        sSubject = sSubject.trim();
+
+        if (sSubject === '')
+        {
+            this.removeAdded();
+        }
+        else
+        {
+            this.oInWeek_Added.Subject = sSubject;
+            
+            SendRequest('/Modules/Details/Lesson/SetSubject.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : this.Added});
+
+            Information_Draw();
+            if (this.Element)
+                this.Element.children[1].children[1].innerHTML = this.Added;
+
+            this.findInWeek_Note();
+        };
+    }
+
+    removeAdded()
+    {
+        if (confirm(`${['Remove lesson', 'Удалить занятие'][_iLanguage]} "${this.Added}" (${Time_FormatDate(Time_From1970(this.Date))})?`))
+        {
+            SendRequest('/Modules/Details/Lesson/SetSubject.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : ''});
+
+            _oWeek.AddedLessons.removeWhere({ 'Date': this.Date, 'LessonNumber': this.LessonNumber }, true);
+
+            if (this.Element.parentElement.children.length === 1)
+                this.DayElement.remove();
+            else
+                this.Element.remove();
+
+            LessonDetails_Close();
+        }
+        else
+        {
+            document.getElementById('LessonDetails_Subject').value = this.Added;
+        };
     }
 
 
@@ -95,6 +142,8 @@ class Lesson
 
     set Replacement(sReplacement)
     {
+        sReplacement = sReplacement.trim();
+
         let bWasCanceled = this.Canceled;
         
         if (sReplacement === this.Subject)
@@ -123,7 +172,14 @@ class Lesson
             };
         };
 
-        SendRequest('/Modules/Details/Lesson/SetReplacement.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : this.Subject, 'Replacement' : this.DefaultSubject});
+        SendRequest('/Modules/Details/Lesson/SetReplacement.php', {'Date': this.Date, 'LessonNumber': this.LessonNumber, 'Subject': this.Subject, 'Replacement': this.DefaultSubject});
+
+        Information_Draw();
+        if (this.Canceled !== bWasCanceled)
+        {
+            if (this.DayElement)
+                this.DayElement.children[0].children[1].innerHTML = Timetable_GetPeriod(this.Date);
+        };
 
         if (this.Element)
         {
@@ -135,26 +191,23 @@ class Lesson
             this.Element.children[1].children[0].innerHTML = this.Replacement ?? '';
         };
 
-        Information_Draw();
-        if (this.Canceled !== bWasCanceled)
-        {
-            let eDay = Timetable_GetDayElement(this.Date);
-            if (eDay)
-                eDay.children[0].children[1].innerHTML = Timetable_GetPeriod(this.Date);
-        };
-
         this.findInWeek_Note();
-        this.showPoint();
-        document.getElementById('LessonDetails_Text').value = this.Note;
     }
 
     get Canceled()
     {
         if (this.oInWeek_Replacement)
             if (this.oInWeek_Replacement.Replacement === '')
-                return true
+                return true;
 
         return false;
+    }
+    
+    restoreReplacement()
+    {
+        document.getElementById('LessonDetails_Subject').value = this.Subject;
+
+        this.Replacement = this.Subject;
     }
 
 
@@ -195,16 +248,9 @@ class Lesson
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/Modules/Details/Lesson/SetText.php', {'Date' : this.Date, 'Subject' : this.DefaultSubject, 'Note' : this.Note});
+        SendRequest('/Modules/Details/Lesson/SetText.php', {'Date': this.Date, 'Subject': this.DefaultSubject, 'Note': this.Note});
 
         this.showPoint();
-    }
-
-
-
-    get Element()
-    {
-        return Timetable_GetLessonElement(this.Date, this.LessonNumber);
     }
 
 
@@ -221,18 +267,47 @@ class Lesson
         return this.Added || (this.Replacement ?? this.Subject);
     }
 
-    showPoint()
+    get DayElement()
     {
+        return Timetable_GetDayElement(this.Date);
+    }
+
+    get Element()
+    {
+        return Timetable_GetLessonElement(this.Date, this.LessonNumber);
+    }
+
+    get Elements()
+    {
+        let aElements = [];
+
         for (let loop_eLesson of Timetable_GetLessonElements(this.Date))
         {
             let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
             let loop_sSubject = loop_eLesson.children[1].children[1].innerHTML;
 
             if ((loop_sReplacement || loop_sSubject) === this.DefaultSubject)
-                if (this.oInWeek_Note)
-                    loop_eLesson.classList.add('Note');
-                else
-                    loop_eLesson.classList.remove('Note');
+                aElements.push(loop_eLesson);
         };
+
+        return aElements;
+    }
+
+
+
+    get Alarms()
+    {
+        return Alarm_Get(this.LessonNumber, this.Date);
+    }
+
+
+
+    showPoint()
+    {
+        for (let loop_eLesson of this.Elements)
+            if (this.oInWeek_Note)
+                loop_eLesson.classList.add('Note');
+            else
+                loop_eLesson.classList.remove('Note');
     }
 }

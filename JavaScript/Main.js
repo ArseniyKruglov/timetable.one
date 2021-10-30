@@ -19,14 +19,25 @@ if (_mAlarms.size !== 0)
     Information_Draw();
 
 {
+    let aPath = location.pathname.split('/');
     let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
-    if (oQuery['Date'] !== undefined)
+
+    window._sURL = aPath[1];
+
+    if (aPath[2] === 'Chart')
     {
-        if (oQuery['LessonNumber'] !== undefined)
-            LessonDetails(parseInt(oQuery['Date']), parseInt(oQuery['LessonNumber']));
-        else
-            DayDetails(parseInt(oQuery['Date']));
+        Chart(oQuery.Date);
     }
+    else
+    {
+        if (oQuery.Date !== undefined)
+        {
+            if (oQuery.LessonNumber !== undefined)
+                LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.LessonNumber));
+            else
+                DayDetails(parseInt(oQuery.Date));
+        }
+    };
 }
 
 

@@ -12,7 +12,7 @@ if ($UserID->num_rows === 1)
     $Note = $_POST['Note'];
 
     $SQL->multi_query( "INSERT INTO LessonNotes VALUES ($UserID, $Date, '$Subject', '$Note', '[]')
-                            ON DUPLICATE KEY UPDATE Text = '$Text';
+                            ON DUPLICATE KEY UPDATE Text = '$Note';
 
                         DELETE FROM LessonNotes WHERE (UserID = $UserID) AND (Text = '') AND (Attachments = '[]')");
 }

@@ -67,6 +67,9 @@ function Overlay_Remove(sName)
         _eOverlay_LastFocusedElement.focus();
         delete _eOverlay_LastFocusedElement;
     };
+
+    if (!Overlay_IsOpened())
+        history.pushState('', '', `/${_sURL}`);
 }
 
 

@@ -12,6 +12,6 @@ function DayDetails(iDate)
 function DayDetails_Close()
 {
     Overlay_Remove('DayDetails');
-    history.pushState('', '', location.pathname);
+
     delete _DayDetails_iDate;
 }
