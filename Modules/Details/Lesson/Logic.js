@@ -53,7 +53,7 @@ function LessonDetails_SetReplacement(sValue)
         document.getElementById('LessonDetails_Reset').hidden = (_LessonDetails_sReplacement === undefined);
 
         // Отображение новой заметки
-        document.getElementById('LessonDetails_Text').value = _LessonDetails_oWeekElement['Text'];
+        document.getElementById('LessonDetails_Text').value = _LessonDetails_oWeekElement['Note'];
 
         // Отображение новых файлов                         - тут что-то откуда-то скопировано и это плохо
         {
@@ -169,7 +169,7 @@ function LessonDetails_SetReplacement(sValue)
         for (let loop_oLessonNote of _oWeek['LessonNotes'])
             if (loop_oLessonNote['Subject'] === _LessonDetails_sSubject && loop_oLessonNote['Date'] === _LessonDetails_iDate)
             {
-                sText = loop_oLessonNote['Text'];
+                sText = loop_oLessonNote['Note'];
                 break;
             };
 
@@ -194,7 +194,7 @@ function LessonDetails_SetText(sText)
     sText = sText.trim();
 
     // Отправка на сервер
-    SendRequest('/Modules/Details/Lesson/SetText.php', {'Date' : _LessonDetails_iDate, 'Subject' : LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Text' : sText});
+    SendRequest('/Modules/Details/Lesson/SetText.php', {'Date' : _LessonDetails_iDate, 'Subject' : LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Note' : sText});
     
     // Массив недели
     if (_LessonDetails_oWeekElement === null)
@@ -204,7 +204,7 @@ function LessonDetails_SetText(sText)
     }
     else
     {
-        _LessonDetails_oWeekElement['Text'] = sNote;
+        _LessonDetails_oWeekElement['Note'] = sNote;
     };
     LessonDetails_ClearWeek();
 

@@ -32,8 +32,8 @@ if ($User->num_rows === 1)
 
     if ($AccessLevel > 0)
     {
-        foreach ($SQL->query("SELECT Subject, Date, Text, Attachments FROM LessonNotes WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
-            array_push($aLessonNotes, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Text' => $aLesson[2], 'Attachments' => json_decode($aLesson[3])]);
+        foreach ($SQL->query("SELECT Subject, Date, Note FROM LessonNotes WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
+            array_push($aLessonNotes, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Note' => $aLesson[2]]);
 
         foreach ($SQL->query("SELECT Date, Note FROM DayNotes WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
             array_push($aDayNotes, ['Date' => (int) $aLesson[0], 'Note' => $aLesson[1]]);

@@ -43,7 +43,7 @@ function Week_Update()
 
                 for (let loop_oLessonNote of _oWeek['LessonNotes'])
                     if (window._LessonDetails_iDate === loop_oLessonNote['Date'] && (_LessonDetails_sReplacement ? _LessonDetails_sReplacement : _LessonDetails_sSubject) === loop_oLessonNote['Subject'])
-                        sLessonDetails_Text = loop_oLessonNote['Text'];
+                        sLessonDetails_Text = loop_oLessonNote['Note'];
 
                 document.getElementById('LessonDetails_Text').value = sLessonDetails_Text || '';
             };

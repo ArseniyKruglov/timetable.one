@@ -23,13 +23,13 @@ function DayDetails_SetNote(sNote)
         for (let loop_oDayNote of _oWeek['DayNotes'])
             if (loop_oDayNote['Date'] === _DayDetails_iDate)
             {
-                loop_oDayNote['Text'] = sNote;
+                loop_oDayNote['Note'] = sNote;
                 bExist = true;
                 break;
             };
 
         if (bExist === false)
-            _oWeek['DayNotes'].push({'Date': _DayDetails_iDate, 'Text': sNote});
+            _oWeek['DayNotes'].push({'Date': _DayDetails_iDate, 'Note': sNote});
     };
 
 

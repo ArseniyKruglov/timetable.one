@@ -56,3 +56,20 @@ function Timetable_GetPeriod_Raw(iDate)
 
     return [tBegin ? Time_FormatTime(tBegin[0]) : undefined, tEnd ? Time_FormatTime(tEnd[1]) : undefined];
 }
+
+function Timetable_SetPoint(iDate, sSubject, bPoint)
+{
+    for (let loop_eLesson of Timetable_GetLessonElements(iDate))
+    {
+        let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
+        let loop_sSubject = loop_eLesson.children[1].children[1].innerHTML;
+
+        if ((loop_sReplacement || loop_sSubject) === sSubject)
+        {
+            if (bPoint)
+                loop_eLesson.classList.add('Note');
+            else
+                loop_eLesson.classList.remove('Note');
+        };
+    };
+}

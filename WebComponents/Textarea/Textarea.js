@@ -26,7 +26,9 @@ class Textarea extends HTMLElement
             this.ExpandHandler();
         });
         document.fonts.addEventListener('ready', () => { this.ExpandHandler(); });
-        this.etTextarea.setSelectionRange((this.getAttribute('value') || '').length, (this.getAttribute('value') || '').length);
+
+        let iLength = (this.getAttribute('value') || '').length;
+        this.etTextarea.setSelectionRange(iLength, iLength);
     }
 
     ExpandHandler()

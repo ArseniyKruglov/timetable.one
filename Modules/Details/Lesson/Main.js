@@ -214,18 +214,18 @@ class Lesson
 
     get Note()
     {
-        return this.oInWeek_Note ? this.oInWeek_Note.Text : '';
+        return this.oInWeek_Note ? this.oInWeek_Note.Note : '';
     }
 
     set Note(sNote)
     {
         sNote = sNote.trim();
 
-        if (sNote || this.Attachments.length)
+        if (sNote)
         {
             if (this.oInWeek_Note)
             {
-                this.oInWeek_Note.Text = sNote;
+                this.oInWeek_Note.Note = sNote;
             }
             else
             {
@@ -233,8 +233,7 @@ class Lesson
                 {
                     'Subject': this.DefaultSubject,
                     'Date': this.Date,
-                    'Text': sNote,
-                    'Attachments': []
+                    'Note': sNote
                 };
 
                 _oWeek.LessonNotes.push(this.oInWeek_Note);                
@@ -255,13 +254,6 @@ class Lesson
 
 
 
-    get Attachments()
-    {
-        return [];
-    }
-
-
-
     get DefaultSubject()
     {
         return this.Added || (this.Replacement ?? this.Subject);
@@ -277,22 +269,6 @@ class Lesson
         return Timetable_GetLessonElement(this.Date, this.LessonNumber);
     }
 
-    get Elements()
-    {
-        let aElements = [];
-
-        for (let loop_eLesson of Timetable_GetLessonElements(this.Date))
-        {
-            let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
-            let loop_sSubject = loop_eLesson.children[1].children[1].innerHTML;
-
-            if ((loop_sReplacement || loop_sSubject) === this.DefaultSubject)
-                aElements.push(loop_eLesson);
-        };
-
-        return aElements;
-    }
-
 
 
     get Alarms()
@@ -304,10 +280,6 @@ class Lesson
 
     showPoint()
     {
-        for (let loop_eLesson of this.Elements)
-            if (this.oInWeek_Note)
-                loop_eLesson.classList.add('Note');
-            else
-                loop_eLesson.classList.remove('Note');
+        Timetable_SetPoint(this.Date, this.DefaultSubject, this.oInWeek_Note);
     }
 }

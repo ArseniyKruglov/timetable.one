@@ -5,7 +5,7 @@ function LessonDetails_DisplayedSubject(sSubject, sReplcement)
 
 function LessonDetails_ClearWeek()
 {
-    if (_LessonDetails_oWeekElement !== null || (_LessonDetails_oWeekElement['Text'] === '' && _LessonDetails_oWeekElement['Attachments'].length === 0))
+    if (_LessonDetails_oWeekElement !== null || (_LessonDetails_oWeekElement['Note'] === '' && _LessonDetails_oWeekElement['Attachments'].length === 0))
     {
         _LessonDetails_oWeekElement = null;
         
@@ -20,5 +20,5 @@ function LessonDetails_ClearWeek()
 
 function LessonDetails_GetDefaultWeekElement(sNote = '', aAttachments = [])
 {
-    return {'Subject': LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Date': _LessonDetails_iDate, 'Text': sNote, 'Attachments' : aAttachments}; 
+    return {'Subject': LessonDetails_DisplayedSubject(_LessonDetails_sSubject, _LessonDetails_sReplacement), 'Date': _LessonDetails_iDate, 'Note': sNote, 'Attachments' : aAttachments}; 
 }

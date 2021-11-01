@@ -52,16 +52,14 @@ function LessonDetails_Draw(iDate, iLessonNumber)
     document.getElementById('LessonDetails_Header').firstElementChild.addEventListener('click', LessonDetails_Close);
     document.getElementById('LessonDetails_Header').lastElementChild.addEventListener('click', (Event) =>
     {
-        let aActions =
-        [
-            ['Edit', ['Edit instance', 'Редактировать экземпляр'][_iLanguage], '()'],
-            ['', ['Show in timetable', 'Показать в расписании'][_iLanguage], '()']
-        ];
+        let aActions = [['Edit', ['Edit instance', 'Редактировать экземпляр'][_iLanguage], '']];
 
         if (!cLesson.Added)
-            aActions.push(['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], '()']);
+            aActions.push(['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], '']);
         else
             aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], 'cLesson.removeAdded()']);
+
+        aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], '']);
 
         if (cLesson.Replacement || this.Canceled)
             aActions.push(['Restore', ['', 'Убрать замену'][_iLanguage], 'cLesson.restoreReplacement()']);
