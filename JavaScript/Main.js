@@ -2,12 +2,29 @@ _iToday = new Date().get1970();
 _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
 
-document.body.innerHTML =  `<main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''}'>
-                                <div id='Information'></div>
+document.body.innerHTML =  `<nav>
+                                <div class='Selected'>
+                                    <custom-round-button icon=Timetable scale=30></custom-round-button>
+                                    <div>${['Timetable', 'Расписание'][_iLanguage]}</div>
+                                </div>
+                                <div>
+                                    <custom-round-button icon=Edit scale=30></custom-round-button>
+                                    <div>${['Editor', 'Редактор'][_iLanguage]}</div>
+                                </div>
+                                <div>
+                                    <custom-round-button icon=Settings scale=30></custom-round-button>
+                                    <div>${['Settings', 'Настройки'][_iLanguage]}</div>
+                                </div>
+                            </nav>
 
-                                <div id='Timetable'></div>
+                            <main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''}'>
+                                <div id='Information' class='Island'></div>
+
+                                <div id='TimetableContainer' class='Island'>
+                                    <div id='Timetable'></div>
+                                </div>
                                 
-                                <div id='Week'>
+                                <div id='Week' class='Island'>
                                     <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()' hover-color='var(--Gray00)'></custom-round-button>
                                     <button id='Week_Period' onclick='Week_Current()'></button>
                                     <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()' hover-color='var(--Gray00)'></custom-round-button>
