@@ -8,9 +8,9 @@ document.body.innerHTML =  `<main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''
                                 <div id='Timetable'></div>
                                 
                                 <div id='Week'>
-                                    <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()' hover-color='Green'></custom-round-button>
+                                    <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()' hover-color='var(--Gray00)'></custom-round-button>
                                     <button id='Week_Period' onclick='Week_Current()'></button>
-                                    <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()' hover-color='Green'></custom-round-button>
+                                    <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()' hover-color='var(--Gray00)'></custom-round-button>
                                 </div>
                             </main>`;
 Week_Select();

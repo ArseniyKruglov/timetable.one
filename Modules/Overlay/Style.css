@@ -54,7 +54,7 @@
 .Overlay_Rectangular
 {
     background-color: var(--Background01);
-    border-radius: 5px;
+    border-radius: 8px;
     overflow: auto;
     box-shadow: var(--Shadow);
 }

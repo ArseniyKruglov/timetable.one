@@ -1,9 +1,5 @@
 function DayDetails_AddLesson()
 {
-    window._aDayDetails_AddLesson_LessonNumbers = Timetable_GetLessonNumbers(_DayDetails_iDate);
-
-
-
     function Enter(Event)
     {
         if (Event.which === 13)
@@ -24,6 +20,4 @@ function DayDetails_AddLesson()
 function DayDetails_AddLesson_Close()
 {
     Overlay_Remove('DayDetails_AddLesson');
-    
-    delete _aDayDetails_AddLesson_LessonNumbers;
 }

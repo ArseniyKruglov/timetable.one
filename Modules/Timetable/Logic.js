@@ -73,3 +73,28 @@ function Timetable_SetPoint(iDate, sSubject, bPoint)
         };
     };
 }
+
+function Timetable_FocusLesson(iDate, iLessonNumber)
+{
+    _iWeekOffset = Week_DateToOffset(iDate);
+    Week_Select();
+
+    let eLesson = Timetable_GetLessonElement(iDate, iLessonNumber);
+    eLesson.children[1].focus();
+    eLesson.classList.add('Focused');
+    setTimeout(() =>
+    {
+        function Focus()
+        {
+            eLesson.classList.remove('Focused');
+            removeEventListener('click', Focus);
+        }
+
+        addEventListener('click', Focus);
+    }, 0);
+}
+
+function Week_DateToOffset(iDate)
+{
+    return Math.floor((iDate - Week_GetPeriod(0)[0]) / 7);
+}

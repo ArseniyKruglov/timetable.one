@@ -59,7 +59,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
         else
             aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], 'cLesson.removeAdded()']);
 
-        aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], '']);
+        aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], 'Timetable_FocusLesson(cLesson.Date, cLesson.LessonNumber); LessonDetails_Close();']);
 
         if (cLesson.Replacement || this.Canceled)
             aActions.push(['Restore', ['', 'Убрать замену'][_iLanguage], 'cLesson.restoreReplacement()']);

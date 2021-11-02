@@ -4,7 +4,19 @@ function DayDetails_AddLesson_Validation(eSubject = document.getElementById('Day
 
     let bDate = eDate.value !== '';
 
-    let bLessonNumber = _aDayDetails_AddLesson_LessonNumbers.includes(parseInt(eLessonNumber.value)) === false;
+    let bLessonNumber;
+    if (bDate)
+    {
+        let mTimetable = Timetable_GetLessonNumbers(new Date(eDate.value).get1970());
+        if (mTimetable)
+            bLessonNumber = (mTimetable.includes(parseInt(eLessonNumber.value)) === false);
+        else
+            bLessonNumber = true;
+    }
+    else
+    {
+        bLessonNumber = true;
+    };
     eLessonNumber.setCustomValidity(bLessonNumber ? '' : 'Invalid field.');
 
     document.querySelector(`#DayDetails_AddLesson > button`).disabled = !(bSubject && bDate && bLessonNumber);

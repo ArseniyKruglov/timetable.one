@@ -184,6 +184,16 @@
             text-decoration: none;
         }
 
+    /* Focus */
+    #Timetable .Lesson.Focused
+    {
+        border-radius: 5px;
+        padding: 5px;
+        margin: -5px;
+        background-color: HSLA(210, 100%, 30%, 7.5%);
+    }
+
+
 
 
     /* Notes, replacements, etc. */

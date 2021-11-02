@@ -9,7 +9,7 @@ function DayDetails_AddLesson_Draw()
                 
                 <div>
                     <svg ${_Icons['Alarm']}></svg>
-                    <input type=number value=${Math.max(..._aDayDetails_AddLesson_LessonNumbers) + 1} min=-127 max=128 id='DayDetails_AddLesson_LessonNumber' required oninput='DayDetails_AddLesson_Validation(undefined, undefined, this)'>
+                    <input type=number value=${Math.max(...Timetable_GetLessonNumbers(_DayDetails_iDate)) + 1} min=-127 max=128 id='DayDetails_AddLesson_LessonNumber' required oninput='DayDetails_AddLesson_Validation(undefined, undefined, this)'>
                 </div>
                 
                 <button onclick='DayDetails_AddLesson_AddLesson()' disabled>${['Add', 'Добавить'][_iLanguage]}</button>`;
