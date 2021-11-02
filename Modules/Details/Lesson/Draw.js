@@ -7,7 +7,7 @@ function LessonDetails_Draw(iDate, iLessonNumber)
                     <span><custom-round-button icon='More' scale=28></custom-round-button></span>
                 </div>
                 
-                <custom-textarea id='LessonDetails_Subject' placeholder='${cLesson.Subject}' value='${cLesson.Added || ((cLesson.Replacement || cLesson.Canceled) ? cLesson.Replacement : cLesson.Subject)}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
+                <custom-textarea id='LessonDetails_Subject' placeholder='${cLesson.Subject}' value='${cLesson.Added || (cLesson.Canceled ? '' : cLesson.Replacement ?? cLesson.Subject)}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
 
                 <div id='LessonDetails_Info'>
                     <div>
@@ -52,19 +52,26 @@ function LessonDetails_Draw(iDate, iLessonNumber)
     document.getElementById('LessonDetails_Header').firstElementChild.addEventListener('click', LessonDetails_Close);
     document.getElementById('LessonDetails_Header').lastElementChild.addEventListener('click', (Event) =>
     {
-        let aActions = [['Edit', ['Edit instance', 'Редактировать экземпляр'][_iLanguage], '']];
+        let aActions = [];
+
+        aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], () => { Timetable_FocusLesson(cLesson.Date, cLesson.LessonNumber); LessonDetails_Close(); }]);
 
         if (!cLesson.Added)
-            aActions.push(['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], '']);
+        {
+            if (!cLesson.Canceled)
+                aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () => { document.getElementById('LessonDetails_Subject').value = ''; cLesson.Replacement = ''; }]);
+        }
         else
-            aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], 'cLesson.removeAdded()']);
+        {
+            aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], () => { cLesson.Added = ''; }]);
+        };
 
-        aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], 'Timetable_FocusLesson(cLesson.Date, cLesson.LessonNumber); LessonDetails_Close();']);
-
-        if (cLesson.Replacement || this.Canceled)
-            aActions.push(['Restore', ['', 'Убрать замену'][_iLanguage], 'cLesson.restoreReplacement()']);
+        if (cLesson.Replacement)
+            aActions.push(['Restore', ['Remove replacement', 'Убрать замену'][_iLanguage], () =>  { cLesson.restoreReplacement(); }]);
+        else if (cLesson.Canceled)
+            aActions.push(['Restore', ['Undo cancellation', 'Отменить отмену'][_iLanguage], () => { cLesson.restoreReplacement(); }]);
         
-        DropDown(Event.target, DropDown_GetActionsHTML(aActions));
+        DropDown(Event.target, aActions);
     });
     document.getElementById('LessonDetails_Subject').addEventListener('input', (Event) => { if (cLesson.Added) cLesson.Added = Event.target.value; else cLesson.Replacement = Event.target.value; });
     document.getElementById('LessonDetails_Text').addEventListener('input', (Event) => { cLesson.Note = Event.target.value; });

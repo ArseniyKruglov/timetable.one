@@ -62,14 +62,14 @@ class Lesson
     {
         if (this.oInWeek_Note)
         {
-            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.DefaultSubject }, true) || null;
+            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.TimetableSubject }, true) || null;
             
-            this.showPoint();
+            Timetable_SetPoint(this.Date, this.TimetableSubject, this.oInWeek_Note);
             document.getElementById('LessonDetails_Text').value = this.Note;
         }
         else
         {
-            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.DefaultSubject }, true) || null;
+            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.TimetableSubject }, true) || null;
         };
     }
 
@@ -96,7 +96,23 @@ class Lesson
 
         if (sSubject === '')
         {
-            this.removeAdded();
+            if (confirm(`${['Remove lesson', 'Удалить занятие'][_iLanguage]} "${this.Added}" (${Time_FormatDate(Time_From1970(this.Date))})?`))
+            {
+                SendRequest('/Modules/Details/Lesson/SetSubject.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : ''});
+
+                _oWeek.AddedLessons.removeWhere({ 'Date': this.Date, 'LessonNumber': this.LessonNumber }, true);
+
+                if (this.Element.parentElement.children.length === 1)
+                    this.DayElement.remove();
+                else
+                    this.Element.remove();
+
+                LessonDetails_Close();
+            }
+            else
+            {
+                document.getElementById('LessonDetails_Subject').value = this.Added;
+            };
         }
         else
         {
@@ -109,27 +125,6 @@ class Lesson
                 this.Element.children[1].children[1].innerHTML = this.Added;
 
             this.findInWeek_Note();
-        };
-    }
-
-    removeAdded()
-    {
-        if (confirm(`${['Remove lesson', 'Удалить занятие'][_iLanguage]} "${this.Added}" (${Time_FormatDate(Time_From1970(this.Date))})?`))
-        {
-            SendRequest('/Modules/Details/Lesson/SetSubject.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : ''});
-
-            _oWeek.AddedLessons.removeWhere({ 'Date': this.Date, 'LessonNumber': this.LessonNumber }, true);
-
-            if (this.Element.parentElement.children.length === 1)
-                this.DayElement.remove();
-            else
-                this.Element.remove();
-
-            LessonDetails_Close();
-        }
-        else
-        {
-            document.getElementById('LessonDetails_Subject').value = this.Added;
         };
     }
 
@@ -172,7 +167,7 @@ class Lesson
             };
         };
 
-        SendRequest('/Modules/Details/Lesson/SetReplacement.php', {'Date': this.Date, 'LessonNumber': this.LessonNumber, 'Subject': this.Subject, 'Replacement': this.DefaultSubject});
+        SendRequest('/Modules/Details/Lesson/SetReplacement.php', {'Date': this.Date, 'LessonNumber': this.LessonNumber, 'Subject': this.Subject, 'Replacement': sReplacement});
 
         Information_Draw();
         if (this.Canceled !== bWasCanceled)
@@ -231,7 +226,7 @@ class Lesson
             {
                 this.oInWeek_Note = 
                 {
-                    'Subject': this.DefaultSubject,
+                    'Subject': this.TimetableSubject,
                     'Date': this.Date,
                     'Note': sNote
                 };
@@ -242,19 +237,19 @@ class Lesson
         else
         {
             if (this.oInWeek_Note)
-                _oWeek.LessonNotes.removeWhere({ 'Date': this.Date, 'Subject': this.DefaultSubject }, true);
+                _oWeek.LessonNotes.removeWhere({ 'Date': this.Date, 'Subject': this.TimetableSubject }, true);
 
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/Modules/Details/Lesson/SetText.php', {'Date': this.Date, 'Subject': this.DefaultSubject, 'Note': this.Note});
+        SendRequest('/Modules/Details/Lesson/SetText.php', {'Date': this.Date, 'Subject': this.TimetableSubject, 'Note': this.Note});
 
-        this.showPoint();
+        Timetable_SetPoint(this.Date, this.TimetableSubject, this.oInWeek_Note);
     }
 
 
 
-    get DefaultSubject()
+    get TimetableSubject()
     {
         return this.Added || (this.Replacement ?? this.Subject);
     }
@@ -274,12 +269,5 @@ class Lesson
     get Alarms()
     {
         return Alarm_Get(this.LessonNumber, this.Date);
-    }
-
-
-
-    showPoint()
-    {
-        Timetable_SetPoint(this.Date, this.DefaultSubject, this.oInWeek_Note);
     }
 }

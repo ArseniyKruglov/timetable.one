@@ -43,5 +43,5 @@ function DayDetails_Draw(iDate)
 
 function DayDetails_OpenMenu(eButton)
 {
-    DropDown(eButton, DropDown_GetActionsHTML([['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], 'DayDetails_AddLesson()']]), 'LessonDetails_Menu')
+    DropDown(eButton, [['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], DayDetails_AddLesson]]);
 }

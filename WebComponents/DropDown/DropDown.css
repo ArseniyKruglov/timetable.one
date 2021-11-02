@@ -5,17 +5,12 @@
     background-color: var(--Background02);
     z-index: 10;
     box-shadow: var(--Shadow);
-}
-
-.DropDown > .DropDown_Actions
-{
     padding: 5px 0;
     gap: 7.5px;
     display: grid;
-    zoom: 110%;
 }
 
-.DropDown > .DropDown_Actions > button
+.DropDown > button
 {
     display: grid;
     grid-auto-flow: column;
@@ -26,12 +21,12 @@
     width: 100%;
 }
 
-.DropDown > .DropDown_Actions > button:hover
+.DropDown > button:hover
 {
     background-color: var(--Gray04);
 }
 
-.DropDown > .DropDown_Actions > button > svg
+.DropDown > button > svg
 {
     fill: var(--Gray00)
 }
