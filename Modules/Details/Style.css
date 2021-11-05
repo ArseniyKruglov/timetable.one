@@ -4,8 +4,7 @@
     width: 400px;
 }
 
-#DayDetails,
-#LessonDetails
+.Details
 {
     display: grid;
     gap: 25px;
@@ -15,8 +14,7 @@
 
 
 
-#DayDetails_Header,
-#LessonDetails_Header
+.Details .Header
 {
     display: grid;
     grid-auto-flow: column;
@@ -25,15 +23,14 @@
 
 
 
-#DayDetails_Info,
-#LessonDetails_Info
+.Details .Info
 {
     display: grid;
     gap: 5px;
 }
 
-#DayDetails_Info > *,
-#LessonDetails_Info > *
+.Details .Info > *,
+.Details .Info> *
 {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -42,8 +39,8 @@
     line-height: 100%;
 }
 
-#DayDetails_Info > * > svg,
-#LessonDetails_Info > * > svg
+.Details .Info > * > svg,
+.Details .Info > * > svg
 {
     opacity: var(--Gray00-Opacity);
 }

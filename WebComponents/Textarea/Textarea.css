@@ -22,20 +22,6 @@ custom-textarea[readonly] textarea
     border-radius: 5px;
     background: var(--Gray04);
 }
-  
-
-
-
-custom-textarea.Name textarea
-{
-    font-size: 125%;
-    font-weight: 500;
-}
-
-custom-textarea.Note textarea
-{
-    font-size: 105%;
-}
 
 
 

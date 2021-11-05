@@ -17,9 +17,10 @@ padding-button.InnerMain span.Ripple,
 
 @keyframes Ripple
 {
-    0%   { transform: scale(50%); opacity: 10%; }
-    50%  { opacity: 5%; }
-    100% { transform: scale(400%); opacity: 0%; }
+    0%     { transform: scale(50%); opacity: 10%; }
+    17.5%  { transform: scale(100%); }
+    50%    { opacity: 5%; }
+    100%   { transform: scale(100%); opacity: 0%; }
 }
 
 button,

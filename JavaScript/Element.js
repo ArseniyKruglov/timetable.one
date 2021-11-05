@@ -1,7 +1,7 @@
-function FocusDiv(eFocusing)   
+function FocusDiv(eTarget)   
 {
     let temp_bFocus = document.createElement('button');
-    eFocusing.insertBefore(temp_bFocus, eFocusing.firstElementChild);
+    eTarget.insertBefore(temp_bFocus, eTarget.firstElementChild);
     temp_bFocus.focus();
     temp_bFocus.remove();
 }

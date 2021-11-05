@@ -9,10 +9,10 @@ body
 {
     display: grid;
     grid-template-rows: auto 1fr;
-    justify-content: center;
     padding: 25px 0;
     background-color: HSL(var(--Accent-Hue), 17.5%, 92.5%);
     gap: 25px;
+    overflow: hidden;
     height: calc(100% - 50px);
 }
 
@@ -20,61 +20,16 @@ body
 {
     body
     {
-        background: none;
         background-color: #000000;
     }
 }
 
 
 
-nav
-{
-    display: grid;
-    grid-auto-flow: column;
-}
-
-nav > *
-{
-    display: grid;
-    gap: 2.5px;
-    justify-items: center;
-}
-
-nav > * > div
-{
-    font-size: 80%;
-    font-weight: 500;
-}
-
-nav > .Selected svg
-{
-    fill: var(--Main);
-}
-
-nav > .Selected > div
-{
-    color: var(--Main);
-}
-
-
-
 main
 {
-    display: grid;
-    overflow: auto;
-    justify-items: center;
-    align-self: center;
-    gap: 5px;
-    height: min(700px, calc(100% - 10px));
-    width: calc(100% - 10px);
-    grid-template-rows: auto 1fr auto;
-    align-items: inherit;
-    padding: 5px;
-}
-
-main.NoAlarms
-{
-    grid-template-rows: 1fr auto;
+    display: flex;
+    overflow: hidden;
 }
 
 

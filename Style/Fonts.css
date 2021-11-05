@@ -9,7 +9,6 @@
 {
     font-family: TT Chocolates;
     font-weight: 400;
-    font-display: swap;
     src: url(Fonts/TT_Chocolates_Regular.ttf);
 }
 
@@ -17,7 +16,6 @@
 {
     font-family: TT Chocolates;
     font-weight: 500;
-    font-display: swap;
     src: url(Fonts/TT_Chocolates_Medium.ttf);
 }
 
@@ -25,7 +23,6 @@
 {
     font-family: TT Chocolates;
     font-weight: 700;
-    font-display: swap;
     src: url(Fonts/TT_Chocolates_DemiBold.ttf);
 }
 
@@ -35,7 +32,6 @@
 {
     font-family: TT Norms Pro;
     font-weight: 400;
-    font-display: swap;
     src: url(Fonts/TT_Norms_Pro_Regular.ttf);
 }
 
@@ -43,7 +39,6 @@
 {
     font-family: TT Norms Pro;
     font-weight: 500;
-    font-display: swap;
     src: url(Fonts/TT_Norms_Pro_Medium.ttf);
 }
 
@@ -51,6 +46,5 @@
 {
     font-family: TT Norms Pro;
     font-weight: 700;
-    font-display: swap;
     src: url(Fonts/TT_Norms_Pro_Bold.ttf);
 }

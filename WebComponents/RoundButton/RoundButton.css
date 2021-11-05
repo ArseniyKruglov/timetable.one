@@ -23,7 +23,7 @@ custom-round-button > button
 
 custom-round-button > button > svg
 {
-    fill: var(--Gray00);
+    fill: var(--Color);
     width: var(--Scale);
     height: var(--Scale);
     transition: fill 250ms;
@@ -31,7 +31,7 @@ custom-round-button > button > svg
 
 custom-round-button > button:hover > svg
 {
-    fill: var(--Text);
+    fill: var(--Color);
 }
 
 

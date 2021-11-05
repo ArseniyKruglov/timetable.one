@@ -60,7 +60,7 @@ function Information_Draw()
     function BeforeLessons()
     {
         HTML +=    `<div>
-                        Сегодня к ${Time_FormatTime(Alarm_Get(aTodayTimetable[0][0])[0])} на <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[0][0])}>${aTodayTimetable[0][1]}</a>${aTodayTimetable[0][2] ? ` (${aTodayTimetable[0][2]})` : ''}, осталось ${Timer(Alarm_Get(aTodayTimetable[0][0])[0])}
+                        Сегодня к ${Time_Format(Alarm_Get(aTodayTimetable[0][0])[0])} на <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[0][0])}>${aTodayTimetable[0][1]}</a>${aTodayTimetable[0][2] ? ` (${aTodayTimetable[0][2]})` : ''}, осталось ${Timer(Alarm_Get(aTodayTimetable[0][0])[0])}
                     </div>`;
 
         Timeout(Alarm_Get(aTodayTimetable[0][0])[0]);
@@ -95,7 +95,7 @@ function Information_Draw()
                             </div>
 
                             <div>
-                                Затем <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''} в ${Time_FormatTime(Alarm_Get(aTodayTimetable[i + 1][0])[0])}
+                                Затем <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''} в ${Time_Format(Alarm_Get(aTodayTimetable[i + 1][0])[0])}
                             </div>`;
 
                 Timeout(Alarm_Get(aTodayTimetable[i + 1][0])[0]);
@@ -111,7 +111,7 @@ function Information_Draw()
         if (aTomorrowTimetable !== false && aTomorrowTimetable.length !== 0)
             HTML +=    `<div>
                             Завтра к 
-                            ${Time_FormatTime(Alarm_Get(aTomorrowTimetable[0][0], _iToday + 1)[0])}
+                            ${Time_Format(Alarm_Get(aTomorrowTimetable[0][0], _iToday + 1)[0])}
                             на
                             <a ${Timetable_GetLessonLinkAttributes(_iToday + 1, aTomorrowTimetable[0][0])}>${aTomorrowTimetable[0][1]}</a>,
                             осталось

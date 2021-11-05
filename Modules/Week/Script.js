@@ -165,5 +165,5 @@ function Week_Select()
 
     let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
     Week_Fill(aWeekPeriod);
-    document.getElementById('Week_Period').innerHTML = `${Time_FormatDate_Short(Time_From1970(aWeekPeriod[0]))} – ${Time_FormatDate_Short(Time_From1970(aWeekPeriod[1]))}`;
+    document.getElementById('Week_Period').innerHTML = `${Date_Format_Short(Time_From1970(aWeekPeriod[0]))} – ${Date_Format_Short(Time_From1970(aWeekPeriod[1]))}`;
 }

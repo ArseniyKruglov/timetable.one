@@ -1,20 +1,10 @@
-#LessonDetails_Header
-{
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: space-between;
-}
-
-
-
-#LessonDetails_Subject textarea
+.Details .Title textarea
 {
     font-size: 115%;
     font-weight: 500;
-
 }
 
-#LessonDetails_Subject textarea::placeholder
+.Details .Title textarea::placeholder
 {
     text-decoration: line-through;
 }

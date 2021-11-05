@@ -9,7 +9,7 @@ function Timetable_GetDayTimetable(iDate)
 
 function Timetable_GetLessonLinkAttributes(iDate, iLessonNumber)
 {
-    return `href='${location.pathname}?Date=${iDate}&LessonNumber=${iLessonNumber}' onclick='event.preventDefault(); LessonDetails(${iDate}, ${iLessonNumber});'`    
+    return `href='${location.pathname}?Date=${iDate}&LessonNumber=${iLessonNumber}' onclick='event.preventDefault(); new LessonDetails(${iDate}, ${iLessonNumber});'`    
 }
 
 function Timetable_GetLessonNumbers(iDate)
@@ -54,10 +54,22 @@ function Timetable_GetPeriod_Raw(iDate)
     let tBegin = Alarm_Get(Math.min(...aTimetable)),
         tEnd = Alarm_Get(Math.max(...aTimetable));
 
-    return [tBegin ? Time_FormatTime(tBegin[0]) : undefined, tEnd ? Time_FormatTime(tEnd[1]) : undefined];
+    return [tBegin ? Time_Format(tBegin[0]) : undefined, tEnd ? Time_Format(tEnd[1]) : undefined];
 }
 
-function Timetable_SetPoint(iDate, sSubject, bPoint)
+function Timetable_SetPoint_Day(iDate, bPoint)
+{
+    let eDay = Timetable_GetDayElement(iDate);
+    if (eDay)
+    {
+        if (bPoint)
+            eDay.classList.add('Note');
+        else
+            eDay.classList.remove('Note');
+    };
+}
+
+function Timetable_SetPoint_Lesson(iDate, sSubject, bPoint)
 {
     for (let loop_eLesson of Timetable_GetLessonElements(iDate))
     {

@@ -1,0 +1,31 @@
+nav
+{
+    display: grid;
+    grid-auto-flow: column;
+    width: min(700px, 100%);
+    justify-self: center;
+}
+
+nav > *
+{
+    display: grid;
+    gap: 2.5px;
+    justify-items: center;
+}
+
+nav > * > div
+{
+    font-size: 80%;
+    font-weight: 500;
+}
+
+nav > .Selected > custom-round-button 
+{
+    --Color: var(--Main) !important;
+    --Hover: var(--Main) !important;
+}
+
+nav > .Selected > div
+{
+    color: var(--Main);
+}

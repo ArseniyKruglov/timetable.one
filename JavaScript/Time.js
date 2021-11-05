@@ -13,11 +13,11 @@ function Time_From1970(iDaysSince1970)
     return new Date(iDaysSince1970 * 24 * 60 * 60 * 1000);
 }
 
-function Time_FormatDate(tDate)
+function Date_Format(tDate, bLong)
 {
     let HTML = '';
 
-    let sDayOfWeek = tDate.toLocaleDateString(navigator.language, { weekday: 'short' });
+    let sDayOfWeek = tDate.toLocaleDateString(navigator.language, { weekday: (bLong ? 'long' : 'short') });
     sDayOfWeek = sDayOfWeek.charAt(0).toUpperCase() + sDayOfWeek.slice(1);
     HTML += sDayOfWeek + ', ';
     
@@ -29,12 +29,12 @@ function Time_FormatDate(tDate)
     return HTML;
 }
 
-function Time_FormatDate_Short(tDate)
+function Date_Format_Short(tDate)
 {
     return tDate.toLocaleString([], {month: 'numeric', day: 'numeric'});
 }
 
-function Time_FormatTime(tDate)
+function Time_Format(tDate)
 {
     return tDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 }

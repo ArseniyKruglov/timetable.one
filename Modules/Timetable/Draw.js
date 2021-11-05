@@ -31,8 +31,8 @@ function Timetable_GetIHTML(iWeekOffset)
                 sDayClass = 'Tomorrow';
 
             HTML += `<div class='Day ${sDayClass || ''}'>
-                        <button onclick='DayDetails(${iDate})'>
-                            <div>${Time_FormatDate(Time_From1970(iDate))}</div>
+                        <button onclick='new DayDetails(${iDate})'>
+                            <div>${Date_Format(Time_From1970(iDate))}</div>
                             <div>${Timetable_GetPeriod(iDate)}</div>
                         </button>
 
