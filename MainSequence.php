@@ -69,7 +69,7 @@
             {
                 $aLessons = array_fill(0, strlen($aTimetable[4]), []);
                 foreach ($SQL->query("SELECT DayOfTimetable, LessonNumber, Subject, LectureHall, Educator FROM lessons_timetable WHERE TimetableID = $User[0] ORDER BY DayOfTimetable, LessonNumber")->fetch_all() as &$aLesson)
-                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Subject' => $aLesson[2], 'LectureHall' => $aLesson[3], 'Educator' => $aLesson[4]]]);
+                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Subject' => $aLesson[2], 'Fields' => [ 'LectureHall' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $SQL->query("SELECT Text FROM Fields WHERE (UserID = $User[0]) AND (TimetableID = $aTimetable[0]) AND (DayOfTimetable = $aLesson[0]) AND (LessonNumber = $aLesson[1])")->fetch_all()]]]);
 
                 array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : (int) $aTimetable[1], 'End' => $aTimetable[2] === NULL ? NULL : (int) $aTimetable[2], 'AnchorDate' => (int) $aTimetable[3], 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
             };

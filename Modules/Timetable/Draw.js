@@ -1,26 +1,12 @@
 function Timetable_Draw()
 {
-    let eTimetable = document.getElementById('Timetable');
+    const eTimetable = document.getElementById('Timetable');
     
-    eTimetable.innerHTML = Timetable_GetIHTML(_iWeekOffset);
-
-    eTimetable.classList.remove('Current', 'Next', 'Past');
-    if (_iWeekOffset === 0)
-        eTimetable.classList.add('Current');
-    else if (_iWeekOffset === 1)
-        eTimetable.classList.add('Next');
-    else if (_iWeekOffset < 0)
-        eTimetable.classList.add('Past');
-}
-
-function Timetable_GetIHTML(iWeekOffset)
-{
     let HTML = '';
-
-    let aWeekPeriod = Week_GetPeriod(iWeekOffset);
+    const aWeekPeriod = Week_GetPeriod(_iWeekOffset);
     for (let iDate = aWeekPeriod[0]; iDate <= aWeekPeriod[1]; iDate++)
     {
-        let mTodayTimetable = Timetable_GetDayTimetable(iDate);
+        const mTodayTimetable = Timetable_GetDayTimetable(iDate);
 
         if (mTodayTimetable !== false && mTodayTimetable.size > 0)
         {
@@ -33,7 +19,7 @@ function Timetable_GetIHTML(iWeekOffset)
             HTML += `<div class='Day ${sDayClass || ''}'>
                         <button onclick='new DayDetails(${iDate})'>
                             <div>${Date_Format(Time_From1970(iDate))}</div>
-                            <div>${Timetable_GetPeriod(iDate)}</div>
+                            <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
                         </button>
 
                         <div>`;
@@ -50,7 +36,15 @@ function Timetable_GetIHTML(iWeekOffset)
         };
     };
 
-    return HTML;
+    eTimetable.innerHTML = HTML;
+
+    eTimetable.classList.remove('Current', 'Next', 'Past');
+    if (_iWeekOffset === 0)
+        eTimetable.classList.add('Current');
+    else if (_iWeekOffset === 1)
+        eTimetable.classList.add('Next');
+    else if (_iWeekOffset < 0)
+        eTimetable.classList.add('Past');
 }
 
 function Timetable_Scroll()

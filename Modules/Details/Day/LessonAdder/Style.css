@@ -1,0 +1,31 @@
+#LessonAdder > :last-child
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+#LessonAdder > :last-child > div
+{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#LessonAdder > :last-child > div > svg
+{
+    fill: var(--Gray00);
+}
+
+#LessonAdder > :last-child > div > input
+{
+    border-radius: 5px;
+    border: var(--Border);
+    font-size: 95%;
+    padding: 1px 0 1px 5px;
+}
+
+#LessonAdder > :last-child > div > input:invalid
+{
+    background-color: HSLA(0, 100%, 50%, 20%);
+    border: 1px solid #00000000;
+}

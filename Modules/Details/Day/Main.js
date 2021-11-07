@@ -15,20 +15,24 @@ class DayDetails
 
                 _aOverlays['DayDetails'][1].children[1].className = 'Overlay_Rectangular';
                 _aOverlays['DayDetails'][1].children[1].children[0].className = 'Details';
+
+                const aAlarms = Timetable_GetPeriod(this.Date);
                 
                 let HTML = `<div class='Header'>
                                 <span><custom-round-button icon='Arrow Back' scale=26></custom-round-button></span>
-                                <span><custom-round-button icon='More' scale=26></custom-round-button></span>
+                                ${ (_iAccessLevel === 2) ? `<span><custom-round-button icon='More' scale=26></custom-round-button></span>`: '' }
                             </div>
             
                             <div class='Date'>${Date_Format(Time_From1970(iDate), true)}</div>
             
-                            <div class='Info'>
-                                <div>
+                            <div class='Info EmptyHidden'>${
+                                _mAlarms.size ? 
+                                `<div class='Alarms'>
                                     <svg ${_Icons['Alarm']}></svg>
-                                    <span>${Timetable_GetPeriod(iDate)}</span>
-                                </div>
-                            </div>
+                                    <span>${Timetable_GetPeriod(this.Date)}</span>
+                                </div>`
+                                : ''
+                            }</div>
             
                             <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${this.Note}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
             
@@ -37,10 +41,8 @@ class DayDetails
 
 
                 this.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Close(); });
-                this.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
-                {
-                    DropDown(Event.target, [['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () => { new LessonAdder(this.Date); }]]);
-                });
+                if (_iAccessLevel === 2)
+                    this.GetUIElement('.Header').children[1].addEventListener('click', (Event) => { DropDown(Event.target, [['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () => { new LessonAdder(this.Date); }]]); });
                 this.GetUIElement('.Note').addEventListener('input', (Event) => { this.Note = Event.target.value; });
 
 

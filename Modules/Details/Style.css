@@ -1,5 +1,6 @@
 #DayDetailsContainer,
-#LessonDetailsContainer
+#LessonDetailsContainer,
+#LessonAdderContainer
 {
     width: 400px;
 }
@@ -29,8 +30,7 @@
     gap: 5px;
 }
 
-.Details .Info > *,
-.Details .Info> *
+.Details .Info > div
 {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -39,8 +39,7 @@
     line-height: 100%;
 }
 
-.Details .Info > * > svg,
-.Details .Info > * > svg
+.Details .Info > div > svg
 {
     opacity: var(--Gray00-Opacity);
 }

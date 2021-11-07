@@ -17,9 +17,9 @@ document.body.innerHTML =  `<nav>
                                 </div>
                             </nav>
 
-                            <main class='${_mAlarms.size === 0 ? 'NoAlarms' : ''}'>
+                            <main>
                                 <div id='TimetableTab'>
-                                    <div id='Information' class='Island'></div>
+                                    <div id='Information' class='Island EmptyHidden'></div>
 
                                     <div id='TimetableContainer' class='Island'>
                                         <div id='Timetable'></div>
@@ -33,9 +33,11 @@ document.body.innerHTML =  `<nav>
                                 </div>
                             </main>`;
 Week_Select();
+addEventListener('resize', () => { GridOverflow(document.getElementById('Timetable')); });
 
-if (_mAlarms.size !== 0)
-    Information_Draw();
+
+
+Information_Draw();
 
 {
     let aPath = location.pathname.split('/');
@@ -43,19 +45,12 @@ if (_mAlarms.size !== 0)
 
     window._sURL = aPath[1];
 
-    if (aPath[2] === 'Chart')
+    if (oQuery.Date !== undefined)
     {
-        Chart(oQuery.Date);
-    }
-    else
-    {
-        if (oQuery.Date !== undefined)
-        {
-            if (oQuery.LessonNumber !== undefined)
-                new LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.LessonNumber));
-            else
-                new DayDetails(parseInt(oQuery.Date));
-        };
+        if (oQuery.LessonNumber !== undefined)
+            new LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.LessonNumber));
+        else
+            new DayDetails(parseInt(oQuery.Date));
     };
 }
 
@@ -67,22 +62,22 @@ onkeydown = (Event) =>
         switch(Event.which) 
         {
             case 37:
-                document.getElementById('Week').children[0].click();
+                document.getElementById('Week').firstElementChild.click();
                 break;
 
             case 39:
-                document.getElementById('Week').children[2].click();
+                document.getElementById('Week').lastElementChild.click();
                 break;
         };
 };
-addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[0].click(); });
-addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[2].click(); });
+// addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[0].click(); });
+// addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[2].click(); });
 
 
 
 function Midnight()
 {
-    _iToday = new Date().get1970();
+    _iToday++;
 
 
     
@@ -103,3 +98,59 @@ setTimeout
     () => { Midnight(); setInterval(Midnight, 24 * 60 * 60 * 1000); },
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
+
+
+
+
+
+// Dev
+
+function GridOverflow(eGrid)
+{
+    eGrid.style.gridTemplateColumns = '1fr 1fr';
+    eGrid.style.gridTemplateRows = '';
+    eGrid.style.gridAutoFlow = '';
+
+    let iWidth = eGrid.clientWidth;
+    let iScrollWidth = eGrid.scrollWidth;
+    let iHeight = eGrid.parentElement.clientHeight;
+    let iScrollHeight = eGrid.parentElement.scrollHeight;
+
+    if (iScrollWidth > iWidth)
+    {
+        eGrid.style.gridTemplateColumns = '1fr';
+    }
+    else if (iScrollHeight > iHeight)
+    {
+        eGrid.style.gridTemplateColumns = '';
+        eGrid.style.gridTemplateRows = '1fr 1fr';
+        eGrid.style.gridAutoFlow = 'column';
+
+        let iWidth = eGrid.clientWidth;
+        let iScrollWidth = eGrid.scrollWidth;
+        let iHeight = eGrid.parentElement.clientHeight;
+        let iScrollHeight = eGrid.parentElement.scrollHeight;
+
+        if (iScrollWidth > iWidth)
+        {
+            eGrid.style.gridTemplateColumns = '1fr 1fr';
+            eGrid.style.gridTemplateRows = '';
+            eGrid.style.gridAutoFlow = '';
+        };
+
+        if (iScrollHeight > iHeight)
+        {
+            eGrid.style.gridTemplateRows = '1fr';
+
+            let iWidth = eGrid.clientWidth;
+            let iScrollWidth = eGrid.scrollWidth;
+
+            if (iScrollWidth > iWidth)
+            {
+                eGrid.style.gridTemplateColumns = '';
+                eGrid.style.gridTemplateRows = '1fr 1fr';
+                eGrid.style.gridAutoFlow = 'column';
+            };
+        };
+    }
+}

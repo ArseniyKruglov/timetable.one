@@ -161,6 +161,7 @@ function Week_Fill(aWeekPeriod)
 function Week_Select()
 {
     Timetable_Draw();
+    GridOverflow(document.getElementById('Timetable'));
     document.fonts.ready.then(Timetable_Scroll);
 
     let aWeekPeriod = Week_GetPeriod(_iWeekOffset);

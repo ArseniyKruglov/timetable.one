@@ -22,19 +22,19 @@ function Date_Format(tDate, bLong)
     HTML += sDayOfWeek + ', ';
     
     if (tDate.getFullYear() === new Date().getFullYear())
-        HTML += tDate.toLocaleString(navigator.language, {month: 'long', day: 'numeric'});
+        HTML += tDate.toLocaleString(navigator.language, { month: 'long', day: 'numeric' });
     else
-        HTML += tDate.toLocaleString(navigator.language, {year: 'numeric', month: 'short', day: '2-digit'});
+        HTML += tDate.toLocaleString(navigator.language, { year: 'numeric', month: 'short', day: '2-digit' });
 
     return HTML;
 }
 
 function Date_Format_Short(tDate)
 {
-    return tDate.toLocaleString([], {month: 'numeric', day: 'numeric'});
+    return tDate.toLocaleString([], { month: 'numeric', day: 'numeric' });
 }
 
 function Time_Format(tDate)
 {
-    return tDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    return tDate.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' });
 }
