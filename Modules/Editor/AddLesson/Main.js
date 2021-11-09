@@ -25,7 +25,7 @@ class LessonAdder
                                 <span><custom-round-button icon='Done' scale=26 color='var(--Main)' hover-color='var(--Main)'></custom-round-button></span>
                             </div>
                 
-                            <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title'></custom-textarea>
+                            <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' required></custom-textarea>
     
                             <div>
                                 <div>

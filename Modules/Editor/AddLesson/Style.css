@@ -13,7 +13,7 @@
 
 #LessonAdder > :last-child > div > svg
 {
-    fill: var(--Gray00);
+    fill: var(--Gray70);
 }
 
 #LessonAdder > :last-child > div > input

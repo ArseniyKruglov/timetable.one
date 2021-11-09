@@ -13,14 +13,14 @@ custom-textarea textarea
     padding: 10px;
     resize: none;
     border-radius: 5px 5px 0 0;
-    background: var(--Gray05);
+    background: var(--Gray02-5);
 }
 
 custom-textarea[readonly] textarea
 {
     cursor: default;
     border-radius: 5px;
-    background: var(--Gray04);
+    background: var(--Gray05);
 }
 
 
@@ -36,10 +36,10 @@ custom-textarea > button
 
 custom-textarea > button > span
 {
-    color: var(--Gray00);
+    color: var(--Gray70);
 }
 
 custom-textarea > button > svg
 {
-    fill: var(--Gray00);
+    fill: var(--Gray70);
 }

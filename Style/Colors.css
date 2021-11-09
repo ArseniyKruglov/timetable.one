@@ -11,44 +11,43 @@
 
     --Main-Dark: HSL(210, 100%, 47.5%);
 
-    --Gray00-Opacity: 70%;
-    --Gray01-Opacity: 55%;
-    --Gray02-Opacity: 20%;
-    --Gray03-Opacity: 10%;
-    --Gray04-Opacity: 5%;
-    --Gray05-Opacity: 2.5%;
+    --Gray70-Opacity: 70%;
+    --Gray55-Opacity: 55%;
+    --Gray20-Opacity: 20%;
+    --Gray10-Opacity: 10%;
+    --Gray05-Opacity: 5%;
+    --Gray02-5-Opacity: 2.5%;
 
-    --Border: 1px solid var(--Gray02);
+    --Border: 1px solid var(--Gray20);
 }
 
 body
 {   
-    --Gray00: HSL(var(--Accent-Hue), var(--Accent-Saturation), 30%);
-    --Gray01: HSL(var(--Accent-Hue), var(--Accent-Saturation), 45%);
-    --Gray02: HSL(var(--Accent-Hue), var(--Accent-Saturation), 80%);
-    --Gray03: HSL(var(--Accent-Hue), var(--Accent-Saturation), 90%);
-    --Gray04: HSL(var(--Accent-Hue), var(--Accent-Saturation), 95%);
-    --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 97.5%);
+    --Gray70: HSL(var(--Accent-Hue), var(--Accent-Saturation), 30%);
+    --Gray55: HSL(var(--Accent-Hue), var(--Accent-Saturation), 45%);
+    --Gray20: HSL(var(--Accent-Hue), var(--Accent-Saturation), 80%);
+    --Gray10: HSL(var(--Accent-Hue), var(--Accent-Saturation), 90%);
+    --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 95%);
+    --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 97.5%);
 
-    --Background00: HSL(240, 12.5%, 30%);
+    --Background00: HSL(var(--Accent-Hue), var(--Accent-Saturation), 92.5%);
     --Background01: #FFFFFF;
     --Background02: #FFFFFF;
 
     --Text: #000000;
-    --Shadow: HSLA(0, 0%, 40%, 20%) 0px 2px 8px 0px;
-    --Shadow: HSLA(0, 0%, 40%, 10%) 0px 2px 8px 0px, HSLA(0, 0%, 40%, 40%) -0.1px 1px 2px 0px !important;
+    --Shadow: HSLA(0, 0%, 0%, 5%) 0px 2px 8px 0px, HSLA(0, 0%, 0%, 20%) -0.1px 1px 2px 0px;
 }
 
 @media (prefers-color-scheme: dark) { body
 {
-    --Gray00: HSL(0, 0%, 70%);
-    --Gray01: HSL(0, 0%, 55%);
-    --Gray02: HSL(0, 0%, 20%);
-    --Gray03: HSL(0, 0%, 10%);
-    --Gray04: HSL(0, 0%, 5%);
-    --Gray05: HSL(0, 0%, 2.5%);
+    --Gray70: HSL(var(--Accent-Hue), var(--Accent-Saturation), 70%);
+    --Gray55: HSL(var(--Accent-Hue), var(--Accent-Saturation), 55%);
+    --Gray20: HSL(var(--Accent-Hue), var(--Accent-Saturation), 20%);
+    --Gray10: HSL(var(--Accent-Hue), var(--Accent-Saturation), 10%);
+    --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 5%);
+    --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 2.5%);
 
-    --Background00: HSL(20, 5%, 7.5%);
+    --Background00: HSL(20, var(--Accent-Saturation), 7.5%);
     --Background01: HSL(20, 5%, 12.5%);
     --Background02: HSL(20, 5%, 15%);
 

@@ -3,7 +3,7 @@ span.Ripple
     position: absolute;
     border-radius: 50%;
     transform: scale(0);
-    background-color: var(--Gray01);
+    background-color: var(--Gray55);
     animation: Ripple 750ms linear;
     pointer-events: none;
 }

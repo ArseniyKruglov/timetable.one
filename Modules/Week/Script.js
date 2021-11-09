@@ -161,8 +161,17 @@ function Week_Fill(aWeekPeriod)
 function Week_Select()
 {
     Timetable_Draw();
-    GridOverflow(document.getElementById('Timetable'));
+    Timetable_Overflow(document.getElementById('Timetable'));
     document.fonts.ready.then(Timetable_Scroll);
+
+    let sWeekClass;
+    if (_iWeekOffset === 0)
+        sWeekClass = 'Current';
+    else if (_iWeekOffset === 1)
+        sWeekClass = 'Next';
+    else if (_iWeekOffset < 0)
+        sWeekClass = 'Past';
+    document.getElementById('Week').className = `Island ${sWeekClass}`;
 
     let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
     Week_Fill(aWeekPeriod);

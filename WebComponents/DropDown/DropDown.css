@@ -23,10 +23,10 @@
 
 .DropDown > button:hover
 {
-    background-color: var(--Gray04);
+    background-color: var(--Gray05);
 }
 
 .DropDown > button > svg
 {
-    fill: var(--Gray00)
+    fill: var(--Gray70)
 }

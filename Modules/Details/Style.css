@@ -41,5 +41,10 @@
 
 .Details .Info > div > svg
 {
-    opacity: var(--Gray00-Opacity);
+    opacity: var(--Gray70-Opacity);
+}
+
+.Details .Info > div > span
+{
+    word-break: break-word;
 }

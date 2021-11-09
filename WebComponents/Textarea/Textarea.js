@@ -3,7 +3,7 @@ class Textarea extends HTMLElement
     connectedCallback()
     {
         this.innerHTML =   `<div class='Underline'>
-                                <textarea placeholder='${this.getAttribute('placeholder') || ''}' ${this.hasAttribute('readonly') ? 'readonly' : ''}>${this.getAttribute('value') || ''}</textarea>
+                                <textarea placeholder='${this.getAttribute('placeholder') || ''}' ${this.hasAttribute('readonly') ? 'readonly' : ''} name='${this.getAttribute('name') || ''}'>${this.getAttribute('value') || ''}</textarea>
                             </div>
                             
                             <button></button>`;

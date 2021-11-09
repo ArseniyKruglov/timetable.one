@@ -3,16 +3,16 @@ _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
 
 document.body.innerHTML =  `<nav>
-                                <div class='Selected' onclick='Tab_Select(0)'>
-                                    <custom-round-button icon=Timetable scale=30></custom-round-button>
+                                <div class='Selected' onclick='this.firstElementChild.click()'>
+                                    <custom-round-button icon=Timetable scale=30 onclick='Tab_Select(0)'></custom-round-button>
                                     <div>${['Timetable', 'Расписание'][_iLanguage]}</div>
                                 </div>
-                                <div onclick='Tab_Select(1)'>
-                                    <custom-round-button icon=Edit scale=30></custom-round-button>
+                                <div onclick='this.firstElementChild.click()'>
+                                    <custom-round-button icon=Edit scale=30 onclick='Tab_Select(1)'></custom-round-button>
                                     <div>${['Editor', 'Редактор'][_iLanguage]}</div>
                                 </div>
-                                <div onclick='Tab_Select(2)'>
-                                    <custom-round-button icon=Settings scale=30></custom-round-button>
+                                <div onclick='this.firstElementChild.click()'>
+                                    <custom-round-button icon=Settings scale=30 onclick='Tab_Select(2)'></custom-round-button>
                                     <div>${['Settings', 'Настройки'][_iLanguage]}</div>
                                 </div>
                             </nav>
@@ -21,20 +21,22 @@ document.body.innerHTML =  `<nav>
                                 <div id='TimetableTab'>
                                     <div id='Information' class='Island EmptyHidden'></div>
 
-                                    <div id='TimetableContainer' class='Island'>
-                                        <div id='Timetable'></div>
+                                    <div id='TimetableHeight'>
+                                        <div id='TimetableScroll' class='Island'>
+                                            <div id='Timetable'></div>
+                                        </div>
                                     </div>
                                     
                                     <div id='Week' class='Island'>
-                                        <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()' hover-color='var(--Gray00)'></custom-round-button>
+                                        <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()' hover-color='var(--Gray70)'></custom-round-button>
                                         <button id='Week_Period' onclick='Week_Current()'></button>
-                                        <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()' hover-color='var(--Gray00)'></custom-round-button>
+                                        <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()' hover-color='var(--Gray70)'></custom-round-button>
                                     </div>
                                 </div>
                             </main>`;
 Week_Select();
-addEventListener('resize', () => { GridOverflow(document.getElementById('Timetable')); });
-
+Timetable_Height(false);
+addEventListener('resize', () => { Timetable_Overflow(document.getElementById('Timetable')); Timetable_Height(false); });
 
 
 Information_Draw();
@@ -98,59 +100,3 @@ setTimeout
     () => { Midnight(); setInterval(Midnight, 24 * 60 * 60 * 1000); },
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
-
-
-
-
-
-// Dev
-
-function GridOverflow(eGrid)
-{
-    eGrid.style.gridTemplateColumns = '1fr 1fr';
-    eGrid.style.gridTemplateRows = '';
-    eGrid.style.gridAutoFlow = '';
-
-    let iWidth = eGrid.clientWidth;
-    let iScrollWidth = eGrid.scrollWidth;
-    let iHeight = eGrid.parentElement.clientHeight;
-    let iScrollHeight = eGrid.parentElement.scrollHeight;
-
-    if (iScrollWidth > iWidth)
-    {
-        eGrid.style.gridTemplateColumns = '1fr';
-    }
-    else if (iScrollHeight > iHeight)
-    {
-        eGrid.style.gridTemplateColumns = '';
-        eGrid.style.gridTemplateRows = '1fr 1fr';
-        eGrid.style.gridAutoFlow = 'column';
-
-        let iWidth = eGrid.clientWidth;
-        let iScrollWidth = eGrid.scrollWidth;
-        let iHeight = eGrid.parentElement.clientHeight;
-        let iScrollHeight = eGrid.parentElement.scrollHeight;
-
-        if (iScrollWidth > iWidth)
-        {
-            eGrid.style.gridTemplateColumns = '1fr 1fr';
-            eGrid.style.gridTemplateRows = '';
-            eGrid.style.gridAutoFlow = '';
-        };
-
-        if (iScrollHeight > iHeight)
-        {
-            eGrid.style.gridTemplateRows = '1fr';
-
-            let iWidth = eGrid.clientWidth;
-            let iScrollWidth = eGrid.scrollWidth;
-
-            if (iScrollWidth > iWidth)
-            {
-                eGrid.style.gridTemplateColumns = '';
-                eGrid.style.gridTemplateRows = '1fr 1fr';
-                eGrid.style.gridAutoFlow = 'column';
-            };
-        };
-    }
-}

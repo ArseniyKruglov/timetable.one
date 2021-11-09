@@ -37,17 +37,17 @@
     min-width: 125px;
 }
 
-#Timetable.Past ~  #Week > #Week_Period
+#Week.Past > #Week_Period
 {
-    opacity: var(--Gray00-Opacity);
+    opacity: var(--Gray70-Opacity);
 }
 
-#Timetable.Current ~ #Week > #Week_Period
+#Week.Current > #Week_Period
 {
     color: var(--Main);
 }
 
-#Timetable.Next ~ #Week > #Week_Period
+#Week.Next > #Week_Period
 {
     color: var(--Secondary);
 }

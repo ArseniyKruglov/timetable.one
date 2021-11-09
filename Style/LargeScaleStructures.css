@@ -10,20 +10,11 @@ body
     display: grid;
     grid-template-rows: auto 1fr;
     padding: 25px 0;
-    background-color: HSL(var(--Accent-Hue), 17.5%, 92.5%);
+    background-color: var(--Background00);
     gap: 25px;
     overflow: hidden;
     height: calc(100% - 50px);
 }
-
-@media (prefers-color-scheme: dark)
-{
-    body
-    {
-        background-color: #000000;
-    }
-}
-
 
 
 main

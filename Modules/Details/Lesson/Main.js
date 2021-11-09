@@ -193,7 +193,8 @@ class LessonDetails
                         <span><custom-round-button icon='Done' scale=28 hover-color='var(--Main)' color='var(--Main)'></custom-round-button></span>
                     </div>
                     
-                    <custom-textarea class='Title' placeholder='${this.Subject}' value='${this.Added || this.Subject}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
+                    <form>
+                    <custom-textarea class='Title' name='Title' placeholder='${this.Subject}' value='${this.Added || this.Subject}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
 
                     <div class='Info'>
                         <div>
@@ -215,7 +216,8 @@ class LessonDetails
                             <svg ${_Icons['Circle']}></svg>
                             <custom-textarea placeholder='${['User field', 'Пользовательское поле'][_iLanguage]}'></custom-textarea>
                         </div>
-                    </div>`;
+                    </div>
+                    <form>`;
 
         _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
 
@@ -240,6 +242,7 @@ class LessonDetails
         });
         this.GetUIElement('.Header').children[2].addEventListener('click', () =>
         {
+            console.log(this.GetUIElement('form').Title)
             let sTitle = this.GetUIElement('.Title').value;
 
             let aFields = [];
@@ -304,16 +307,16 @@ class LessonDetails
 
     FindInWeek_Note()
     {
-        if (this.oInWeek_Note)
+        if (this.oInWeek_Note === undefined)
         {
             this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.TimetableSubject }, true) || null;
-            
-            Timetable_SetPoint_Lesson(this.Date, this.TimetableSubject, this.oInWeek_Note);
-            document.this.GetUIElementById('LessonDetails_Text').value = this.Note;
         }
         else
         {
             this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': this.TimetableSubject }, true) || null;
+            
+            Timetable_SetPoint_Lesson(this.Date, this.TimetableSubject, this.oInWeek_Note);
+            this.GetUIElement('.Note').value = this.Note;
         };
     }
 
@@ -355,7 +358,7 @@ class LessonDetails
             }
             else
             {
-                document.this.GetUIElementById('LessonDetails_Subject').value = this.Added;
+                this.GetUIElement('.Title').value = this.Added;
             };
         }
         else
