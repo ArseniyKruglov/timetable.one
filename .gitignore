@@ -1,3 +1,4 @@
 Passwords.php
 vendor
 .DS_Store
+node_modules
