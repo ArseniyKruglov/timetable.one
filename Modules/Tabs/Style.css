@@ -6,11 +6,20 @@ nav
     justify-self: center;
 }
 
+
+
 nav > *
 {
     display: grid;
     gap: 2.5px;
     justify-items: center;
+}
+
+
+
+nav > * > custom-round-button
+{
+    --Scale: 30px;
 }
 
 nav > * > div
@@ -19,10 +28,12 @@ nav > * > div
     font-weight: 500;
 }
 
+
+
 nav > .Selected > custom-round-button 
 {
-    --Color: var(--Main) !important;
-    --Hover: var(--Main) !important;
+    --Icon-Color: var(--Main);
+    --Hover-Color: var(--Main);
 }
 
 nav > .Selected > div

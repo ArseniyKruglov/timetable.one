@@ -40,8 +40,8 @@ class LessonDetails
                 _aOverlays['LessonDetails'][1].children[1].children[0].className = 'Details';
 
                 let HTML = `<div class='Header'>
-                                <span><custom-round-button icon='Arrow Back' scale=28></custom-round-button></span>
-                                <span><custom-round-button icon='More' scale=28></custom-round-button></span>
+                                <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
+                                <span><custom-round-button icon='More'></custom-round-button></span>
                             </div>
                             
                             <custom-textarea class='Title' placeholder='${this.Subject}' value='${this.Added || (this.Canceled ? '' : this.Replacement ?? this.Subject)}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
@@ -110,7 +110,8 @@ class LessonDetails
                     {
                         if (!this.Added)
                         {
-                            aActions.push(['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], () => { this.Edit(); }]);
+                            if (_bBeta)
+                                aActions.push(['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], () => { this.Edit(); }]);
     
                             if (!this.Canceled)
                                 aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () =>
@@ -188,12 +189,11 @@ class LessonDetails
     Edit()
     {
         let HTML = `<div class='Header'>
-                        <span><custom-round-button icon='Arrow Back' scale=28></custom-round-button></span>
-                        <span><custom-round-button icon='RemoveForever' scale=28 hover-color=Red></custom-round-button></span>
-                        <span><custom-round-button icon='Done' scale=28 hover-color='var(--Main)' color='var(--Main)'></custom-round-button></span>
+                        <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
+                        <span><custom-round-button icon='RemoveForever' hover-color=Red></custom-round-button></span>
+                        <span><custom-round-button icon='Done' hover-color='var(--Main)' color='var(--Main)'></custom-round-button></span>
                     </div>
                     
-                    <form>
                     <custom-textarea class='Title' name='Title' placeholder='${this.Subject}' value='${this.Added || this.Subject}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
 
                     <div class='Info'>
@@ -216,8 +216,7 @@ class LessonDetails
                             <svg ${_Icons['Circle']}></svg>
                             <custom-textarea placeholder='${['User field', 'Пользовательское поле'][_iLanguage]}'></custom-textarea>
                         </div>
-                    </div>
-                    <form>`;
+                    </div>`;
 
         _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
 

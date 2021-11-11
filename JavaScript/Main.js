@@ -1,18 +1,21 @@
 _iToday = new Date().get1970();
 _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
+_bBeta = false;
 
+if (!_bBeta)
+document.body.classList.add('NoNav');
 document.body.innerHTML =  `<nav>
                                 <div class='Selected' onclick='this.firstElementChild.click()'>
-                                    <custom-round-button icon=Timetable scale=30 onclick='Tab_Select(0)'></custom-round-button>
+                                    <custom-round-button icon=Timetable onclick='Tab_Select(0)'></custom-round-button>
                                     <div>${['Timetable', 'Расписание'][_iLanguage]}</div>
                                 </div>
                                 <div onclick='this.firstElementChild.click()'>
-                                    <custom-round-button icon=Edit scale=30 onclick='Tab_Select(1)'></custom-round-button>
+                                    <custom-round-button icon=Edit onclick='Tab_Select(1)'></custom-round-button>
                                     <div>${['Editor', 'Редактор'][_iLanguage]}</div>
                                 </div>
                                 <div onclick='this.firstElementChild.click()'>
-                                    <custom-round-button icon=Settings scale=30 onclick='Tab_Select(2)'></custom-round-button>
+                                    <custom-round-button icon=Settings onclick='Tab_Select(2)'></custom-round-button>
                                     <div>${['Settings', 'Настройки'][_iLanguage]}</div>
                                 </div>
                             </nav>
@@ -58,6 +61,7 @@ Information_Draw();
 
 
 // addEventListener('focus', Week_Update);
+addEventListener('focus', Information_Draw);
 onkeydown = (Event) =>
 {
     if (Overlay_IsOpened() === false)

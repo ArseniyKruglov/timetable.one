@@ -31,3 +31,15 @@ main
     border-radius: 8px;
     box-shadow: var(--Shadow);
 }
+
+
+
+body.NoNav
+{
+    grid-template-rows: initial;
+}
+
+body.NoNav > nav
+{
+    display: none;
+}

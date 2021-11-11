@@ -1,6 +1,9 @@
 custom-round-button
 {
+    --Scale: 24px;
     --Radius: calc(var(--Scale) + 12px);
+    --Icon-Color: var(--Text);
+    --Hover-Color: var(--Gray70);
 }
 
 
@@ -23,7 +26,7 @@ custom-round-button > button
 
 custom-round-button > button > svg
 {
-    fill: var(--Color);
+    fill: var(--Icon-Color);
     width: var(--Scale);
     height: var(--Scale);
     transition: fill 250ms;
@@ -31,12 +34,12 @@ custom-round-button > button > svg
 
 custom-round-button > button:hover > svg
 {
-    fill: var(--Color);
+    fill: var(--Icon-Color);
 }
 
 
 
-custom-round-button > button > :nth-child(2)
+custom-round-button > button > div
 {
     position: absolute;
     clip-path: circle(10px);
@@ -44,11 +47,11 @@ custom-round-button > button > :nth-child(2)
     height: 100%;
     opacity: 0%;
     z-index: -1;
-    background-color: var(--Hover);
+    background-color: var(--Hover-Color);
     transition: opacity 100ms, clip-path 300ms;
 }
 
-custom-round-button > button:hover > :nth-child(2)
+custom-round-button > button:hover > div
 {
     clip-path: circle(var(--Radius));
     opacity: 5%;
@@ -61,8 +64,16 @@ custom-round-button > button > span
     position: absolute;
     border-radius: 50%;
     transform: scale(0);
-    background-color: var(--Hover);
+    background-color: var(--Hover-Color);
     animation: Ripple 750ms linear;
     width: var(--Radius);
     height: var(--Radius);
+}
+
+@keyframes Ripple
+{
+    0%     { opacity: 10%;   transform: scale(50%);  }
+    17.5%  {                 transform: scale(100%); }
+    50%    { opacity: 5%;                          }
+    100%   { opacity: 0%;    transform: scale(100%); }
 }

@@ -19,8 +19,8 @@ class DayDetails
                 const aAlarms = Timetable_GetPeriod(this.Date);
                 
                 let HTML = `<div class='Header'>
-                                <span><custom-round-button icon='Arrow Back' scale=26></custom-round-button></span>
-                                ${ (_iAccessLevel === 2) ? `<span><custom-round-button icon='More' scale=26></custom-round-button></span>`: '' }
+                                <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
+                                ${ (_bBeta && _iAccessLevel === 2) ? `<span><custom-round-button icon='More'></custom-round-button></span>`: '' }
                             </div>
             
                             <div class='Date'>${Date_Format(Time_From1970(iDate), true)}</div>
@@ -41,7 +41,7 @@ class DayDetails
 
 
                 this.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Close(); });
-                if (_iAccessLevel === 2)
+                if (_bBeta && _iAccessLevel === 2)
                     this.GetUIElement('.Header').children[1].addEventListener('click', (Event) => { DropDown(Event.target, [['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () => { new LessonAdder(this.Date); }]]); });
                 this.GetUIElement('.Note').addEventListener('input', (Event) => { this.Note = Event.target.value; });
 
