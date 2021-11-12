@@ -1,21 +1,17 @@
 _iToday = new Date().get1970();
 _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
-_bBeta = false;
+_bBeta = true;
 
-// if (!_bBeta)
-//     document.body.classList.add('NoNav');
+if (!_bBeta)
+    document.body.classList.add('NoNav');
 document.body.innerHTML =  `<nav>
                                 <div class='Selected' onclick='this.firstElementChild.click()'>
                                     <custom-round-button icon=Timetable onclick='Tab_Select(0)'></custom-round-button>
                                     <div>${['Timetable', 'Расписание'][_iLanguage]}</div>
                                 </div>
                                 <div onclick='this.firstElementChild.click()'>
-                                    <custom-round-button icon=Edit onclick='Tab_Select(1)'></custom-round-button>
-                                    <div>${['Editor', 'Редактор'][_iLanguage]}</div>
-                                </div>
-                                <div onclick='this.firstElementChild.click()'>
-                                    <custom-round-button icon=Settings onclick='Tab_Select(2)'></custom-round-button>
+                                    <custom-round-button icon=Settings onclick='Tab_Select(1)'></custom-round-button>
                                     <div>${['Settings', 'Настройки'][_iLanguage]}</div>
                                 </div>
                             </nav>
@@ -39,7 +35,7 @@ document.body.innerHTML =  `<nav>
                             </main>`;
 Week_Select();
 Timetable_Height(false);
-addEventListener('resize', () => { Timetable_Overflow(document.getElementById('Timetable')); Timetable_Height(false); });
+addEventListener('resize', () => { Timetable_Overflow(document.getElementById('Timetable')); _aHeights = []; Timetable_Height(false); });
 
 
 Information_Draw();

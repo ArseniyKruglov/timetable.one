@@ -175,36 +175,36 @@ function Timetable_Overflow(eGrid)
 
 function Timetable_Height(bAnimation)
 {
-    const iInitialHeight = document.getElementById('TimetableHeight').clientHeight - 10;
-    const iInitialWeekOffset = _iWeekOffset;
-
     const eHeight = document.getElementById('TimetableHeight');
     const eScroll = document.getElementById('TimetableScroll');
+
+    if (!_aHeights[_iWeekOffset])
+        _aHeights[_iWeekOffset] = eScroll.scrollHeight;
+    const iInitialHeight = bAnimation ? document.getElementById('TimetableHeight').clientHeight - 10 : null;
+    const iInitialWeekOffset = _iWeekOffset;
+
 
     eHeight.style.height = '';
     eHeight.style.transition = '';
 
-    let iMaxHeight = 0;
     for (let i = -3; i < 3; i++)
-        if (i !== 0)
+        if (i !== 0 && !_aHeights[iInitialWeekOffset + i])
         {
             _iWeekOffset = iInitialWeekOffset + i;
             Week_Select();
 
-            if (eScroll.scrollHeight > iMaxHeight)
-                iMaxHeight = eScroll.scrollHeight;
+            _aHeights[_iWeekOffset] = eScroll.scrollHeight;
         };
 
     _iWeekOffset = iInitialWeekOffset;
     Week_Select();
 
-    if (eScroll.scrollHeight > iMaxHeight)
-        iMaxHeight = eScroll.scrollHeight;
+    let iMaxHeight = Math.max(_aHeights[_iWeekOffset - 3], _aHeights[_iWeekOffset - 2], _aHeights[_iWeekOffset - 1], _aHeights[_iWeekOffset], _aHeights[_iWeekOffset + 1], _aHeights[_iWeekOffset + 2]);
 
     if (bAnimation === true)
     {
         eHeight.style.transition = 'height 500ms';
-        eHeight.style.height = iInitialHeight + 'px';
+        eHeight.style.height = Math.max(iInitialHeight, _aHeights[_iWeekOffset]) + 'px';
         setTimeout(() => { eHeight.style.height = (iMaxHeight + 75) + 'px'; }, 0);
     }
     else
@@ -212,3 +212,5 @@ function Timetable_Height(bAnimation)
         eHeight.style.height = (iMaxHeight + 75) + 'px';
     };
 }
+
+_aHeights = [];

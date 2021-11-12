@@ -1,12 +1,11 @@
 #Week
 {
     padding: 10px 10.5px;
-    font-size: 110%;
     display: grid;
     grid-auto-flow: column;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     width: fit-content;
     border-radius: 100px;
     z-index: 1;
@@ -37,6 +36,7 @@
 {
     font-weight: 500;
     min-width: 125px;
+    font-size: 16px;
 }
 
 #Week.Past > #Week_Period

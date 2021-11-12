@@ -9,7 +9,20 @@
     --Main-Transparent: HSLA(210, 100%, 45%, 7.5%);
     --Secondary-Transparent: HSLA(348, 83%, 47%, 25%);
 
-    --Main-Dark: HSL(210, 100%, 47.5%);
+
+
+    /* --Accent-Hue: 217;
+    --Accent-Saturation: 17.5%;
+
+    --Main: HSL(217, 89%, 61%);
+    --Secondary: HSL(5, 69%, 54%);
+
+    --Main-Transparent: HSLA(217, 89%, 61%, 7.5%);
+    --Secondary-Transparent: HSLA(5, 69%, 54%, 25%);
+
+
+
+    --Main-Dark: HSL(210, 100%, 47.5%); */
 
     --Gray70-Opacity: 70%;
     --Gray55-Opacity: 55%;
@@ -30,7 +43,7 @@ body
     --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 95%);
     --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 97.5%);
 
-    --Background00: HSL(var(--Accent-Hue), var(--Accent-Saturation), 92.5%);
+    --Background00: HSL(var(--Accent-Hue), calc(var(--Accent-Saturation) * 0.1), 95%);
     --Background01: #FFFFFF;
     --Background02: #FFFFFF;
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 
 <html>
     <head>
@@ -7,7 +7,7 @@
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
         <link rel='manifest' href='/manifest.php?URL=<? echo $URL ?>'>
-        <meta name='theme-color' content='#E9ECEF'>
+        <meta name='theme-color' content='#F2F2F2'>
 
         <link rel='apple-touch-icon' sizes='57x57' href='/Style/Icons/apple-icon-57x57.png'>
         <link rel='apple-touch-icon' sizes='60x60' href='/Style/Icons/apple-icon-60x60.png'>
@@ -27,6 +27,8 @@
         <meta name='theme-color' content='#FFFFFF'>
 
         <? 
+        $Time = time();
+
         $Files_JS = [];
         $Files_CSS = [];
         
@@ -48,7 +50,7 @@
         GetFiles('');
 
         foreach ($Files_CSS as &$File_CSS)
-            echo "<link rel='stylesheet' href='/$File_CSS'>\r\n";
+            echo "<link rel='stylesheet' href='/$File_CSS?$Time'>\r\n";
         ?>
     </head>
 
@@ -56,7 +58,7 @@
 
     <?
     foreach ($Files_JS as &$File_JS)
-        echo "<script src='/$File_JS'></script>\r\n";
+        echo "<script src='/$File_JS?$Time'></script>\r\n";
     ?>
 
     <script>
@@ -114,5 +116,5 @@
         ?>);
     </script>
 
-    <script src='/JavaScript/Main.js'></script>
+    <script src='/JavaScript/Main.js?<? echo $Time ?>'></script>
 </html>

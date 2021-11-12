@@ -190,8 +190,8 @@ class LessonDetails
     {
         let HTML = `<div class='Header'>
                         <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
-                        <span><custom-round-button icon='RemoveForever' hover-color=Red></custom-round-button></span>
-                        <span><custom-round-button icon='Done' hover-color='var(--Main)' color='var(--Main)'></custom-round-button></span>
+                        <span><custom-round-button icon='RemoveForever'></custom-round-button></span>
+                        <span><custom-round-button icon='Done'></custom-round-button></span>
                     </div>
                     
                     <custom-textarea class='Title' name='Title' placeholder='${this.Subject}' value='${this.Added || this.Subject}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>

@@ -19,13 +19,15 @@ nav > *
 
 nav > * > custom-round-button
 {
-    --Scale: 30px;
+    --Scale: 28px;
+    --Icon-Color: var(--Gray70);
 }
 
 nav > * > div
 {
     font-size: 80%;
     font-weight: 500;
+    color: var(--Gray70);
 }
 
 
@@ -39,4 +41,23 @@ nav > .Selected > custom-round-button
 nav > .Selected > div
 {
     color: var(--Main);
+}
+
+
+
+@media (max-width: 600px)
+{
+    nav
+    {
+        grid-row: 2;
+        background-color: var(--Background01);
+        box-shadow: var(--Shadow);
+        padding: 10px 0;
+        height: fit-content;
+    }
+
+    nav > * > custom-round-button
+    {
+        --Scale: 24px;
+    }
 }

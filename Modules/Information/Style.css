@@ -1,9 +1,9 @@
 #Information
 {
     padding: 15px 22.5px;
-    font-size: 102.5%;
     display: grid;
     gap: 5px;
+    font-size: 15px;
 }
 
 main.NoAlarms > #Information

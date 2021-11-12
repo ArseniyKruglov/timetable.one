@@ -39,8 +39,8 @@
     {
         display: grid;
         grid-gap: 40px 80px;
-        padding: 35px 45px;
-        font-size: 125%;
+        font-size: 18px;
+        padding: 30px 40px;
         overflow: auto;
         margin: auto;
     }
@@ -65,7 +65,7 @@
 
     #Timetable:empty
     {
-        background-image: URL('https://i.pinimg.com/originals/8d/13/d2/8d13d2bfbb27884602f2f6584b1770e9.gif');
+        background-image: URL('/Style/Tumbleweed.gif');
         background-size: cover;
         min-width: 250px;
         height: 250px;
@@ -82,15 +82,6 @@
             grid-template-rows: 1fr auto !important;
             padding: 0 !important;
             gap: 2.5px !important;
-        }
-
-        nav
-        {
-            grid-row: 2;
-            background-color: var(--Background01);
-            box-shadow: var(--Shadow);
-            padding: 10px 0;
-            height: fit-content;
         }
 
         #TimetableScroll

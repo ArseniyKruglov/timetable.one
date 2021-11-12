@@ -1,31 +1,55 @@
-#LessonAdder > :last-child
+.Adder > .Info > div > div
+{
+    display: grid;
+}
+
+
+
+.Adder > .Info  input
+{
+    border: none;
+    border-bottom: var(--Border);
+    transition: border-bottom 250ms;
+    border-radius: 5px 5px 0 0;
+    background-color: var(--Gray02-5);
+    height: 40px;
+    font-size: 18px;
+    padding: 1px 12.5px;
+    width: calc(100% - 25px);
+}
+
+.Adder > .Info input:focus
+{
+    outline: none;
+    border-bottom: 1px solid var(--Main);
+}
+
+.Adder > .Info input:invalid
+{
+    background-color: HSLA(0, 100%, 50%, 5%);
+}
+
+
+
+.Adder > .Info .Caution
 {
     display: flex;
-    justify-content: space-between;
+    visibility: hidden;
+    gap: 4px;
 }
 
-#LessonAdder > :last-child > div
+.Adder > .Info .Caution > :first-child
 {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    width: 10px;
+    height: 8px;
+    border-top: 1px solid Darkred;
+    border-left: 1px solid Darkred;
+    margin: 8px 0 0 5px;
+    border-radius: 5px 0 0 0;
 }
 
-#LessonAdder > :last-child > div > svg
+.Adder > .Info .Caution :last-child
 {
-    fill: var(--Gray70);
-}
-
-#LessonAdder > :last-child > div > input
-{
-    border-radius: 5px;
-    border: var(--Border);
-    font-size: 95%;
-    padding: 1px 0 1px 5px;
-}
-
-#LessonAdder > :last-child > div > input:invalid
-{
-    background-color: HSLA(0, 100%, 50%, 20%);
-    border: 1px solid #00000000;
+    font-size: 14px;
+    color: Darkred;
 }

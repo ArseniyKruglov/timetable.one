@@ -10,7 +10,7 @@
     display: grid;
     gap: 25px;
     padding: 17.5px 15px;
-    font-size: 120%;
+    font-size: 18px;
 }
 
 
@@ -39,14 +39,14 @@
 {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 12.5px;
+    gap: 0 12.5px;
     align-items: center;
     line-height: 100%;
 }
 
 .Details .Info > div > custom-icon
 {
-    color: var(--Gray70-Opacity);
+    --Color: var(--Gray70);
 }
 
 .Details .Info > div > span
