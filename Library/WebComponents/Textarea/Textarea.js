@@ -44,7 +44,7 @@ class Textarea extends HTMLElement
             this.etTextarea.style.maxHeight = this.bExpanded ? '' : `${this.iMinimized}px`;
             this.ebExpand.hidden = false;
             this.ebExpand.innerHTML =  `<span>${(this.bExpanded ? ['Show less', 'Свернуть'] : ['Show full', 'Показать полностью'])[_iLanguage]}</span>
-                                        <svg width=18px height=18px ${_Icons[(this.bExpanded ? 'Expand_Less' : 'Expand_More')]}></svg>`;
+                                        <custom-icon icon='${this.bExpanded ? 'Expand_Less' : 'Expand_More'}''></svg>`;
         };
     }
 

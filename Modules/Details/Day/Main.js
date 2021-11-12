@@ -28,7 +28,7 @@ class DayDetails
                             <div class='Info EmptyHidden'>${
                                 _mAlarms.size ? 
                                 `<div class='Alarms'>
-                                    <svg ${_Icons['Alarm']}></svg>
+                                    <custom-icon icon='Alarm'></custom-icon>
                                     <span>${Timetable_GetPeriod(this.Date)}</span>
                                 </div>`
                                 : ''

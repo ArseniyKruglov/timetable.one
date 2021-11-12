@@ -39,7 +39,8 @@ custom-textarea > button > span
     color: var(--Gray70);
 }
 
-custom-textarea > button > svg
+custom-textarea > button > custom-icon
 {
-    fill: var(--Gray70);
+    --Scale: 18px;
+    --Color: var(--Gray70);
 }

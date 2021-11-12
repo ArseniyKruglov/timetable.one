@@ -3,8 +3,8 @@ _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
 _bBeta = false;
 
-if (!_bBeta)
-document.body.classList.add('NoNav');
+// if (!_bBeta)
+//     document.body.classList.add('NoNav');
 document.body.innerHTML =  `<nav>
                                 <div class='Selected' onclick='this.firstElementChild.click()'>
                                     <custom-round-button icon=Timetable onclick='Tab_Select(0)'></custom-round-button>
@@ -31,9 +31,9 @@ document.body.innerHTML =  `<nav>
                                     </div>
                                     
                                     <div id='Week' class='Island'>
-                                        <custom-round-button icon='Chevron Left' scale=20 onclick='Week_Previous()' hover-color='var(--Gray70)'></custom-round-button>
+                                        <custom-round-button icon='Chevron Left' onclick='Week_Previous()'></custom-round-button>
                                         <button id='Week_Period' onclick='Week_Current()'></button>
-                                        <custom-round-button icon='Chevron Right' scale=20 onclick='Week_Next()' hover-color='var(--Gray70)'></custom-round-button>
+                                        <custom-round-button icon='Chevron Right' onclick='Week_Next()'></custom-round-button>
                                     </div>
                                 </div>
                             </main>`;

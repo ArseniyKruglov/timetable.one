@@ -44,9 +44,9 @@
     line-height: 100%;
 }
 
-.Details .Info > div > svg
+.Details .Info > div > custom-icon
 {
-    opacity: var(--Gray70-Opacity);
+    color: var(--Gray70-Opacity);
 }
 
 .Details .Info > div > span

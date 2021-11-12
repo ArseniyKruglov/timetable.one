@@ -7,7 +7,7 @@ function DropDown(eButton, aActions)
     for (let loop_aAction of aActions)
     {
         let loop_eButton = document.createElement('button');
-        loop_eButton.innerHTML =   `<svg ${_Icons[loop_aAction[0]]}><svg>
+        loop_eButton.innerHTML =   `<custom-icon icon=${loop_aAction[0]}></custom-icon>
                                     <span>${loop_aAction[1]}</span>`;
         loop_eButton.addEventListener('click', loop_aAction[2])
         eDropDown.append(loop_eButton);

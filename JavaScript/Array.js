@@ -1,50 +1,78 @@
 Array.prototype.selectWhere = function(oObject, bSingle)
 {
-    let aArray = [];
-
-    for (let i = 0; i < this.length; i++)
+    if (bSingle === true)
     {
-        let bSelect = true;
-        for (let loop_sKey in oObject)
-            if (this[i][loop_sKey] !== oObject[loop_sKey])
-            {
-                bSelect = false;
-                break;
-            };
-        
-        if (bSelect === true)
+        for (let i = 0; i < this.length; i++)
         {
-            if (bSingle === true)
-                return this[i];
-            else
+            let bSelect = true;
+            for (let loop_sKey in oObject)
+                if (this[i][loop_sKey] !== oObject[loop_sKey])
+                {
+                    bSelect = false;
+                    break;
+                };
+            
+            if (bSelect === true)
+                    return this[i];
+        };
+    }
+    else
+    {
+        let aArray = [];
+
+        for (let i = 0; i < this.length; i++)
+        {
+            let bSelect = true;
+            for (let loop_sKey in oObject)
+                if (this[i][loop_sKey] !== oObject[loop_sKey])
+                {
+                    bSelect = false;
+                    break;
+                };
+            
+            if (bSelect === true)
                 aArray.push(this[i]);
         };
-    };
 
-    if (bSingle === true)
-        return;
-    else
         return aArray;
+    };
 }
 
 Array.prototype.removeWhere = function(oObject, bSingle)
 {
-    for (let i = 0; i < this.length; i++)
+    if (bSingle === true)
     {
-        let bRemove = true;
-        for (let loop_sKey in oObject)
-            if (this[i][loop_sKey] !== oObject[loop_sKey])
+        for (let i = 0; i < this.length; i++)
+        {
+            let bRemove = true;
+            for (let loop_sKey in oObject)
+                if (this[i][loop_sKey] !== oObject[loop_sKey])
+                {
+                    bRemove = false;
+                    break;
+                };
+            
+            if (bRemove === true)
             {
-                bRemove = false;
+                this.splice(i, 1);
                 break;
             };
-        
-        if (bRemove === true)
+        };
+    }
+    else
+    {
+        for (let i = 0; i < this.length; i++)
         {
-            this.splice(i, 1);
-
-            if (bSingle === true)
-                break;
+            let bRemove = true;
+            for (let loop_sKey in oObject)
+                if (this[i][loop_sKey] !== oObject[loop_sKey])
+                {
+                    bRemove = false;
+                    break;
+                };
+            
+            if (bRemove === true)
+                this.splice(i, 1);
         };
     };
 }

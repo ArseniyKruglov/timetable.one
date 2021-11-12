@@ -48,14 +48,14 @@ class LessonDetails
             
                             <div class='Info'>
                                 <div class='Calendar'>
-                                    <svg ${_Icons['Calendar']}></svg>
+                                    <custom-icon icon='Calendar'></custom-icon>
                                     <span>${Date_Format(Time_From1970(this.Date))}</span>
                                 </div>
                                 
                             ${
                                 this.Alarms ? 
                                 `<div class='Alarms'>
-                                    <svg ${_Icons['Alarm']}></svg>
+                                    <custom-icon icon='Alarm'></custom-icon>
                                     <span>${Time_Format(this.Alarms[0])} – ${Time_Format(this.Alarms[1])}</span>
                                 </div>`
                                 : ''
@@ -64,7 +64,7 @@ class LessonDetails
                             ${
                                 this.Fields.LectureHall ? 
                                 `<div>
-                                    <svg ${_Icons['Location']}></svg>
+                                    <custom-icon icon='Location'></custom-icon>
                                     <span>${this.Fields.LectureHall}</span>
                                 </div>`
                                 : ''
@@ -73,7 +73,7 @@ class LessonDetails
                             ${
                                 this.Fields.Educator ? 
                                 `<div>
-                                    <svg ${_Icons['Teacher']}></svg>
+                                    <custom-icon icon='Teacher'></custom-icon>
                                     <span>${this.Fields.Educator}</span>
                                 </div>`
                                 : ''
@@ -82,7 +82,7 @@ class LessonDetails
                 if (this.Fields.UserFields)
                     for (let loop_sUserField of this.Fields.UserFields)
                         HTML += `<div>
-                                    <svg ${_Icons['Circle']}></svg>
+                                    <custom-icon icon='Circle'></custom-icon>
                                     <span>${loop_sUserField}</span>
                                 </div>`;
 
@@ -198,22 +198,22 @@ class LessonDetails
 
                     <div class='Info'>
                         <div>
-                            <svg ${_Icons['Location']}></svg>
+                            <custom-icon icon='Location']}></custom-icon>
                             <custom-textarea value='${this.Fields.LectureHall || ''}' placeholder='${['Place', 'Место'][_iLanguage]}'></custom-textarea>
                         </div>
                         <div>
-                            <svg ${_Icons['Teacher']}></svg>
+                            <custom-icon icon='Teacher']}></custom-icon>
                             <custom-textarea value='${this.Fields.Educator || ''}'m placeholder='${['Educator', 'Преподаватель'][_iLanguage]}'></custom-textarea>
                         </div>`;
 
         for (let loop_sUserField of this.oInTimetable.Fields.UserFields)
             HTML +=    `<div>
-                            <svg ${_Icons['Circle']}></svg>
+                            <custom-icon icon='Circle']}></custom-icon>
                             <custom-textarea value='${loop_sUserField}' class='UserField'></custom-textarea>
                         </div>`;
 
         HTML +=        `<div>
-                            <svg ${_Icons['Circle']}></svg>
+                            <custom-icon icon='Circle']}></custom-icon>
                             <custom-textarea placeholder='${['User field', 'Пользовательское поле'][_iLanguage]}'></custom-textarea>
                         </div>
                     </div>`;
@@ -281,7 +281,7 @@ class LessonDetails
             if (Event.target.value.trim())
             {
                 let eField = document.createElement('div');
-                eField.innerHTML = `<svg ${_Icons['Circle']}></svg>
+                eField.innerHTML = `<custom-icon icon='Circle']}></custom-icon>
                                     <custom-textarea placeholder='${['User field', 'Пользовательское поле'][_iLanguage]}'></custom-textarea>`;
                 eField.addEventListener('input', UserField_Remove, { once: true });
                 this.GetUIElement('.Info').append(eField);

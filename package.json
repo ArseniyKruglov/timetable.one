@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "webpack": "^5.63.0"
-  },
-  "dependencies": {
-    "webpack-merge-and-include-globally": "^2.3.4"
-  }
-}

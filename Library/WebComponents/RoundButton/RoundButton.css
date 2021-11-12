@@ -2,6 +2,9 @@ custom-round-button
 {
     --Scale: 24px;
     --Radius: calc(var(--Scale) + 12px);
+
+    --this-Scale: var(--Scale);     /* TO DO */
+
     --Icon-Color: var(--Text);
     --Hover-Color: var(--Gray70);
 }
@@ -24,17 +27,16 @@ custom-round-button > button
 
 
 
-custom-round-button > button > svg
+custom-round-button > button > custom-icon
 {
-    fill: var(--Icon-Color);
-    width: var(--Scale);
-    height: var(--Scale);
+    --Color: var(--Icon-Color);
+    --Scale: var(--this-Scale);
     transition: fill 250ms;
 }
 
-custom-round-button > button:hover > svg
+custom-round-button > button:hover > custom-icon
 {
-    fill: var(--Icon-Color);
+    --Color: var(--Icon-Color);
 }
 
 

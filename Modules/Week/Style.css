@@ -14,19 +14,21 @@
 
 
 
-#Week > :first-child svg
+#Week > :first-child custom-icon
 {
     margin-right: 2.5px;
 }
 
-#Week > :last-child svg
+#Week > :last-child custom-icon
 {
     margin-left: 2.5px;
 }
 
-#Week custom-round-button
+#Week > custom-round-button
 {
-    --Radius: calc(var(--Scale) + 22px);
+    --Scale: 20px;
+    --Radius: 42px;
+    --Hover-Color: var(--Gray70);
 }
 
 

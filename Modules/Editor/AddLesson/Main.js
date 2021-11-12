@@ -29,12 +29,12 @@ class LessonAdder
     
                             <div>
                                 <div>
-                                    <svg ${_Icons['Calendar']}></svg>
+                                    <custom-icon icon='Calendar'></custom-icon>
                                     <input type=date value='${Time_From1970(this.Date).toISOString().slice(0, 10)}' class='Calendar' required >
                                 </div>
                                 
                                 <div>
-                                    <svg ${_Icons['Alarm']}></svg>
+                                    <custom-icon icon='Alarm'></custom-icon>
                                     <input type=number value=${Math.max(...Timetable_GetLessonNumbers(this.Date)) + 1} min=-127 max=128 class='Number' required>
                                 </div>
                             </div>`;
