@@ -2,8 +2,13 @@ class Textarea extends HTMLElement
 {
     connectedCallback()
     {
+        let sAttributes = '';
+        for (let loop_sAttribute of this.attributes)
+            if (loop_sAttribute.nodeName !== 'class')
+                sAttributes += `${loop_sAttribute.nodeName}='${loop_sAttribute.nodeValue}' `;
+
         this.innerHTML =   `<div class='Underline'>
-                                <textarea placeholder='${this.getAttribute('placeholder') || ''}' ${this.hasAttribute('readonly') ? 'readonly' : ''} name='${this.getAttribute('name') || ''}'>${this.getAttribute('value') || ''}</textarea>
+                                <textarea ${sAttributes}>${this.getAttribute('value') || ''}</textarea>
                             </div>
                             
                             <button></button>`;

@@ -1,11 +1,4 @@
-.Adder > .Info > div > div
-{
-    display: grid;
-}
-
-
-
-.Adder > .Info  input
+.Adder > .Info input
 {
     border: none;
     border-bottom: var(--Border);
@@ -24,32 +17,54 @@
     border-bottom: 1px solid var(--Main);
 }
 
-.Adder > .Info input:invalid
+
+
+.Adder .Moderate:not(.Invalid) .Caution,
+.Adder .Strict:not(.Invalid) .Caution,
+.Adder:not(.Strict) .Strict .Caution
 {
-    background-color: HSLA(0, 100%, 50%, 5%);
+    opacity: 0;
+    height: 0;
+}
+
+.Adder .Moderate :invalid,
+.Adder.Strict .Strict :invalid
+{
+    background-color: HSLA(0, 100%, 50%, 10%);
 }
 
 
 
-.Adder > .Info .Caution
+.Adder .Caution
 {
     display: flex;
-    visibility: hidden;
-    gap: 4px;
+    gap: 2.5px;
 }
 
-.Adder > .Info .Caution > :first-child
+.Adder .Caution > :first-child
 {
     width: 10px;
-    height: 8px;
-    border-top: 1px solid Darkred;
-    border-left: 1px solid Darkred;
+}
+
+.Adder .Caution.Bottom > :first-child
+{
+    border-top: 1px solid var(--Caution);
+    border-left: 1px solid var(--Caution);
     margin: 8px 0 0 5px;
     border-radius: 5px 0 0 0;
 }
 
-.Adder > .Info .Caution :last-child
+.Adder .Caution.Top > :first-child
 {
-    font-size: 14px;
-    color: Darkred;
+    border-bottom: 1px solid var(--Caution);
+    border-left: 1px solid var(--Caution);
+    margin: 0 0 8px 5px;
+    border-radius: 0 0 0 5px;
+}
+
+.Adder .Caution :last-child
+{
+    min-height: 1rem;
+    font-size: 15px;
+    color: var(--Caution);
 }

@@ -12,25 +12,31 @@ function Timetable_GetLessonLinkAttributes(iDate, iLessonNumber)
     return `href='${location.pathname}?Date=${iDate}&LessonNumber=${iLessonNumber}' onclick='event.preventDefault(); new LessonDetails(${iDate}, ${iLessonNumber});'`    
 }
 
-function Timetable_GetLessonNumbers(iDate)
+function Timetable_GetLessonNumbers(iDate, bIncludeCanceled)
 {
     let mTimetable = Timetable_GetDayTimetable(iDate);
+
     if (mTimetable === false)
-        return false;
-
-    let aLessonNumbers = [];
-    for (let loop_aLesson of mTimetable)
-        aLessonNumbers.push(loop_aLesson[0]);
-
-    for (let loop_oReplacement of _oWeek['Replacements'])
-        if (loop_oReplacement['Date'] === iDate && loop_oReplacement['Replacement'] === '')
-            aLessonNumbers.splice(aLessonNumbers.indexOf(loop_oReplacement['LessonNumber']), 1);
-            
-    for (let loop_aAddedLesson of _oWeek['AddedLessons'])
-        if (loop_aAddedLesson['Date'] === iDate)
-            aLessonNumbers.push(loop_aAddedLesson['LessonNumber']);
+    {
+        return [];
+    }
+    else
+    {
+        let aLessons = [];
+        for (let loop_aLesson of mTimetable)
+            aLessons.push(loop_aLesson[0]);
     
-    return aLessonNumbers;
+        if (!bIncludeCanceled)
+            for (let loop_oReplacement of _oWeek['Replacements'])
+                if (loop_oReplacement['Date'] === iDate && loop_oReplacement['Replacement'] === '')
+                    aLessons.splice(aLessons.indexOf(loop_oReplacement['LessonNumber']), 1);
+        
+        for (let loop_aAddedLesson of _oWeek['AddedLessons'])
+            if (loop_aAddedLesson['Date'] === iDate)
+                aLessons.push(loop_aAddedLesson['LessonNumber']);
+        
+        return aLessons;
+    }
 }
 
 function Timetable_GetPeriod(iDate)

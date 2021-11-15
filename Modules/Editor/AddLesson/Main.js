@@ -2,18 +2,14 @@ class LessonAdder
 {
     constructor(iDate)
     {
-        function Enter(Event)
-        {
-            if (Event.which === 13)
-                document.querySelector(`#DayDetails_AddLesson > button`).click();
-        };
 
         Overlay_Open
         (
             'LessonAdder',
             () =>
             {
-                this.Date = iDate || _iToday;
+                this.Date = iDate;
+                this.Valid = false;
 
 
 
@@ -25,24 +21,30 @@ class LessonAdder
                                 <span><custom-round-button icon='Done'</custom-round-button></span>
                             </div>
                 
-                            <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' required></custom-textarea>
+                            <div class='Strict Invalid'>
+                                <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' maxlength=10 required></custom-textarea>
+                                <div class='Caution Top'>
+                                    <span></span>
+                                    <span>${['Enter a lesson title', 'Укажите название занятия'][_iLanguage]}.</span>
+                                </div>
+                            </div>
     
                             <div class='Info'>
-                                <div>
+                                <div class='Moderate'>
                                     <div></div>
-                                    <div class='Caution'>
+                                    <div class='Caution Bottom'>
                                         <span></span>
-                                        <span></span>
+                                        <span>Lorem Ipsum</span>
                                     </div>
                                     <custom-icon icon='Calendar'></custom-icon>
                                     <input type=date value='${Time_From1970(this.Date).toISOString().slice(0, 10)}' class='Calendar' required>
                                 </div>
                                 
-                                <div>
+                                <div class='Moderate'>
                                     <div></div>
-                                    <div class='Caution'>
+                                    <div class='Caution Bottom'>
                                         <span></span>
-                                        <span></span>
+                                        <span>Lorem Ipsum</span>
                                     </div>
                                     <custom-icon icon='Alarm'></custom-icon>
                                     <input type=number value=${Math.max(...Timetable_GetLessonNumbers(this.Date)) + 1} min=-127 max=128 class='Number' required>
@@ -52,52 +54,106 @@ class LessonAdder
                 _aOverlays['LessonAdder'][1].children[1].children[0].innerHTML = HTML;
 
 
-                this.GetUIElement('.Title').addEventListener('input', (Event) => { this.Validation(Event.target, undefined, undefined); })
-                this.GetUIElement('.Calendar').addEventListener('input', (Event) =>
-                {
-                    if (!Event.target.value)
-                    {
-                        Event.target.parentElement.children[1].style.visibility = 'initial';
 
-                        if (Event.target.validity.badInput)
-                            Event.target.parentElement.children[1].children[1].innerHTML = 'Такой даты нет';
-                        else
-                            Event.target.parentElement.children[1].children[1].innerHTML = 'Заполните поле';
+                this.GetUIElement('.Header').firstElementChild.addEventListener('click', () => { this.Close(); });
+                this.GetUIElement('.Header').lastElementChild.addEventListener('click', () =>
+                {
+                    if (this.Valid)
+                        this.Send();
+                    else
+                        _aOverlays['LessonAdder'][1].children[1].children[0].classList.add('Strict');
+                });
+                
+                let SetError = (bValid, bStrict, sError) =>
+                {
+                    this.Valid = bValid;
+
+                    if (bValid)
+                    {
+                        event.target.parentElement.classList.remove('Invalid');
                     }
                     else
                     {
-                        Event.target.parentElement.children[1].style.visibility = '';
+                        event.target.parentElement.className = bStrict ? 'Strict' : 'Moderate';
+                        event.target.parentElement.classList.add('Invalid');
+                        event.target.parentElement.children[1].children[1].innerHTML = sError;
                     };
-
-                    this.Validation(undefined, Event.target, undefined);
-                });
-                this.GetUIElement('.Number').addEventListener('input', (Event) =>
+                };
+                this.GetUIElement('.Title').addEventListener('input', (event) =>
                 {
-                    let bValid;
-                    if (this.GetUIElement('.Calendar').value)
+                    if (event.target.value)
                     {
-                        let mTimetable = Timetable_GetLessonNumbers(new Date(this.GetUIElement('.Calendar').value).get1970());
-                        if (mTimetable)
-                            bValid = (mTimetable.includes(parseInt(Event.target.value)) === false);
-                        else
-                            bValid = true;
+                        this.Valid = true;
+                        event.target.parentElement.parentElement.parentElement.classList.remove('Invalid');
                     }
                     else
                     {
-                        bValid = true;
-                    };
-                    Event.target.setCustomValidity(bValid ? '' : 'Invalid field.');
-
-                    this.Validation(undefined, undefined, Event.target);
+                        this.Valid = false;
+                        event.target.parentElement.parentElement.parentElement.classList.add('Invalid');
+                    }
                 });
-                this.GetUIElement('.Header').lastElementChild.addEventListener('click', () => { this.Send(); });
-
-
-
-                addEventListener('keydown', Enter);
+                this.GetUIElement('.Calendar').addEventListener('input', (event) =>
+                {
+                    if (event.target.value)
+                    {
+                        SetError(true);
+                        this.GetUIElement('.Number').dispatchEvent(new Event('input'));
+                    }
+                    else
+                    {
+                        if (event.target.validity.badInput)
+                            SetError(false, true, [`Date isn't fully entered or doesn't exist.`, 'Дата введена не полностью или не существует.'][_iLanguage]);
+                        else
+                            SetError(false, true, ['Enter the date.', 'Укажите дату.'][_iLanguage]);
+                    };
+                });
+                this.GetUIElement('.Number').addEventListener('input', (event) =>
+                {
+                    event.target.setCustomValidity('');
+                    if (event.target.checkValidity())
+                    {
+                        let bValid = true;
+                        if (this.GetUIElement('.Calendar').value)
+                        {
+                            let aLeesons = Timetable_GetLessonNumbers(new Date(this.GetUIElement('.Calendar').value).get1970(), true);
+                            if (aLeesons)
+                                bValid = !aLeesons.includes(parseInt(event.target.value));
+                        };
+                        
+                        if (bValid)
+                        {
+                            event.target.setCustomValidity('');
+                            SetError(true);
+                        }
+                        else
+                        {
+                            event.target.setCustomValidity([`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
+                            SetError(false, false, [`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
+                        };
+                    }
+                    else
+                    {
+                        if (!event.target.validity.badInput && event.target.validity.valueMissing)
+                        {
+                            SetError(false, true, ['Enter a lesson number.', 'Укажите номер занятия.'][_iLanguage]);
+                        }
+                        else if (event.target.validity.stepMismatch || event.target.validity.valueMissing)
+                        {
+                            SetError(false, false, ['Enter an integer value.', 'Введите целое значение.'][_iLanguage]);
+                        }
+                        else if (event.target.validity.rangeOverflow)
+                        {
+                            SetError(false, false, [`The value can't be more than 128.`, 'Значение не может быть больше 128.'][_iLanguage]);
+                        }
+                        else if (event.target.validity.rangeUnderflow)
+                        {
+                            SetError(false, false, [`The value can't be less than -127.`, 'Значение не может быть меньше -127.'][_iLanguage]);
+                        };
+                    };
+                });
             },
             () => {},
-            () => { this.Close(); removeEventListener('keydown', Enter); }
+            () => { this.Close(); }
         );
     }
 
@@ -108,6 +164,11 @@ class LessonAdder
         return _aOverlays['LessonAdder'][1].children[1].children[0].querySelector(sSelector);
     }
 
+    GetUIElements(sSelector)
+    {
+        return _aOverlays['LessonAdder'][1].children[1].children[0].querySelectorAll(sSelector);
+    }
+
     Close()
     {
         Overlay_Remove('LessonAdder');
@@ -115,65 +176,49 @@ class LessonAdder
 
 
 
-    Validation(eTitle = this.GetUIElement('.Title'), eDate = this.GetUIElement('.Calendar'), eNumber = this.GetUIElement('.Number'))
-    {
-        return eTitle.value && eDate.validity.valid && eNumber.validity.valid;
-    }
-
     Send()
     {
-        sSubject = document.getElementById('DayDetails_AddLesson_Subject').value.trim();
-        iDate = new Date(document.getElementById('DayDetails_AddLesson_Calendar').value).get1970();
-        iLessonNumber = parseInt(document.getElementById('DayDetails_AddLesson_LessonNumber').value);
+        let sTitle = this.GetUIElement('.Title').value.trim();
+        let iDate = new Date(this.GetUIElement('.Calendar').value).get1970();
+        let iNumber = parseInt(this.GetUIElement('.Number').value);
 
-        if (sSubject !== '' && iDate !== NaN && iLessonNumber !== NaN)
+        SendRequest('/Modules/Editor/AddLesson/AddLesson.php', {'Date' : iDate, 'LessonNumber' : iNumber, 'Subject' : sTitle});
+        
+        _oWeek['AddedLessons'].push({'Date' : iDate, 'LessonNumber' : iNumber, 'Subject' : sTitle});
+    
+        this.Close();
+        
+        let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
+        if (aWeekPeriod[0] <= iDate && iDate <= aWeekPeriod[1])
         {
-            SendRequest('/Modules/Details/Day/AddLesson/AddLesson.php', {'Date' : iDate, 'LessonNumber' : iLessonNumber, 'Subject' : sSubject});
-            
-            _oWeek['AddedLessons'].push({'Date' : iDate, 'LessonNumber' : iLessonNumber, 'Subject' : sSubject});
-        
-        
-            //// Внешнее
-            // Закрытие окна
-            this.Close();
-            
-            // Обновление элемента расписания
-            let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
-            if (aWeekPeriod[0] <= iDate && iDate <= aWeekPeriod[1])
+            let eLesson = document.createElement('div');
+            eLesson.className = 'Lesson Added';
+            eLesson.innerHTML =    `<span>${iNumber}</span>
+                                    <a ${Timetable_GetLessonLinkAttributes(iDate, iNumber)}>
+                                        <span></span>
+                                        <span>${sTitle}</span>
+                                    </a>`;
+
+            let eAfter = null;
+            let bSame = false;
+            for (let loop_aLesson of Timetable_GetLessonElements(iDate))
             {
-                // Week/Script.js copypaste
+                let loop_iLessonNumber = parseInt(loop_aLesson.children[0].innerHTML);
 
-                let eLesson = document.createElement('div');
-                eLesson.className = 'Lesson Added';
-                eLesson.innerHTML =    `<span>${iLessonNumber}</span>
-                                        <a ${Timetable_GetLessonLinkAttributes(iDate, iLessonNumber)}>
-                                            <span></span>
-                                            <span>${sSubject}</span>
-                                        </a>`;
-
-                let eAfter = null;
-                let bSame = false;
-                for (let loop_aLesson of Timetable_GetLessonElements(iDate))
+                if (loop_iLessonNumber === iNumber)
                 {
-                    let loop_iLessonNumber = parseInt(loop_aLesson.children[0].innerHTML);
-
-                    if (loop_iLessonNumber === iLessonNumber)
-                    {
-                        bSame = true;
-                        break;
-                    };
-
-                    if (loop_iLessonNumber > iLessonNumber)
-                    {
-                        eAfter = loop_aLesson;
-                        break;
-                    };
+                    bSame = true;
+                    break;
                 };
-                if (bSame === false)
-                    Timetable_GetDayElement(iDate).children[1].insertBefore(eLesson, eAfter);
 
-                Timetable_FocusLesson(iDate, iLessonNumber);
+                if (loop_iLessonNumber > iNumber)
+                {
+                    eAfter = loop_aLesson;
+                    break;
+                };
             };
+            if (bSame === false)
+                Timetable_GetDayElement(iDate).children[1].insertBefore(eLesson, eAfter);
         };
     }
 }

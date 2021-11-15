@@ -11,19 +11,6 @@
 
 
 
-    /* --Accent-Hue: 217;
-    --Accent-Saturation: 17.5%;
-
-    --Main: HSL(217, 89%, 61%);
-    --Secondary: HSL(5, 69%, 54%);
-
-    --Main-Transparent: HSLA(217, 89%, 61%, 7.5%);
-    --Secondary-Transparent: HSLA(5, 69%, 54%, 25%);
-
-
-
-    --Main-Dark: HSL(210, 100%, 47.5%); */
-
     --Gray70-Opacity: 70%;
     --Gray55-Opacity: 55%;
     --Gray20-Opacity: 20%;
@@ -43,12 +30,15 @@ body
     --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 95%);
     --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 97.5%);
 
-    --Background00: HSL(var(--Accent-Hue), calc(var(--Accent-Saturation) * 0.1), 95%);
+    --Background00: HSL(var(--Accent-Hue), calc(var(--Accent-Saturation) / 2), 95%);
     --Background01: #FFFFFF;
     --Background02: #FFFFFF;
 
     --Text: #000000;
     --Shadow: HSLA(0, 0%, 0%, 5%) 0px 2px 8px 0px, HSLA(0, 0%, 0%, 20%) -0.1px 1px 2px 0px;
+    --Shadow: 0 1px 2px 0 RGB(48 48 48 / 25%), 0 1px 3px 1px RGB(48 48 48 / 12.5%);
+
+    --Caution: Darkred;
 }
 
 @media (prefers-color-scheme: dark) { body
@@ -66,6 +56,8 @@ body
 
     --Text: #FFFFFF;
     --Shadow: HSLA(0, 0%, 10%, 20%) 0px 2px 8px 0px;
+
+    --Caution: Red;
 
     color-scheme: dark;
 } }

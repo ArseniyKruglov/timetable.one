@@ -9,5 +9,16 @@
     color: var(--Text);
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
-    overscroll-behavior: none;
+}
+
+
+
+body
+{
+    grid-template-rows: none;
+}
+
+nav
+{
+    display: none;
 }

@@ -3,7 +3,7 @@
     padding: 15px 22.5px;
     display: grid;
     gap: 5px;
-    font-size: 15px;
+    font-size: 16.5px;
 }
 
 main.NoAlarms > #Information
@@ -23,7 +23,7 @@ main.NoAlarms > #Information
 
 #Information .Caution
 {
-    color: Darkred;
+    color: var(--Caution);
     font-size: 95%;
     font-weight: 600;
     line-height: 100%;

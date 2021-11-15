@@ -12,7 +12,6 @@ body
     padding: 25px 0;
     background-color: var(--Background00);
     gap: 25px;
-    overflow: hidden;
     height: calc(100% - 50px);
 }
 

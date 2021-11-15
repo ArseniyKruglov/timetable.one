@@ -46,7 +46,7 @@ class DayDetails
                 this.GetUIElement('.Note').addEventListener('input', (Event) => { this.Note = Event.target.value; });
 
 
-            
+
                 history.pushState('', '', `${_sURL}?Date=${this.Date}`);
             },
             () => {},

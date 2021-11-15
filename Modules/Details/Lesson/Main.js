@@ -10,7 +10,6 @@ class LessonDetails
                 this.Date = iDate;
                 this.LessonNumber = iLessonNumber;
 
-                history.pushState('', '', `${location.pathname}?Date=${this.Date}&LessonNumber=${this.LessonNumber}`);
 
 
                 let mDayTimetable = Timetable_GetDayTimetable(this.Date);
@@ -73,7 +72,7 @@ class LessonDetails
                             ${
                                 this.Fields.Educator ? 
                                 `<div>
-                                    <custom-icon icon='Teacher'></custom-icon>
+                                    <custom-icon icon='Educator'></custom-icon>
                                     <span>${this.Fields.Educator}</span>
                                 </div>`
                                 : ''
@@ -83,7 +82,7 @@ class LessonDetails
                     for (let loop_sUserField of this.Fields.UserFields)
                         HTML += `<div>
                                     <custom-icon icon='Circle'></custom-icon>
-                                    <span>${loop_sUserField}</span>
+                                    <span>${loop_sUserField[1]}</span>
                                 </div>`;
 
                 HTML +=     `</div>
@@ -109,10 +108,7 @@ class LessonDetails
                     if (_iAccessLevel === 2)
                     {
                         if (!this.Added)
-                        {
-                            if (_bBeta)
-                                aActions.push(['EditAll', ['Edit all', 'Редактировать все'][_iLanguage], () => { this.Edit(); }]);
-    
+                        {  
                             if (!this.Canceled)
                                 aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () =>
                                 {
@@ -161,6 +157,8 @@ class LessonDetails
                 {
                     this.Note = Event.target.value;
                 });
+
+                history.pushState('', '', `${location.pathname}?Date=${this.Date}&LessonNumber=${this.LessonNumber}`);
             },
             () => {},
             () => { this.Close(); }
@@ -182,124 +180,6 @@ class LessonDetails
     Close()
     {
         Overlay_Remove('LessonDetails');
-    }
-
-
-
-    Edit()
-    {
-        let HTML = `<div class='Header'>
-                        <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
-                        <span><custom-round-button icon='RemoveForever'></custom-round-button></span>
-                        <span><custom-round-button icon='Done'></custom-round-button></span>
-                    </div>
-                    
-                    <custom-textarea class='Title' name='Title' placeholder='${this.Subject}' value='${this.Added || this.Subject}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
-
-                    <div class='Info'>
-                        <div>
-                            <custom-icon icon='Location']}></custom-icon>
-                            <custom-textarea value='${this.Fields.LectureHall || ''}' placeholder='${['Place', 'Место'][_iLanguage]}'></custom-textarea>
-                        </div>
-                        <div>
-                            <custom-icon icon='Teacher']}></custom-icon>
-                            <custom-textarea value='${this.Fields.Educator || ''}'m placeholder='${['Educator', 'Преподаватель'][_iLanguage]}'></custom-textarea>
-                        </div>`;
-
-        for (let loop_sUserField of this.oInTimetable.Fields.UserFields)
-            HTML +=    `<div>
-                            <custom-icon icon='Circle']}></custom-icon>
-                            <custom-textarea value='${loop_sUserField}' class='UserField'></custom-textarea>
-                        </div>`;
-
-        HTML +=        `<div>
-                            <custom-icon icon='Circle']}></custom-icon>
-                            <custom-textarea placeholder='${['User field', 'Пользовательское поле'][_iLanguage]}'></custom-textarea>
-                        </div>
-                    </div>`;
-
-        _aOverlays['LessonDetails'][1].children[1].children[0].innerHTML = HTML;
-
-
-
-        this.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Close(); new LessonDetails(this.Date, this.LessonNumber); });
-        this.GetUIElement('.Header').children[1].addEventListener('click', () =>
-        {
-            let mDayTimetable = Timetable_GetDayTimetable(this.Date);
-            mDayTimetable.delete(this.LessonNumber);
-
-
-
-            if (mDayTimetable.size === 0)
-                this.DayElement.remove();
-            else
-                this.Element.remove();
-
-
-
-            this.Close();
-        });
-        this.GetUIElement('.Header').children[2].addEventListener('click', () =>
-        {
-            console.log(this.GetUIElement('form').Title)
-            let sTitle = this.GetUIElement('.Title').value;
-
-            let aFields = [];
-            for (let loop_eTextarea of this.GetUIElements('.Info custom-textarea'))
-                aFields.push(loop_eTextarea.value);
-            aFields.pop();
-
-
-
-            if (sTitle !== this.oInTimetable.Subject)
-            {
-                this.oInTimetable.Subject = sTitle;
-                this.Element.children[1].children[1].innerHTML = sTitle;
-                if (_oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Subject': sSubject }, true))
-                    this.Element.classList.add('Note');
-                else
-                    this.Element.classList.remove('Note');
-            };
-
-            this.oInTimetable.Fields.LectureHall = aFields.shift();
-            this.oInTimetable.Fields.Educator = aFields.shift();
-            this.oInTimetable.Fields.UserFields = aFields;
-
-            let oSend = { 'Timetable': 0, 'DayOfTimetable': 0, 'Number': this.LessonNumber, 'LectureHall': this.oInTimetable.Fields.LectureHall, 'Educator': this.oInTimetable.Fields.Educator };
-            for (let i = 0; i < this.oInTimetable.Fields.UserFields.length; i++)
-                oSend[`UserField[${i}]`] = this.oInTimetable.Fields.UserFields[i];
-
-            SendRequest('/Modules/Details/Lesson/PHP/Fields.php', oSend);
-
-
-
-            this.Close(); new LessonDetails(this.Date, this.LessonNumber);
-        });
-
-        let UserField_Create = (Event) =>
-        {
-            if (Event.target.value.trim())
-            {
-                let eField = document.createElement('div');
-                eField.innerHTML = `<custom-icon icon='Circle']}></custom-icon>
-                                    <custom-textarea placeholder='${['User field', 'Пользовательское поле'][_iLanguage]}'></custom-textarea>`;
-                eField.addEventListener('input', UserField_Remove, { once: true });
-                this.GetUIElement('.Info').append(eField);
-
-                Event.target.addEventListener('input', UserField_Remove);
-            };
-        };
-        let UserField_Remove = (Event) =>
-        {
-            if (!Event.target.value.trim())
-            {
-                Event.target.parentElement.parentElement.parentElement.remove();
-                this.GetUIElement('.Info > :last-child custom-textarea textarea').focus();
-            };
-        };
-        this.GetUIElement('.Info > :last-child custom-textarea').addEventListener('input', UserField_Create, { once: true });
-        for (let loop_eUserField of this.GetUIElements('.Info .UserField'))
-            loop_eUserField.addEventListener('input', UserField_Remove);
     }
 
 
@@ -353,7 +233,7 @@ class LessonDetails
                 else
                     this.Element.remove();
 
-                LessonDetails_Close();
+                this.Close();
             }
             else
             {

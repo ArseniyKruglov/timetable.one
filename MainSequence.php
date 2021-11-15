@@ -72,14 +72,27 @@
             {
                 $aLessons = array_fill(0, strlen($aTimetable[4]), []);
                 foreach ($SQL->query("SELECT DayOfTimetable, LessonNumber, Subject, LectureHall, Educator, UserFieldsAI FROM lessons_timetable WHERE TimetableID = $User[0] ORDER BY DayOfTimetable, LessonNumber")->fetch_all() as &$aLesson)
-                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Subject' => $aLesson[2], 'Fields' => [ 'LectureHall' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $SQL->query("SELECT Text FROM Fields WHERE (UserID = $User[0]) AND (TimetableID = $aTimetable[0]) AND (DayOfTimetable = $aLesson[0]) AND (LessonNumber = $aLesson[1])")->fetch_all()], 'UserFieldsAI' => (int) $aLesson[5]]]);
+                {
+                    $UserFields = $SQL->query("SELECT FieldID, Text FROM Fields WHERE (UserID = $User[0]) AND (TimetableID = $aTimetable[0]) AND (DayOfTimetable = $aLesson[0]) AND (LessonNumber = $aLesson[1])")->fetch_all();
+                    foreach ($UserFields as &$UserField)
+                        $UserField[0] = (int) $UserField[0];
+
+                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Subject' => $aLesson[2], 'Fields' => [ 'LectureHall' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $UserFields], 'UserFieldsAI' => (int) $aLesson[5]]]);
+                }
 
                 array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : (int) $aTimetable[1], 'End' => $aTimetable[2] === NULL ? NULL : (int) $aTimetable[2], 'AnchorDate' => (int) $aTimetable[3], 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
             };
 
             echo json_encode($aTimetables, JSON_UNESCAPED_UNICODE);
         ?>;
-        _aTimetable.forEach(ArrayElement00 => ArrayElement00[1]['Lessons'] = ArrayElement00[1]['Lessons'].map(ArrayElement01 => new Map(ArrayElement01)));
+        for (let loop_aTimetable of _aTimetable)
+        {
+            for (let loop_aDay of loop_aTimetable[1].Lessons)
+                for (let loop_aLesson of loop_aDay)
+                    loop_aLesson[1].Fields.UserFields = new Map(loop_aLesson[1].Fields.UserFields);
+                    
+            loop_aTimetable[1].Lessons = loop_aTimetable[1].Lessons.map(loop_aDay => new Map(loop_aDay));
+        };
         _aTimetable = new Map(_aTimetable);
 
         _oWeek = 
