@@ -107,7 +107,7 @@ class LessonDetails
             
                     if (_iAccessLevel === 2)
                     {
-                        if (!this.Added)
+                        if (!this.IsAdded)
                         {  
                             if (!this.Canceled)
                                 aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () =>
@@ -216,6 +216,11 @@ class LessonDetails
         return this.oInWeek_Added ? this.oInWeek_Added.Subject : null;
     }
 
+    get IsAdded()
+    {
+        return this.oInWeek_Added ? true : false;
+    }
+
     set Added(sSubject)
     {
         sSubject = sSubject.trim();
@@ -224,9 +229,11 @@ class LessonDetails
         {
             if (confirm(`${['Remove lesson', 'Удалить занятие'][_iLanguage]} "${this.Added}" (${Date_Format(Time_From1970(this.Date))})?`))
             {
-                SendRequest('/Modules/Details/Lesson/PHP/Added.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : ''});
+                SendRequest('/PHP/Details/Lesson/Added.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : ''});
 
                 _oWeek.AddedLessons.removeWhere({ 'Date': this.Date, 'LessonNumber': this.LessonNumber }, true);
+
+                Week_CallTimetableChange(this.Date);
 
                 if (this.Element.parentElement.children.length === 1)
                     this.DayElement.remove();
@@ -244,7 +251,7 @@ class LessonDetails
         {
             this.oInWeek_Added.Subject = sSubject;
             
-            SendRequest('/Modules/Details/Lesson/PHP/Added.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : this.Added});
+            SendRequest('/PHP/Details/Lesson/Added.php', {'Date' : this.Date, 'LessonNumber' : this.LessonNumber, 'Subject' : this.Added});
 
             Information_Draw();
             if (this.Element)
@@ -264,8 +271,6 @@ class LessonDetails
     set Replacement(sReplacement)
     {
         sReplacement = sReplacement.trim();
-
-        let bWasCanceled = this.Canceled;
         
         if (sReplacement === this.Subject)
         {    
@@ -293,14 +298,12 @@ class LessonDetails
             };
         };
 
-        SendRequest('/Modules/Details/Lesson/PHP/Replacement.php', {'Date': this.Date, 'LessonNumber': this.LessonNumber, 'Subject': this.Subject, 'Replacement': sReplacement});
+        SendRequest('/PHP/Details/Lesson/Replacement.php', {'Date': this.Date, 'LessonNumber': this.LessonNumber, 'Subject': this.Subject, 'Replacement': sReplacement});
+
+
 
         Information_Draw();
-        if (this.Canceled !== bWasCanceled)
-        {
-            if (this.DayElement)
-                this.DayElement.children[0].children[1].innerHTML = Timetable_GetPeriod(this.Date);
-        };
+        Week_CallTimetableChange(this.Date);
 
         if (this.Element)
         {
@@ -317,7 +320,7 @@ class LessonDetails
 
     get Canceled()
     {
-        return this.oInWeek_Replacement && this.oInWeek_Replacement.Replacement === '';
+        return !this.Added && this.oInWeek_Replacement && this.oInWeek_Replacement.Replacement === '';
     }
 
 
@@ -357,7 +360,7 @@ class LessonDetails
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/Modules/Details/Lesson/PHP/Note.php', {'Date': this.Date, 'Subject': this.TimetableSubject, 'Note': this.Note});
+        SendRequest('/PHP/Details/Lesson/Note.php', {'Date': this.Date, 'Subject': this.TimetableSubject, 'Note': this.Note});
 
         Timetable_SetPoint_Lesson(this.Date, this.TimetableSubject, this.oInWeek_Note);
     }

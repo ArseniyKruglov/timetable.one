@@ -1,5 +1,5 @@
 <?
-include '../../../../PHP/Database.php';
+include '../../Database.php';
 
 $URL = substr(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), 1);
 $UserID = $SQL->query("SELECT UserID FROM users WHERE Link_FullAccess = '$URL'");

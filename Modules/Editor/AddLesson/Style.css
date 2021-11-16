@@ -19,18 +19,11 @@
 
 
 
-.Adder .Moderate:not(.Invalid) .Caution,
-.Adder .Strict:not(.Invalid) .Caution,
-.Adder:not(.Strict) .Strict .Caution
+.Adder .Caution:not(.Invalid),
+.Adder:not(.Strict) .Caution.Strict 
 {
     opacity: 0;
     height: 0;
-}
-
-.Adder .Moderate :invalid,
-.Adder.Strict .Strict :invalid
-{
-    background-color: HSLA(0, 100%, 50%, 10%);
 }
 
 

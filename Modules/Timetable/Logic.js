@@ -29,7 +29,12 @@ function Timetable_GetLessonNumbers(iDate, bIncludeCanceled)
         if (!bIncludeCanceled)
             for (let loop_oReplacement of _oWeek['Replacements'])
                 if (loop_oReplacement['Date'] === iDate && loop_oReplacement['Replacement'] === '')
-                    aLessons.splice(aLessons.indexOf(loop_oReplacement['LessonNumber']), 1);
+                {
+                    let iIndex = aLessons.indexOf(loop_oReplacement['LessonNumber']);
+
+                    if (iIndex !== -1)
+                        aLessons.splice(iIndex, 1);
+                };
         
         for (let loop_aAddedLesson of _oWeek['AddedLessons'])
             if (loop_aAddedLesson['Date'] === iDate)

@@ -1,4 +1,4 @@
-_iToday = new Date().get1970();
+_iToday = new Date().to1970();
 _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
 _bBeta = true;

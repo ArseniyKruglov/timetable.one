@@ -1,6 +1,6 @@
 function Week_Update()
 {
-    SendRequest('/Modules/Week/GetWeek.php', {}, true).then((aJSON) =>
+    SendRequest('/PHP/Week/Get.php', {}, true).then((aJSON) =>
     {
         _oWeek = aJSON;
 
@@ -176,4 +176,15 @@ function Week_Select()
     let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
     Week_Fill(aWeekPeriod);
     document.getElementById('Week_Period').innerHTML = `${Date_Format_Short(Time_From1970(aWeekPeriod[0]))} – ${Date_Format_Short(Time_From1970(aWeekPeriod[1]))}`;
+}
+
+function Week_CallTimetableChange(iDate)
+{
+    dispatchEvent(new CustomEvent('TimetableChange', { detail: {'Date': iDate}}));
+
+    let eDay = Timetable_GetDayElement(iDate);
+    if (eDay)
+        eDay.children[0].children[1].innerHTML = Timetable_GetPeriod(iDate);
+
+    Information_Draw();
 }

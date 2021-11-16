@@ -1,5 +1,5 @@
 <?
-include '../../PHP/Database.php';
+include '../Database.php';
 
 $URL = substr(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), 1);
 $User = $SQL->query("SELECT * FROM users WHERE (Link_FullAccess = '$URL') OR (Link_ReadOnly = '$URL') OR (Link_TimetableOnly = '$URL')");
@@ -24,7 +24,7 @@ if ($User->num_rows === 1)
     $aLessonNotes = [];
     $aDayNotes = [];
 
-    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $User[0]")->fetch_all() as &$aReplacement)
+    foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM Changes WHERE UserID = $User[0]")->fetch_all() as &$aReplacement)
         array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
 
     foreach ($SQL->query("SELECT Date, LessonNumber, Subject FROM AddedLessons WHERE UserID = $User[0]")->fetch_all() as &$aAddedLesson)

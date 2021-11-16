@@ -7,9 +7,13 @@ function Week_Previous()
 
 function Week_Current()
 {
-    _iWeekOffset = Week_GetInitialWeekOffset();
-    Week_Select();
-    Timetable_Height(true);
+    let iInitial = Week_GetInitialWeekOffset();
+    if (_iWeekOffset !== iInitial)
+    {
+        _iWeekOffset = iInitial;
+        Week_Select();
+        Timetable_Height(true);
+    };
 }
 
 function Week_Next()

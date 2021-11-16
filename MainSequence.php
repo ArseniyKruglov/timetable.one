@@ -102,7 +102,7 @@
             $aLessonNotes = [];
             $aDayNotes = [];
         
-            foreach ($SQL->query("SELECT Date, LessonNumber, Replacement FROM replacements WHERE UserID = $User[0]")->fetch_all() as &$aReplacement)
+            foreach ($SQL->query("SELECT Date, LessonNumber, Title FROM Changes WHERE UserID = $User[0]")->fetch_all() as &$aReplacement)
                 array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
         
             foreach ($SQL->query("SELECT Date, LessonNumber, Subject FROM AddedLessons WHERE UserID = $User[0]")->fetch_all() as &$aAddedLesson)

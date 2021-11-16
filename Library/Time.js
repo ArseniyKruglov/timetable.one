@@ -3,7 +3,7 @@ Date.prototype.getDayOfWeek = function()
     return (this.getDay() + 6) % 7;
 }
 
-Date.prototype.get1970 = function()
+Date.prototype.to1970 = function()
 {
     return Math.floor((this.getTime() - this.getTimezoneOffset() * 60 * 1000) / 1000 / 60 / 60 / 24);
 }

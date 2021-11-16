@@ -15,19 +15,17 @@ class DayDetails
 
                 _aOverlays['DayDetails'][1].children[1].className = 'Overlay_Rectangular';
                 _aOverlays['DayDetails'][1].children[1].children[0].className = 'Details';
-
-                const aAlarms = Timetable_GetPeriod(this.Date);
                 
                 let HTML = `<div class='Header'>
                                 <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
-                                ${ (_bBeta && _iAccessLevel === 2) ? `<span><custom-round-button icon='More'></custom-round-button></span>`: '' }
+                                ${ (_iAccessLevel === 2) ? `<span><custom-round-button icon='More'></custom-round-button></span>`: '' }
                             </div>
             
                             <div class='Date'>${Date_Format(Time_From1970(iDate), true)}</div>
             
                             <div class='Info EmptyHidden'>${
-                                _mAlarms.size ? 
-                                `<div class='Alarms'>
+                                (_mAlarms.size !== 0) ? 
+                               `<div class='Alarms'>
                                     <custom-icon icon='Alarm'></custom-icon>
                                     <span>${Timetable_GetPeriod(this.Date)}</span>
                                 </div>`
@@ -41,9 +39,12 @@ class DayDetails
 
 
                 this.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Close(); });
-                if (_bBeta && _iAccessLevel === 2)
+                if (_iAccessLevel === 2)
                     this.GetUIElement('.Header').children[1].addEventListener('click', (Event) => { DropDown(Event.target, [['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () => { new LessonAdder(this.Date); }]]); });
                 this.GetUIElement('.Note').addEventListener('input', (Event) => { this.Note = Event.target.value; });
+
+                this.UpdateAlarms_Listener = () => { this.UpdateAlarms(); };
+                addEventListener('TimetableChange', this.UpdateAlarms_Listener);
 
 
 
@@ -61,8 +62,19 @@ class DayDetails
         return _aOverlays['DayDetails'][1].children[1].children[0].querySelector(sSelector);
     }
 
+    UpdateAlarms()
+    {
+        this.GetUIElement('.Info').innerHTML =  (_mAlarms.size !== 0) ? 
+                                                `<div class='Alarms'>
+                                                    <custom-icon icon='Alarm'></custom-icon>
+                                                    <span>${Timetable_GetPeriod(this.Date)}</span>
+                                                </div>`
+                                                : '';
+    }
+
     Close()
     {
+        removeEventListener('TimetableChange', this.UpdateAlarms_Listener);
         Overlay_Remove('DayDetails');
     }
 
@@ -102,7 +114,7 @@ class DayDetails
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/Modules/Details/Day/Note.php', {'Date': this.Date, 'Note': this.Note});
+        SendRequest('/PHP/Details/Day/Note.php', {'Date': this.Date, 'Note': this.Note});
 
         Timetable_SetPoint_Day(this.Date, this.oInWeek_Note);
     }
