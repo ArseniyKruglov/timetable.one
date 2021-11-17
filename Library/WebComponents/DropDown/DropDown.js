@@ -18,7 +18,7 @@ function DropDown(eButton, aActions)
         eDropDown.style.top = 0;
         eDropDown.style.left = 0;
 
-        let BoundingClientRect = eButton.getBoundingClientRect();
+        const BoundingClientRect = eButton.getBoundingClientRect();
 
         let fTop = BoundingClientRect.bottom  + 5;
         let fLeft = BoundingClientRect.right - eDropDown.clientWidth;

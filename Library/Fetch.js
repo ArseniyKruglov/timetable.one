@@ -1,6 +1,6 @@
 function SendRequest(sURL, oData, bCallback)
 {
-    let formData  = new FormData();
+    const formData  = new FormData();
     for (let loop_sField in oData)
         formData.append(loop_sField, oData[loop_sField]);
 

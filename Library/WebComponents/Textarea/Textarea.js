@@ -32,7 +32,7 @@ class Textarea extends HTMLElement
         });
         document.fonts.addEventListener('ready', () => { this.ExpandHandler(); });
 
-        let iLength = (this.getAttribute('value') || '').length;
+        const iLength = (this.getAttribute('value') || '').length;
         this.etTextarea.setSelectionRange(iLength, iLength);
     }
 

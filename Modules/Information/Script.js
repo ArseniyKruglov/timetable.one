@@ -4,34 +4,34 @@ function Information_Draw()
     {
         function GetTimetable(iDate)
         {
-            let mTimetable = Timetable_GetDayTimetable(iDate);
+            const mTimetable = Timetable_GetDayTimetable(iDate);
             if (mTimetable === false)
                 return false;
     
             let aTimetable = [];
             for (let loop_aLesson of mTimetable)
                 if (_mAlarms.has(loop_aLesson[0]) === true)
-                    aTimetable.push([loop_aLesson[0], loop_aLesson[1]['Subject'], loop_aLesson[1]['LectureHall']])
+                    aTimetable.push([loop_aLesson[0], loop_aLesson[1].Title, (_oWeek.Replacements.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || {}).Place ?? loop_aLesson[1].Fields.LectureHall])
                 else
                     bLessonsWithoutAlarms = true;
+
+            for (let loop_oReplacement of _oWeek.Replacements.selectWhere({ 'Date': iDate }))
+                for (let i = 0; i < aTimetable.length; i++)
+                    if (aTimetable[i][0] === loop_oReplacement.Index)
+                    {
+                        if (loop_oReplacement.Replacement === '')
+                            aTimetable.splice(i, 1);
+                        else
+                            if (loop_oReplacement.Replacement)
+                                aTimetable[i][1] = loop_oReplacement.Replacement;
+                            
+                        break;
+                    };
     
-            for (let loop_oReplacement of _oWeek['Replacements'])
-                if (loop_oReplacement['Date'] === iDate)
-                    for (let i = 0; i < aTimetable.length; i++)
-                        if (aTimetable[i][0] === loop_oReplacement['LessonNumber'])
-                        {
-                            if (loop_oReplacement['Replacement'] === '')
-                                aTimetable.splice(i, 1);
-                            else
-                                aTimetable[i][1] = loop_oReplacement['Replacement'];
-                                
-                            break;
-                        };
-    
-            for (let loop_aAddedLesson of _oWeek['AddedLessons'])
-                if (loop_aAddedLesson['Date'] === iDate)
-                    aTimetable.push([loop_aAddedLesson['LessonNumber'], loop_aAddedLesson['Subject']]);
-    
+            for (let loop_aAddedLesson of _oWeek.AddedLessons)
+                if (loop_aAddedLesson.Date === iDate)
+                    aTimetable.push([loop_aAddedLesson.Index, loop_aAddedLesson.Title]);
+
             return aTimetable.sort((a, b) => { return a[0] > b[0]; });
         };
     

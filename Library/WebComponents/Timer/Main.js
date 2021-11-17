@@ -8,14 +8,14 @@ class Timer extends HTMLElement
 
     Update()
     {
-        let tDate = new Date(parseInt(this.getAttribute('time')));
+        const tDate = new Date(parseInt(this.getAttribute('time')));
         
-        let iTimeLeft = tDate - new Date();
+        const iTimeLeft = tDate - new Date();
 
-        let iSeconds = Math.floor((iTimeLeft / 1000) % 60);
-        let iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
-        let iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
-        let iDays = Math.floor(iTimeLeft / (24 * 60 * 60 * 1000));
+        const iSeconds = Math.floor((iTimeLeft / 1000) % 60);
+        const iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
+        const iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
+        const iDays = Math.floor(iTimeLeft / (24 * 60 * 60 * 1000));
 
         let sClass = '';
         if (iDays > 0)

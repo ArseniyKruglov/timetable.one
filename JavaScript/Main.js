@@ -1,6 +1,6 @@
-_iToday = new Date().to1970();
-_iWeekOffset = Week_GetInitialWeekOffset();
-_iLanguage = Language_Get();
+let _iToday = new Date().to1970();
+let _iWeekOffset = Week_GetInitialWeekOffset();
+const _iLanguage = Language_Get();
 
 document.body.innerHTML =  `<main>
                                 <div id='TimetableTab'>
@@ -69,11 +69,11 @@ function Midnight()
     for (let loop_eDay of document.getElementById('Timetable').children)
         loop_eDay.classList.remove('Today', 'Tomorrow');
 
-    let eToday = Timetable_GetDayElement(_iToday);
+    const eToday = Timetable_GetDayElement(_iToday);
     if (eToday)
         eToday.classList.add('Today');
 
-    let eTomorrow = Timetable_GetDayElement(_iToday + 1);
+    const eTomorrow = Timetable_GetDayElement(_iToday + 1);
     if (eTomorrow)
         eTomorrow.classList.add('Tomorrow');
 }

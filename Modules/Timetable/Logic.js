@@ -9,7 +9,7 @@ function Timetable_GetDayTimetable(iDate)
 
 function Timetable_GetLessonLinkAttributes(iDate, iLessonNumber)
 {
-    return `href='${location.pathname}?Date=${iDate}&LessonNumber=${iLessonNumber}' onclick='event.preventDefault(); new LessonDetails(${iDate}, ${iLessonNumber});'`    
+    return `href='${location.pathname}?Date=${iDate}&Lesson=${iLessonNumber}' onclick='event.preventDefault(); new LessonDetails(${iDate}, ${iLessonNumber});'`    
 }
 
 function Timetable_GetLessonNumbers(iDate, bIncludeCanceled)
@@ -30,7 +30,7 @@ function Timetable_GetLessonNumbers(iDate, bIncludeCanceled)
             for (let loop_oReplacement of _oWeek['Replacements'])
                 if (loop_oReplacement['Date'] === iDate && loop_oReplacement['Replacement'] === '')
                 {
-                    let iIndex = aLessons.indexOf(loop_oReplacement['LessonNumber']);
+                    let iIndex = aLessons.indexOf(loop_oReplacement['Index']);
 
                     if (iIndex !== -1)
                         aLessons.splice(iIndex, 1);
@@ -38,7 +38,7 @@ function Timetable_GetLessonNumbers(iDate, bIncludeCanceled)
         
         for (let loop_aAddedLesson of _oWeek['AddedLessons'])
             if (loop_aAddedLesson['Date'] === iDate)
-                aLessons.push(loop_aAddedLesson['LessonNumber']);
+                aLessons.push(loop_aAddedLesson['Index']);
         
         return aLessons;
     }
@@ -87,14 +87,14 @@ function Timetable_SetPoint_Day(iDate, bPoint)
     };
 }
 
-function Timetable_SetPoint_Lesson(iDate, sSubject, bPoint)
+function Timetable_SetPoint_Lesson(iDate, sTitle, bPoint)
 {
     for (let loop_eLesson of Timetable_GetLessonElements(iDate))
     {
         let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
-        let loop_sSubject = loop_eLesson.children[1].children[1].innerHTML;
+        let loop_sTitle = loop_eLesson.children[1].children[1].innerHTML;
 
-        if ((loop_sReplacement || loop_sSubject) === sSubject)
+        if ((loop_sReplacement || loop_sTitle) === sTitle)
         {
             if (bPoint)
                 loop_eLesson.classList.add('Note');

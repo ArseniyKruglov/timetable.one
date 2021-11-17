@@ -27,8 +27,9 @@ function Timetable_Draw()
                                 <span>${loop_aLesson[0]}</span>
                                 <a ${Timetable_GetLessonLinkAttributes(iDate, loop_aLesson[0])}>
                                     <span></span>
-                                    <span>${loop_aLesson[1]['Subject']}</span>
+                                    <span>${loop_aLesson[1]['Title']}</span>
                                 </a>
+                                <span></span>
                             </div>`;
             HTML +=   `</div>
                     </div>`;

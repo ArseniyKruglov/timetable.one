@@ -49,7 +49,7 @@ class Day_UI
 
 
 
-        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Close(); });
+        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Overlay.Close(); });
         if (_iAccessLevel === 2)
             this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) => { DropDown(Event.target, [['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () => { new SuddenLesson_ConstructorUI(this.Date); }]]); });
         this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) => { this.Note = Event.target.value; });

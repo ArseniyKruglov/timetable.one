@@ -8,7 +8,7 @@ class RoundButton extends HTMLElement
                             </button>`;
         this.addEventListener('click', () =>
         {
-            let eCircle = document.createElement('span');
+            const eCircle = document.createElement('span');
             this.children[0].append(eCircle);
             setTimeout(() => { eCircle.remove() }, 750);
         });

@@ -11,15 +11,14 @@
 
 
 
-.Lesson.Details.NotFound > span
+.Lesson.Details .Info > * > :last-child > :first-child
 {
+    color: HSL(39, 85%, 45%);
     font-weight: 500;
-    font-size: 20px;
 }
 
-.Lesson.Details.NotFound > button
+.Lesson.Details .Info > * > :last-child > :first-child:empty,
+.Lesson.Details .Info > * > :last-child > :first-child:not(:empty) + *
 {
-    color: var(--Main);
-    font-weight: 500;
-    text-align: end;
+    display: none;
 }

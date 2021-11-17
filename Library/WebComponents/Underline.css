@@ -2,7 +2,7 @@
 {
     display: block;
     content: '';
-    border-top: 2px solid var(--Main);
+    border-top: 2px solid HSL(var(--Accent-Hue), 100%, 50%);
     transform: translateY(-1px) scaleX(0);
     transition: transform 250ms;
 }

@@ -15,17 +15,21 @@ class Overlay
                                     <div>
                                         <div></div>
                                     </div>`;
-        this.Element.children[0].addEventListener('click', (this.Callback_Close || (() => { this.Close(); })));
         this.Element.style.visibility = 'hidden';
+        
         document.body.appendChild(this.Element);
         this.Callback_Open();
         this.Element.style.visibility = '';
         FocusDiv(this.Element);
+
+        const Esc = this.Callback_Close || (() => { this.Close(); });
+        this.Element.children[0].addEventListener('click', Esc);
         _aOverlay_Escapes.push(event =>
         {
             if (event.code == 'Escape')
-                this.Callback_Close();
+                Esc();
         });
+        document.addEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 1]);
         document.removeEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 2]);
     }
 
@@ -34,7 +38,6 @@ class Overlay
         this.Element.remove();
 
         document.removeEventListener('keydown', _aOverlay_Escapes.pop());
-        document.addEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 1]);
 
         this.eLastFocused.focus();
 

@@ -70,16 +70,16 @@
         <?
             $aTimetables = [];
             
-            foreach ($SQL->query("SELECT TimetableID, Begin, End, AnchorDate, Days FROM timetables WHERE UserID = $User[0]")->fetch_all() as &$aTimetable)
+            foreach ($SQL->query("SELECT `TimetableID`, `Begin`, `End`, `AnchorDate`, `Days` FROM `timetables` WHERE `UserID` = $User[0]")->fetch_all() as &$aTimetable)
             {
                 $aLessons = array_fill(0, strlen($aTimetable[4]), []);
-                foreach ($SQL->query("SELECT DayOfTimetable, LessonNumber, Subject, LectureHall, Educator, UserFieldsAI FROM lessons_timetable WHERE TimetableID = $User[0] ORDER BY DayOfTimetable, LessonNumber")->fetch_all() as &$aLesson)
+                foreach ($SQL->query("SELECT `DayOfTimetable`, `Index`, `Title`, `LectureHall`, `Educator`, `UserFieldsAI` FROM lessons_timetable WHERE `TimetableID` = $User[0] ORDER BY `DayOfTimetable`, `Index`")->fetch_all() as &$aLesson)
                 {
-                    $UserFields = $SQL->query("SELECT FieldID, Text FROM Fields WHERE (UserID = $User[0]) AND (TimetableID = $aTimetable[0]) AND (DayOfTimetable = $aLesson[0]) AND (LessonNumber = $aLesson[1])")->fetch_all();
+                    $UserFields = $SQL->query("SELECT `FieldID`, `Text` FROM `Fields` WHERE (`UserID` = $User[0]) AND (`TimetableID` = $aTimetable[0]) AND (`DayOfTimetable` = $aLesson[0]) AND (`Index` = $aLesson[1])")->fetch_all();
                     foreach ($UserFields as &$UserField)
                         $UserField[0] = (int) $UserField[0];
 
-                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Subject' => $aLesson[2], 'Fields' => [ 'LectureHall' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $UserFields], 'UserFieldsAI' => (int) $aLesson[5]]]);
+                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Title' => $aLesson[2], 'Fields' => [ 'LectureHall' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $UserFields], 'UserFieldsAI' => (int) $aLesson[5]]]);
                 }
 
                 array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : (int) $aTimetable[1], 'End' => $aTimetable[2] === NULL ? NULL : (int) $aTimetable[2], 'AnchorDate' => (int) $aTimetable[3], 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
@@ -104,18 +104,18 @@
             $aLessonNotes = [];
             $aDayNotes = [];
         
-            foreach ($SQL->query("SELECT Date, LessonNumber, Title FROM Changes WHERE UserID = $User[0]")->fetch_all() as &$aReplacement)
-                array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'LessonNumber' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2]]);
+            foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aReplacement)
+                array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'Index' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2], 'Place' => $aReplacement[3], 'Educator' => $aReplacement[4]]);
         
-            foreach ($SQL->query("SELECT Date, LessonNumber, Subject FROM AddedLessons WHERE UserID = $User[0]")->fetch_all() as &$aAddedLesson)
-                array_push($aAddedLessons, ['Date' => (int) $aAddedLesson[0], 'LessonNumber' => (int) $aAddedLesson[1], 'Subject' => $aAddedLesson[2]]);
+            foreach ($SQL->query("SELECT `Date`, `Index`, `Title` FROM `AddedLessons` WHERE `UserID` = $User[0]")->fetch_all() as &$aAddedLesson)
+                array_push($aAddedLessons, ['Date' => (int) $aAddedLesson[0], 'Index' => (int) $aAddedLesson[1], 'Title' => $aAddedLesson[2]]);
 
             if ($AccessLevel > 0)
             {
-                foreach ($SQL->query("SELECT Subject, Date, Note FROM LessonNotes WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
-                    array_push($aLessonNotes, ['Subject' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Note' => $aLesson[2]]);
+                foreach ($SQL->query("SELECT `Title`, `Date`, `Note` FROM `LessonNotes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
+                    array_push($aLessonNotes, ['Title' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Note' => $aLesson[2]]);
 
-                foreach ($SQL->query("SELECT Date, Note FROM DayNotes WHERE UserID = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
+                foreach ($SQL->query("SELECT `Date`, `Note` FROM `DayNotes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
                     array_push($aDayNotes, ['Date' => (int) $aLesson[0], 'Note' => $aLesson[1]]);
             };
         
@@ -125,7 +125,7 @@
         _mAlarms = new Map(
         <?
             $aAlarms = [];
-            foreach ($SQL->query("SELECT LessonNumber, Begin, End FROM Alarms WHERE UserID = $User[0]")->fetch_all() as &$aAlarm)
+            foreach ($SQL->query("SELECT `Index`, `Begin`, `End` FROM `Alarms` WHERE `UserID` = $User[0]")->fetch_all() as &$aAlarm)
                 array_push($aAlarms, [(int) $aAlarm[0], [(int) $aAlarm[1], (int) $aAlarm[2]]]);
             echo json_encode($aAlarms, JSON_UNESCAPED_UNICODE);
         ?>);
