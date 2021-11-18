@@ -1,84 +1,83 @@
-_aOverlays = {};
-_afOverlay_Escapes = [];
+_aOverlay_Escapes = [];
 
-function Overlay_Open(sName, Callback_New, Callback_Unhide, Callback_Close)
+
+class Overlay
 {
-    window._eOverlay_LastFocusedElement = document.activeElement;
+    constructor() {}
 
-    if (!_aOverlays[sName])
+    Open()
     {
-        let HTML, eOverlay;
+        this.eLastFocused = document.activeElement;
 
-        HTML = `<div></div>
-                <div id='${sName}Container'>
-                    <div id='${sName}'></div>
-                </div>`;
-
-        eOverlay = document.createElement('div');
-        eOverlay.className = 'Overlay';
-        eOverlay.innerHTML = HTML;
-        eOverlay.children[0].addEventListener('click', Callback_Close);
-        eOverlay.style.visibility = 'hidden';
-        _aOverlays[sName] = [true, eOverlay];
-        document.body.appendChild(eOverlay);
-        Callback_New();
-        eOverlay.removeAttribute('style');
-        FocusDiv(eOverlay);
-        _afOverlay_Escapes.push(event =>
+        this.Element = document.createElement('div');
+        this.Element.className = 'Overlay';
+        this.Element.innerHTML =   `<div></div>
+                                    <div>
+                                        <div></div>
+                                    </div>`;
+        this.Element.children[0].addEventListener('click', (this.Callback_Close || (() => { this.Close(); })));
+        this.Element.style.visibility = 'hidden';
+        document.body.appendChild(this.Element);
+        this.Callback_Open();
+        this.Element.style.visibility = '';
+        FocusDiv(this.Element);
+        _aOverlay_Escapes.push(event =>
         {
             if (event.code == 'Escape')
-                Callback_Close();
+                this.Callback_Close();
         });
-        document.removeEventListener('keydown', _afOverlay_Escapes[_afOverlay_Escapes.length - 2]);
-        document.addEventListener('keydown', _afOverlay_Escapes[_afOverlay_Escapes.length - 1]);
+        document.removeEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 2]);
     }
-    else
+
+    Close()
     {
-        if (Callback_Unhide)
-            Callback_Unhide();
-        _aOverlays[sName][1].style.visibility = '';
-        _aOverlays[sName][1].children[0].hidden = false;
-        _aOverlays[sName][0] = true;
+        this.Element.remove();
+
+        document.removeEventListener('keydown', _aOverlay_Escapes.pop());
+        document.addEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 1]);
+
+        this.eLastFocused.focus();
+
+
+        const eOverlay = document.querySelector('.Overlay');
+        let sLink;
+        if (eOverlay)
+            sLink = eOverlay.getAttribute('link');
+        history.pushState('', '', '/' + _sURL + (sLink || ''));
     }
-}
 
-function Overlay_Hide(sName)
-{
-    _aOverlays[sName][1].style.visibility = 'hidden';
-    _aOverlays[sName][1].children[0].hidden = true;
-    _aOverlays[sName][0] = false;
-    document.removeEventListener('keydown', _afOverlay_Escapes.pop());
-    document.addEventListener('keydown', _afOverlay_Escapes[_afOverlay_Escapes.length - 1]);
-    if (window._eOverlay_LastFocusedElement)
+
+
+    get Container()
     {
-        _eOverlay_LastFocusedElement.focus();
-        delete _eOverlay_LastFocusedElement;
-    };
-}
+        return this.Element.children[1];
+    }
 
-function Overlay_Remove(sName)
-{
-    _aOverlays[sName][1].remove();
-    delete _aOverlays[sName];
-    document.removeEventListener('keydown', _afOverlay_Escapes.pop());
-    document.addEventListener('keydown', _afOverlay_Escapes[_afOverlay_Escapes.length - 1]);
-    if (window._eOverlay_LastFocusedElement)
+    get Body()
     {
-        _eOverlay_LastFocusedElement.focus();
-        delete _eOverlay_LastFocusedElement;
-    };
+        return this.Element.children[1].children[0];
+    }
 
-    if (!Overlay_IsOpened())
-        history.pushState('', '', `/${_sURL}`);
+    set Link(sLink)
+    {
+        this.Element.setAttribute('link', sLink);
+        history.pushState('', '', '/' + _sURL + sLink);
+    }
+
+    GetUIElement(sSelector)
+    {
+        return this.Body.querySelector(sSelector);
+    }
+
+    GetUIElements(sSelector)
+    {
+        return this.Body.querySelectorAll(sSelector);
+    }
 }
 
 
 
 function Overlay_IsOpened()
 {
-    for (let loop_sOverlay in _aOverlays)
-        if (_aOverlays[loop_sOverlay][0] === true)
-            return true;
-
-    return false;
+    return document.querySelector('.Overlay');
 }

@@ -1,10 +1,10 @@
-class LessonAdder
+class SuddenLesson_ConstructorUI
 {
     constructor(iDate)
     {
         Overlay_Open
         (
-            'LessonAdder',
+            'SuddenLesson_ConstructorUI',
             () =>
             {
                 this.Title = '';
@@ -14,8 +14,8 @@ class LessonAdder
 
 
 
-                _aOverlays['LessonAdder'][1].children[1].className = 'Overlay_Rectangular';
-                _aOverlays['LessonAdder'][1].children[1].children[0].className = 'Details Adder';
+                _aOverlays['SuddenLesson_ConstructorUI'][1].children[1].className = 'Overlay_Rectangular';
+                _aOverlays['SuddenLesson_ConstructorUI'][1].children[1].children[0].className = 'Details Adder';
 
                 let HTML = `<div class='Header'>
                                 <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
@@ -52,7 +52,7 @@ class LessonAdder
                                 </div>
                             </div>`;
 
-                _aOverlays['LessonAdder'][1].children[1].children[0].innerHTML = HTML;
+                _aOverlays['SuddenLesson_ConstructorUI'][1].children[1].children[0].innerHTML = HTML;
 
 
 
@@ -62,7 +62,7 @@ class LessonAdder
                     if (this.Title && this.Date && this.Index)
                         this.Send();
                     else
-                        _aOverlays['LessonAdder'][1].children[1].children[0].classList.add('Strict');
+                        _aOverlays['SuddenLesson_ConstructorUI'][1].children[1].children[0].classList.add('Strict');
                 });
                 
                 let SetError = (bValid, bStrict, sError) =>
@@ -160,12 +160,12 @@ class LessonAdder
 
     GetUIElement(sSelector)
     {
-        return _aOverlays['LessonAdder'][1].children[1].children[0].querySelector(sSelector);
+        return _aOverlays['SuddenLesson_ConstructorUI'][1].children[1].children[0].querySelector(sSelector);
     }
 
     Close()
     {
-        Overlay_Remove('LessonAdder');
+        Overlay_Remove('SuddenLesson_ConstructorUI');
     }
 
 
@@ -173,6 +173,7 @@ class LessonAdder
     Send()
     {
         SuddenLesson_Constructor(this.Date, this.Index, this.Title, true, true, true);
+        this.Close();
     }
 }
 
@@ -185,42 +186,40 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
     if (bPush)
     {
         _oWeek.AddedLessons.push({'Date': iDate, 'LessonNumber': iIndex, 'Subject': sTitle});
-        Week_CallTimetableChange(this.Date);
+
+        let eDay = Timetable_GetDayElement(iDate);
+        if (eDay)
+            eDay.children[0].children[1].innerHTML = Timetable_GetPeriod(iDate);
+
+        if (_iToday <= iDate && iDate <= _iToday + 1)
+            Information_Draw();
     };
 
     if (bDraw)
     {
-        let aWeekPeriod = Week_GetPeriod(_iWeekOffset);
+        const aWeekPeriod = Week_GetPeriod(_iWeekOffset);
         if (aWeekPeriod[0] <= iDate && iDate <= aWeekPeriod[1])
         {
-            let eLesson = document.createElement('div');
+            const eLesson = document.createElement('div');
             eLesson.className = 'Lesson Added';
-            eLesson.innerHTML =    `<span>${this.Index}</span>
-                                    <a ${Timetable_GetLessonLinkAttributes(iDate, iIndex)}>
-                                        <span></span>
-                                        <span>${sTitle}</span>
-                                    </a>`;
+            eLesson.innerHTML = `<span>${iIndex}</span>
+                                 <a ${Timetable_GetLessonLinkAttributes(iDate, iIndex)}>
+                                    <span></span>
+                                    <span>${sTitle}</span>
+                                 </a>`;
 
             let eAfter = null;
-            let bSame = false;
-            for (let loop_aLesson of Timetable_GetLessonElements(iDate))
+            for (let loop_eLesson of Timetable_GetLessonElements(iDate))
             {
-                let loop_iLessonNumber = parseInt(loop_aLesson.children[0].innerHTML);
+                const loop_iIndex = parseInt(loop_eLesson.children[0].innerHTML);
 
-                if (loop_iLessonNumber === iIndex)
+                if (loop_iIndex > iIndex)
                 {
-                    bSame = true;
-                    break;
-                };
-
-                if (loop_iLessonNumber > iIndex)
-                {
-                    eAfter = loop_aLesson;
+                    eAfter = loop_eLesson;
                     break;
                 };
             };
-            if (bSame === false)
-                Timetable_GetDayElement(iDate).children[1].insertBefore(eLesson, eAfter);
+            Timetable_GetDayElement(iDate).children[1].insertBefore(eLesson, eAfter);
         };
     };
 }

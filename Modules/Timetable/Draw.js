@@ -16,7 +16,7 @@ function Timetable_Draw()
                 sDayClass = 'Tomorrow';
 
             HTML += `<div class='Day ${sDayClass || ''}'>
-                        <button onclick='new DayDetails(${iDate})'>
+                        <button onclick='new Day_UI(${iDate})'>
                             <div>${Date_Format(Time_From1970(iDate))}</div>
                             <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
                         </button>
@@ -204,7 +204,7 @@ function Timetable_Height(bAnimation)
     if (bAnimation === true)
     {
         eHeight.style.transition = 'height 500ms';
-        eHeight.style.height = Math.max(iInitialHeight, _aHeights[_iWeekOffset]) + 'px';
+        eHeight.style.height = Math.max(iInitialHeight, (_aHeights[_iWeekOffset] + 5)) + 'px';
         setTimeout(() => { eHeight.style.height = (iMaxHeight + 75) + 'px'; }, 0);
     }
     else

@@ -1,6 +1,4 @@
-#DayDetailsContainer,
-#LessonDetailsContainer,
-#LessonAdderContainer
+.DetailsContainer
 {
     width: 400px;
 }

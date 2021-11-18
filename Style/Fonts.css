@@ -1,6 +1,6 @@
 *
 {
-    font-family: 'Google Sans', 'Google-Sans', 'TT Chocolates', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 
@@ -25,26 +25,3 @@
     font-weight: 700;
     src: url(Fonts/TT_Chocolates_DemiBold.ttf);
 }
-
-
-
-/* @font-face 
-{
-    font-family: Google-Sans;
-    font-weight: 400;
-    src: url(Fonts/GoogleSans-Regular.ttf);
-}
-
-@font-face
-{
-    font-family: Google-Sans;
-    font-weight: 500;
-    src: url(Fonts/GoogleSans-Medium.ttf);
-}
-
-@font-face
-{
-    font-family: Google-Sans;
-    font-weight: 700;
-    src: url(Fonts/GoogleSans-Bold.ttf);
-} */

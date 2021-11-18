@@ -1,22 +1,8 @@
 _iToday = new Date().to1970();
 _iWeekOffset = Week_GetInitialWeekOffset();
 _iLanguage = Language_Get();
-_bBeta = true;
 
-if (!_bBeta)
-    document.body.classList.add('NoNav');
-document.body.innerHTML =  `<nav>
-                                <div class='Selected' onclick='this.firstElementChild.click()'>
-                                    <custom-round-button icon=Timetable onclick='Tab_Select(0)'></custom-round-button>
-                                    <div>${['Timetable', 'Расписание'][_iLanguage]}</div>
-                                </div>
-                                <div onclick='this.firstElementChild.click()'>
-                                    <custom-round-button icon=Settings onclick='Tab_Select(1)'></custom-round-button>
-                                    <div>${['Settings', 'Настройки'][_iLanguage]}</div>
-                                </div>
-                            </nav>
-
-                            <main>
+document.body.innerHTML =  `<main>
                                 <div id='TimetableTab'>
                                     <div id='Information' class='Island EmptyHidden'></div>
 
@@ -41,26 +27,25 @@ addEventListener('resize', () => { Timetable_Overflow(document.getElementById('T
 Information_Draw();
 
 {
-    let aPath = location.pathname.split('/');
-    let oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
+    window._sURL = location.pathname.split('/')[1];
+    const oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
 
-    window._sURL = aPath[1];
-
-    if (oQuery.Date !== undefined)
+    
+    if (oQuery.Date)
     {
-        if (oQuery.LessonNumber !== undefined)
-            new LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.LessonNumber));
+        if (oQuery.Lesson)
+            new LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.Lesson));
         else
-            new DayDetails(parseInt(oQuery.Date));
+            new Day_UI(parseInt(oQuery.Date));
     };
 }
 
 
-// addEventListener('focus', Week_Update);
+
 addEventListener('focus', Information_Draw);
 onkeydown = (Event) =>
 {
-    if (Overlay_IsOpened() === false)
+    if (!Overlay_IsOpened())
         switch(Event.which) 
         {
             case 37:
@@ -72,8 +57,6 @@ onkeydown = (Event) =>
                 break;
         };
 };
-// addEventListener('swiped-right', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[0].click(); });
-// addEventListener('swiped-left', () => { if (Overlay_IsOpened() === false) document.getElementById('Week').children[2].click(); });
 
 
 

@@ -4,19 +4,22 @@
     font-weight: 500;
 }
 
-#LessonDetails .Title textarea::placeholder
+.Lesson.Details .Title textarea::placeholder
 {
     text-decoration: line-through;
 }
 
 
 
-#LessonDetails .Info button
+.Lesson.Details.NotFound > span
 {
-    background: var(--Gray10);
-    border-radius: 5px;
     font-weight: 500;
-    padding: 14px 10px;
-    font-size: 85%;
-    text-align: center;
+    font-size: 20px;
+}
+
+.Lesson.Details.NotFound > button
+{
+    color: var(--Main);
+    font-weight: 500;
+    text-align: end;
 }

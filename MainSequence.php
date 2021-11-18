@@ -7,7 +7,9 @@
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
         <link rel='manifest' href='/manifest.php?URL=<? echo $URL ?>'>
-        <meta name='theme-color' content='#F2F2F2'>
+        <meta name='theme-color' content='#F1F2F3'>
+
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Google+Sans:400,500,700'>
 
         <link rel='apple-touch-icon' sizes='57x57' href='/Style/Icons/apple-icon-57x57.png'>
         <link rel='apple-touch-icon' sizes='60x60' href='/Style/Icons/apple-icon-60x60.png'>

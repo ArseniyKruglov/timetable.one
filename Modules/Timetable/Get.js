@@ -1,6 +1,6 @@
 function Timetable_GetDayElement(iDate)
 {
-    let eDay = document.querySelector(`.Day [onclick="new DayDetails(${iDate})"]`);
+    let eDay = document.querySelector(`.Day [onclick="new Day_UI(${iDate})"]`);
     if (eDay)
         return eDay.parentElement;
     else
@@ -18,7 +18,7 @@ function Timetable_GetLessonElement(iDate, iLessonNumber)
 
 function Timetable_GetLessonElements(iDate)
 {
-    let eDay = document.querySelector(`.Day [onclick="new DayDetails(${iDate})"]`);
+    let eDay = document.querySelector(`.Day [onclick="new Day_UI(${iDate})"]`);
     if (eDay)
         return Timetable_GetDayElement(iDate).children[1].children;
     else

@@ -1,8 +1,8 @@
 {
   "name": "Расписание",
   "short_name": "Расписание",
-  "theme_color": "#F2F2F2",
-  "background_color": "#FFFFFF",
+  "theme_color": "#F1F2F3",
+  "background_color": "#F1F2F3",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
