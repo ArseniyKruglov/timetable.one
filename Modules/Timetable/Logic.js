@@ -7,72 +7,60 @@ function Timetable_GetDayTimetable(iDate)
     return false;
 }
 
-function Timetable_GetLessonLinkAttributes(iDate, iLessonNumber)
+function Timetable_GetLessonLinkAttributes(iDate, iIndex)
 {
-    return `href='${location.pathname}?Date=${iDate}&Lesson=${iLessonNumber}' onclick='event.preventDefault(); new LessonDetails(${iDate}, ${iLessonNumber});'`    
+    return `href='${location.pathname}?Date=${iDate}&Lesson=${iIndex}' onclick='event.preventDefault(); new LessonDetails(${iDate}, ${iIndex});'`    
 }
 
-function Timetable_GetLessonNumbers(iDate, bIncludeCanceled)
+function Timetable_GetLessonIndexes(iDate, bIncludeCanceled)
 {
-    let mTimetable = Timetable_GetDayTimetable(iDate);
-
-    if (mTimetable === false)
+    let aLessonIndexes = [];
+    
+    const mTimetable = Timetable_GetDayTimetable(iDate);
+    if (mTimetable)
     {
-        return [];
-    }
-    else
-    {
-        let aLessons = [];
         for (let loop_aLesson of mTimetable)
-            aLessons.push(loop_aLesson[0]);
+            aLessonIndexes.push(loop_aLesson[0]);
     
         if (!bIncludeCanceled)
-            for (let loop_oReplacement of _oWeek['Replacements'])
-                if (loop_oReplacement['Date'] === iDate && loop_oReplacement['Replacement'] === '')
+            for (let loop_oChange of _oWeek.Changes)
+                if (loop_oChange.Date === iDate && loop_oChange.Change === '')
                 {
-                    let iIndex = aLessons.indexOf(loop_oReplacement['Index']);
+                    const iIndex = aLessonIndexes.indexOf(loop_oChange.Index);
 
                     if (iIndex !== -1)
-                        aLessons.splice(iIndex, 1);
+                        aLessonIndexes.splice(iIndex, 1);
                 };
-        
-        for (let loop_aAddedLesson of _oWeek['AddedLessons'])
-            if (loop_aAddedLesson['Date'] === iDate)
-                aLessons.push(loop_aAddedLesson['Index']);
-        
-        return aLessons;
-    }
+    };
+    for (let loop_aAddedLesson of _oWeek.SuddenLessons)
+        if (loop_aAddedLesson.Date === iDate)
+            aLessonIndexes.push(loop_aAddedLesson.Index);
+
+    return aLessonIndexes;
 }
 
 function Timetable_GetPeriod(iDate)
 {
     if (_mAlarms.size)
     {
-        let aPeriod = Timetable_GetPeriod_Raw(iDate);
-    
-        if (aPeriod === false)
-            return ['Chill', 'Отдых'][_iLanguage];
-        else if (aPeriod[0] === null && aPeriod[1] === null)
-            return ['Unknown', 'Неизвестно'][_iLanguage]
+        const aLessonIndexes = Timetable_GetLessonIndexes(iDate);
+
+        if (aLessonIndexes.length)
+        {
+            const aBegin = Alarm_Get(Math.min(...aLessonIndexes), iDate);
+            const aEnd = Alarm_Get(Math.max(...aLessonIndexes), iDate);
+            
+            return `${aBegin ? Time_Format(aBegin[0]) : '?'} – ${aEnd ? Time_Format(aEnd[1]) : '?'}`;
+        }
         else
-            return `${aPeriod[0] || ['Unknown', 'Неизвестно'][_iLanguage]} – ${aPeriod[1] || ['Unknown', 'Неизвестно'][_iLanguage]}`;
+        {
+            return ['Chill', 'Отдых'][_iLanguage];
+        };
     }
     else
     {
         return '';
     };
-}
-
-function Timetable_GetPeriod_Raw(iDate)
-{
-    let aTimetable = Timetable_GetLessonNumbers(iDate);
-    if (aTimetable === false || aTimetable.length === 0)
-        return false;
-
-    let tBegin = Alarm_Get(Math.min(...aTimetable)),
-        tEnd = Alarm_Get(Math.max(...aTimetable));
-
-    return [tBegin ? Time_Format(tBegin[0]) : null, tEnd ? Time_Format(tEnd[1]) : null];
 }
 
 function Timetable_SetPoint_Day(iDate, bPoint)
@@ -91,10 +79,10 @@ function Timetable_SetPoint_Lesson(iDate, sTitle, bPoint)
 {
     for (let loop_eLesson of Timetable_GetLessonElements(iDate))
     {
-        let loop_sReplacement = loop_eLesson.children[1].children[0].innerHTML;
+        let loop_sChange = loop_eLesson.children[1].children[0].innerHTML;
         let loop_sTitle = loop_eLesson.children[1].children[1].innerHTML;
 
-        if ((loop_sReplacement || loop_sTitle) === sTitle)
+        if ((loop_sChange || loop_sTitle) === sTitle)
         {
             if (bPoint)
                 loop_eLesson.classList.add('Note');
@@ -104,12 +92,12 @@ function Timetable_SetPoint_Lesson(iDate, sTitle, bPoint)
     };
 }
 
-function Timetable_FocusLesson(iDate, iLessonNumber)
+function Timetable_FocusLesson(iDate, iIndex)
 {
     _iWeekOffset = Week_DateToOffset(iDate);
     Week_Select();
 
-    let eLesson = Timetable_GetLessonElement(iDate, iLessonNumber);
+    let eLesson = Timetable_GetLessonElement(iDate, iIndex);
     eLesson.children[1].focus();
     eLesson.classList.add('Focused');
     setTimeout(() => { addEventListener('click', () => { eLesson.classList.remove('Focused'); }, { once: true }); }, 0);

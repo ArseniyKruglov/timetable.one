@@ -11,24 +11,24 @@ function Information_Draw()
             let aTimetable = [];
             for (let loop_aLesson of mTimetable)
                 if (_mAlarms.has(loop_aLesson[0]) === true)
-                    aTimetable.push([loop_aLesson[0], loop_aLesson[1].Title, (_oWeek.Replacements.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || {}).Place ?? loop_aLesson[1].Fields.LectureHall])
+                    aTimetable.push([loop_aLesson[0], loop_aLesson[1].Title, (_oWeek.Changes.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || {}).Place ?? loop_aLesson[1].Fields.LectureHall])
                 else
                     bLessonsWithoutAlarms = true;
 
-            for (let loop_oReplacement of _oWeek.Replacements.selectWhere({ 'Date': iDate }))
+            for (let loop_oChange of _oWeek.Changes.selectWhere({ 'Date': iDate }))
                 for (let i = 0; i < aTimetable.length; i++)
-                    if (aTimetable[i][0] === loop_oReplacement.Index)
+                    if (aTimetable[i][0] === loop_oChange.Index)
                     {
-                        if (loop_oReplacement.Replacement === '')
+                        if (loop_oChange.Change === '')
                             aTimetable.splice(i, 1);
                         else
-                            if (loop_oReplacement.Replacement)
-                                aTimetable[i][1] = loop_oReplacement.Replacement;
+                            if (loop_oChange.Change)
+                                aTimetable[i][1] = loop_oChange.Change;
                             
                         break;
                     };
     
-            for (let loop_aAddedLesson of _oWeek.AddedLessons)
+            for (let loop_aAddedLesson of _oWeek.SuddenLessons)
                 if (loop_aAddedLesson.Date === iDate)
                     aTimetable.push([loop_aAddedLesson.Index, loop_aAddedLesson.Title]);
 

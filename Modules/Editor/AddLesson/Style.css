@@ -2,7 +2,6 @@
 {
     border: none;
     border-bottom: var(--Border);
-    transition: border-bottom 250ms;
     border-radius: 5px 5px 0 0;
     background-color: var(--Gray02-5);
     height: 40px;
@@ -14,7 +13,7 @@
 .Adder > .Info input:focus
 {
     outline: none;
-    border-bottom: 1px solid var(--Main);
+    border-bottom: 1px solid HSL(var(--Accent-Hue), 100%, 50%);
 }
 
 

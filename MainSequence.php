@@ -7,9 +7,8 @@
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
         <link rel='manifest' href='/manifest.php?URL=<? echo $URL ?>'>
-        <meta name='theme-color' content='#F1F2F3'>
 
-        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Google+Sans:400,500,700'>
+        <!-- <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Google+Sans:400,500,700'> -->
 
         <link rel='apple-touch-icon' sizes='57x57' href='/Style/Icons/apple-icon-57x57.png'>
         <link rel='apple-touch-icon' sizes='60x60' href='/Style/Icons/apple-icon-60x60.png'>
@@ -24,10 +23,10 @@
         <link rel='icon' type='image/png' sizes='32x32' href='/Style/Icons/favicon-32x32.png'>
         <link rel='icon' type='image/png' sizes='96x96' href='/Style/Icons/favicon-96x96.png'>
         <link rel='icon' type='image/png' sizes='16x16' href='/Style/Icons/favicon-16x16.png'>
-        <meta name='msapplication-TileColor' content='#FFFFFF'>
+        <meta name='msapplication-TileColor' content='#F1F2F3'>
         <meta name='msapplication-TileImage' content='/Style/Icons/ms-icon-144x144.png'>
-        <meta name='theme-color' content='#FFFFFF'>
-
+        <meta name='theme-color' content='#F1F2F3'>
+        
         <? 
         $Time = time();
 
@@ -99,16 +98,16 @@
 
         _oWeek = 
         <?
-            $aReplacements = [];
-            $aAddedLessons = [];
+            $aChanges = [];
+            $aSuddenLessons = [];
             $aLessonNotes = [];
             $aDayNotes = [];
         
-            foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aReplacement)
-                array_push($aReplacements, ['Date' => (int) $aReplacement[0], 'Index' => (int) $aReplacement[1], 'Replacement' => $aReplacement[2], 'Place' => $aReplacement[3], 'Educator' => $aReplacement[4]]);
+            foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aChange)
+                array_push($aChanges, ['Date' => (int) $aChange[0], 'Index' => (int) $aChange[1], 'Change' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
         
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title` FROM `AddedLessons` WHERE `UserID` = $User[0]")->fetch_all() as &$aAddedLesson)
-                array_push($aAddedLessons, ['Date' => (int) $aAddedLesson[0], 'Index' => (int) $aAddedLesson[1], 'Title' => $aAddedLesson[2]]);
+                array_push($aSuddenLessons, ['Date' => (int) $aAddedLesson[0], 'Index' => (int) $aAddedLesson[1], 'Title' => $aAddedLesson[2]]);
 
             if ($AccessLevel > 0)
             {
@@ -119,7 +118,7 @@
                     array_push($aDayNotes, ['Date' => (int) $aLesson[0], 'Note' => $aLesson[1]]);
             };
         
-            echo json_encode(['LessonNotes' => $aLessonNotes, 'AddedLessons' => $aAddedLessons, 'Replacements' => $aReplacements, 'DayNotes' => $aDayNotes], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['LessonNotes' => $aLessonNotes, 'SuddenLessons' => $aSuddenLessons, 'Changes' => $aChanges, 'DayNotes' => $aDayNotes], JSON_UNESCAPED_UNICODE);
         ?>;
 
         _mAlarms = new Map(

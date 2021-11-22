@@ -5,7 +5,7 @@
     grid-auto-flow: column;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     width: fit-content;
     border-radius: 100px;
     z-index: 1;
@@ -35,8 +35,7 @@
 #Week_Period
 {
     font-weight: 500;
-    min-width: 125px;
-    font-size: 16px;
+    min-width: 100px;
 }
 
 #Week.Past > #Week_Period

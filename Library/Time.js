@@ -29,12 +29,20 @@ function Date_Format(tDate, bLong)
     return HTML;
 }
 
-function Date_Format_Short(tDate)
+function Date_Format_Short(tDate, bForceYear)
 {
-    return tDate.toLocaleString([], { month: 'numeric', day: 'numeric' });
+    if (bForceYear === true)
+        return tDate.toLocaleString([], { year: '2-digit', month: 'numeric', day: 'numeric' });
+    else
+        return tDate.toLocaleString([], { month: 'numeric', day: 'numeric' });
 }
 
 function Time_Format(tDate)
 {
     return tDate.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' });
+}
+
+function Date_ToWeek(iDate)
+{
+    return Math.floor(((new Date(0).to1970() + 3) + iDate) / 7);    
 }

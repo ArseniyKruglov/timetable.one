@@ -16,7 +16,7 @@ class LessonDetails
             {
                 this.Draw();
 
-                this.Overlay.Link = `?Date=${this.Date}&Lesson=${this.Index}`;
+                this.Overlay.Link = `/Lesson?Date=${this.Date}&Lesson=${this.Index}`;
             }
             else
             {
@@ -49,7 +49,7 @@ class LessonDetails
 
 
 
-        this.FindInWeek_Replacement();
+        this.FindInWeek_Change();
         this.FindInWeek_Note();
     }
 
@@ -63,7 +63,7 @@ class LessonDetails
                         <span><custom-round-button icon='More'></custom-round-button></span>
                     </div>
                     
-                    <custom-textarea class='Title' placeholder='${this.Title}' value='${this.Added || (this.Canceled ? '' : this.Replacement ?? this.Title)}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
+                    <custom-textarea class='Title' placeholder='${this.Title}' value='${this.Added || (this.Canceled ? '' : this.Change ?? this.Title)}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
     
                     <div class='Info'>
                         <div class='Calendar'>
@@ -119,7 +119,7 @@ class LessonDetails
 
 
     
-        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Overlay.Close(); });
+        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { history.back(); });
 
         this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
         {
@@ -128,7 +128,7 @@ class LessonDetails
             aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], () =>
             {
                 Timetable_FocusLesson(this.Date, this.Index);
-                this.Overlay.Close();
+                history.back();
             }]);
     
             if (_iAccessLevel === 2)
@@ -139,7 +139,7 @@ class LessonDetails
                         aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () =>
                         {
                             this.Overlay.GetUIElement('.Title').value = '';
-                            this.Replacement = '';
+                            this.Change = '';
                         }]);
                 }
                 else
@@ -150,12 +150,12 @@ class LessonDetails
                     }]);
                 };
         
-                if (this.Replacement)
+                if (this.Change)
                 {
                     aActions.push(['Restore', ['Remove replacement', 'Убрать замену'][_iLanguage], () =>
                     {
                         this.Overlay.GetUIElement('.Title').value = this.Title;
-                        this.Replacement = this.Title;
+                        this.Change = this.Title;
                     }]);
                 }
                 else if (this.Canceled)
@@ -163,7 +163,7 @@ class LessonDetails
                     aActions.push(['Restore', ['Undo cancellation', 'Отменить отмену'][_iLanguage], () =>
                     {
                         this.Overlay.GetUIElement('.Title').value = this.Title;
-                        this.Replacement = this.Title;
+                        this.Change = this.Title;
                     }]);
                 };
             };
@@ -176,7 +176,7 @@ class LessonDetails
             if (this.Added)
                 this.Added = Event.target.value;
             else
-                this.Replacement = Event.target.value;
+                this.Change = Event.target.value;
         });
 
         this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) =>
@@ -199,7 +199,7 @@ class LessonDetails
 
         this.Overlay.GetUIElement('button').addEventListener('click', (Event) =>
         {
-            Event.target.addEventListener('click', () => { this.Overlay.Close(); });
+            Event.target.addEventListener('click', () => { history.back(); });
         });
     }
 
@@ -220,14 +220,14 @@ class LessonDetails
         };
     }
 
-    FindInWeek_Replacement()
+    FindInWeek_Change()
     {
-        this.oInWeek_Changes = _oWeek.Replacements.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || null;
+        this.oInWeek_Changes = _oWeek.Changes.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || null;
     }
 
     FindInWeek_Added()
     {
-        this.oInWeek_Added = _oWeek.AddedLessons.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || null;
+        this.oInWeek_Added = _oWeek.SuddenLessons.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || null;
     }
 
 
@@ -252,7 +252,7 @@ class LessonDetails
             {
                 SendRequest('/PHP/Details/Lesson/Added.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : ''});
 
-                _oWeek.AddedLessons.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
+                _oWeek.SuddenLessons.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
 
                 if (this.Element.parentElement.children.length === 1)
                     this.DayElement.remove();
@@ -282,19 +282,19 @@ class LessonDetails
 
 
 
-    get Replacement()
+    get Change()
     {
-        return (this.oInWeek_Changes && !this.Canceled) ? this.oInWeek_Changes.Replacement : null;
+        return (this.oInWeek_Changes && !this.Canceled) ? this.oInWeek_Changes.Change : null;
     }
 
-    set Replacement(sReplacement)
+    set Change(sChange)
     {
-        sReplacement = sReplacement.trim();
+        sChange = sChange.trim();
         
-        if (sReplacement === this.Title)
+        if (sChange === this.Title)
         {    
             if (this.oInWeek_Changes)
-                _oWeek.Replacements.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
+                _oWeek.Changes.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
 
             this.oInWeek_Changes = null;
         }
@@ -302,7 +302,7 @@ class LessonDetails
         {
             if (this.oInWeek_Changes)
             {
-                this.oInWeek_Changes.Replacement = sReplacement;
+                this.oInWeek_Changes.Change = sChange;
             }
             else
             {
@@ -310,16 +310,16 @@ class LessonDetails
                 {
                     'Date': this.Date,
                     'Index': this.Index,
-                    'Replacement': sReplacement,
+                    'Change': sChange,
                     'Place': null,
                     'Educator': null
                 };
 
-                _oWeek.Replacements.push(this.oInWeek_Changes);
+                _oWeek.Changes.push(this.oInWeek_Changes);
             };
         };
 
-        SendRequest('/PHP/Details/Lesson/Replacement.php', {'Date': this.Date, 'Index': this.Index, 'Title': this.Title, 'Replacement': sReplacement});
+        SendRequest('/PHP/Details/Lesson/Replacement.php', {'Date': this.Date, 'Index': this.Index, 'Title': this.Title, 'Change': sChange});
 
 
 
@@ -332,7 +332,7 @@ class LessonDetails
             else
                 this.Element.classList.remove('Canceled');
     
-            this.Element.children[1].children[0].innerHTML = this.Replacement ?? '';
+            this.Element.children[1].children[0].innerHTML = this.Change ?? '';
         };
 
         this.FindInWeek_Note();
@@ -340,7 +340,7 @@ class LessonDetails
 
     get Canceled()
     {
-        return !this.Added && this.oInWeek_Changes && this.oInWeek_Changes.Replacement === '';
+        return !this.Added && this.oInWeek_Changes && this.oInWeek_Changes.Change === '';
     }
 
 
@@ -397,7 +397,7 @@ class LessonDetails
 
     get TimetableTitle()
     {
-        return this.Added || (this.Replacement ?? this.Title);
+        return this.Added || (this.Change ?? this.Title);
     }
 
     get DayElement()

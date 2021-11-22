@@ -4,13 +4,15 @@ class SuddenLesson_ConstructorUI
     {
         this.Title = '';
         this.Date = iDate;
-        const aLessons = Timetable_GetLessonNumbers(this.Date);
+        const aLessons = Timetable_GetLessonIndexes(this.Date);
         this.Index = ((aLessons.length) ? Math.max(...aLessons) : 0) + 1;
 
-
-
         this.Overlay = new Overlay();
-        this.Overlay.Callback_Open = () => { this.Draw(); };
+        this.Overlay.Callback_Open = () =>
+        {
+            this.Draw();
+            this.Overlay.Link = '/' + location.pathname.split('/')[2] + location.search + `/Add`;
+        };
         this.Overlay.Open();
     }
 
@@ -27,7 +29,7 @@ class SuddenLesson_ConstructorUI
                     </div>
         
                     <div>
-                        <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' maxlength=10 required></custom-textarea>
+                        <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' required></custom-textarea>
                         <div class='Strict Invalid Caution Top'>
                             <span></span>
                             <span>${['Enter a lesson title', 'Укажите название занятия'][_iLanguage]}.</span>
@@ -123,21 +125,15 @@ class SuddenLesson_ConstructorUI
             event.target.setCustomValidity('');
             if (event.target.checkValidity())
             {
-                if (this.Overlay.GetUIElement('.Calendar').value)
-                {                            
-                    const aLessons = Timetable_GetLessonNumbers(new Date(this.Overlay.GetUIElement('.Calendar').value).to1970(), true);
-                    if (aLessons)
-                    {
-                        this.Index = parseInt(this.Index);
+                this.Index = parseInt(this.Index);
 
-                        if (aLessons.includes(this.Index))
-                        {
-                            this.Index = false;
-                            event.target.setCustomValidity([`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
-                            SetError(false, false, [`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
-                        };
+                if (this.Overlay.GetUIElement('.Calendar').value)
+                    if (Timetable_GetLessonIndexes(new Date(this.Overlay.GetUIElement('.Calendar').value).to1970(), true).includes(this.Index))
+                    {
+                        this.Index = false;
+                        event.target.setCustomValidity([`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
+                        SetError(false, false, [`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
                     };
-                };
 
                 if (event.target.checkValidity())
                     SetError(true);
@@ -173,7 +169,7 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
 
     if (bPush)
     {
-        _oWeek.AddedLessons.push({'Date': iDate, 'Index': iIndex, 'Title': sTitle});
+        _oWeek.SuddenLessons.push({'Date': iDate, 'Index': iIndex, 'Title': sTitle});
 
         let eDay = Timetable_GetDayElement(iDate);
         if (eDay)
@@ -188,27 +184,52 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
         const aWeekPeriod = Week_GetPeriod(_iWeekOffset);
         if (aWeekPeriod[0] <= iDate && iDate <= aWeekPeriod[1])
         {
-            const eLesson = document.createElement('div');
-            eLesson.className = 'Lesson Added';
-            eLesson.innerHTML = `<span>${iIndex}</span>
-                                 <a ${Timetable_GetLessonLinkAttributes(iDate, iIndex)}>
-                                    <span></span>
-                                    <span>${sTitle}</span>
-                                 </a>
-                                 <span></span>`;
+            let HTML = `<span>${iIndex}</span>
+                        <a ${Timetable_GetLessonLinkAttributes(iDate, iIndex)}>
+                            <span></span>
+                            <span>${sTitle}</span>
+                        </a>
+                        <span></span>`;
 
-            let eAfter = null;
-            for (let loop_eLesson of Timetable_GetLessonElements(iDate))
+            if (Timetable_GetDayElement(iDate))
             {
-                const loop_iIndex = parseInt(loop_eLesson.children[0].innerHTML);
+                const eLesson = document.createElement('div');
+                eLesson.className = 'Lesson Added';
+                eLesson.innerHTML = HTML;
 
-                if (loop_iIndex > iIndex)
+                let eAfter = null;
+                for (let loop_eLesson of Timetable_GetLessonElements(iDate))
                 {
-                    eAfter = loop_eLesson;
-                    break;
+                    const loop_iIndex = parseInt(loop_eLesson.children[0].innerHTML);
+    
+                    if (loop_iIndex > iIndex)
+                    {
+                        eAfter = loop_eLesson;
+                        break;
+                    };
                 };
+                Timetable_GetDayElement(iDate).children[1].insertBefore(eLesson, eAfter);
+            }
+            else
+            {
+                let sDayClass;
+                if (iDate === _iToday)
+                    sDayClass = 'Today';
+                else if (iDate === _iToday + 1)
+                    sDayClass = 'Tomorrow';
+    
+                const eDay = document.createElement('div');
+                eDay.className = `Day ${sDayClass || ''}`;
+                eDay.innerHTML = `<button onclick='new Day_UI(${iDate})'>
+                                    <div>${Date_Format(Time_From1970(iDate))}</div>
+                                    <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
+                                  </button>
+        
+                                  <div>
+                                    <div class='Lesson Added'>${HTML}</div>
+                                  </div>`;
+                document.getElementById('Timetable').append(eDay);
             };
-            Timetable_GetDayElement(iDate).children[1].insertBefore(eLesson, eAfter);
         };
     };
 }

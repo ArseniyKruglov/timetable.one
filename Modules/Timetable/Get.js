@@ -7,9 +7,9 @@ function Timetable_GetDayElement(iDate)
         return null;
 };
 
-function Timetable_GetLessonElement(iDate, iLessonNumber)
+function Timetable_GetLessonElement(iDate, iIndex)
 {
-    let eLesson = document.querySelector(`.Lesson [onclick="event.preventDefault(); new LessonDetails(${iDate}, ${iLessonNumber});"]`);
+    let eLesson = document.querySelector(`.Lesson [onclick="event.preventDefault(); new LessonDetails(${iDate}, ${iIndex});"]`);
     if (eLesson)
         return eLesson.parentElement;
     else

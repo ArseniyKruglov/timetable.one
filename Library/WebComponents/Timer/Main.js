@@ -7,33 +7,42 @@ class Timer extends HTMLElement
     }
 
     Update()
-    {
-        const tDate = new Date(parseInt(this.getAttribute('time')));
-        
-        const iTimeLeft = tDate - new Date();
+    {   
+        const iTimeLeft = parseInt(this.getAttribute('time')) - new Date();
 
-        const iSeconds = Math.floor((iTimeLeft / 1000) % 60);
-        const iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
-        const iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
-        const iDays = Math.floor(iTimeLeft / (24 * 60 * 60 * 1000));
-
-        let sClass = '';
-        if (iDays > 0)
-            sClass = 'Days';
-        else if (iHours > 0)
-            sClass = 'Hours';
-
-        this.className = sClass;
-
-        function DoubleDigits(i)
+        if (iTimeLeft < 0)
         {
-            if (i < 10)
-                return `0${i}`;
-            else
-                return i;
+            this.innerHTML = 0;
         }
+        else
+        {
+            const iSeconds = Math.floor((iTimeLeft / 1000) % 60);
+            const iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
+            const iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
+            const iDays = Math.floor(iTimeLeft / (24 * 60 * 60 * 1000));
 
-        this.innerHTML = `${iDays > 0 ? `${iDays}:` : ''}${iDays > 0 || iHours > 0 ? `${DoubleDigits(iHours)}:` : ''}${DoubleDigits(iMinutes)}:${DoubleDigits(iSeconds)}`;
+
+    
+            let sClass = '';
+            if (iDays > 0)
+                sClass = 'Days';
+            else if (iHours > 0)
+                sClass = 'Hours';
+    
+            this.className = sClass;
+
+            
+    
+            function DoubleDigits(i)
+            {
+                if (i < 10)
+                    return `0${i}`;
+                else
+                    return i;
+            }
+    
+            this.innerHTML = `${iDays > 0 ? `${iDays}:` : ''}${iDays > 0 || iHours > 0 ? `${DoubleDigits(iHours)}:` : ''}${DoubleDigits(iMinutes)}:${DoubleDigits(iSeconds)}`;
+        };
     }
 }
 

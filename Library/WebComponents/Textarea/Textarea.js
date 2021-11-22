@@ -13,19 +13,19 @@ class Textarea extends HTMLElement
                             
                             <button></button>`;
 
-        this.etTextarea = this.children[0].children[0];
-        this.ebExpand = this.children[1];
+        this.eTextarea = this.children[0].children[0];
+        this.eExpand = this.children[1];
 
         this.iMinimized = 150;
         this.iLimit = this.iMinimized + 35;
         
         this.Resize();
         
-        this.bExpanded = parseInt(this.etTextarea.style.height) < this.iLimit;
+        this.bExpanded = parseInt(this.eTextarea.style.height) < this.iLimit;
         this.ExpandHandler();
-        this.etTextarea.addEventListener('input', () => { this.ExpandHandler(); });
+        this.eTextarea.addEventListener('input', () => { this.ExpandHandler(); });
         addEventListener('resize', () => { this.ExpandHandler(); });
-        this.ebExpand.addEventListener('click', () =>
+        this.eExpand.addEventListener('click', () =>
         {
             this.bExpanded = !this.bExpanded;
             this.ExpandHandler();
@@ -33,46 +33,48 @@ class Textarea extends HTMLElement
         document.fonts.addEventListener('ready', () => { this.ExpandHandler(); });
 
         const iLength = (this.getAttribute('value') || '').length;
-        this.etTextarea.setSelectionRange(iLength, iLength);
+        this.eTextarea.setSelectionRange(iLength, iLength);
     }
 
     ExpandHandler()
     {
         this.Resize();
 
-        if (parseInt(this.etTextarea.style.height) < this.iLimit)
+        if (parseInt(this.eTextarea.style.height) < this.iLimit)
         {
-            this.ebExpand.hidden = true;
+            this.eExpand.hidden = true;
         }
         else
         {
-            this.etTextarea.style.maxHeight = this.bExpanded ? '' : `${this.iMinimized}px`;
-            this.ebExpand.hidden = false;
-            this.ebExpand.innerHTML =  `<span>${(this.bExpanded ? ['Show less', 'Свернуть'] : ['Show full', 'Показать полностью'])[_iLanguage]}</span>
+            this.eTextarea.style.maxHeight = this.bExpanded ? '' : `${this.iMinimized}px`;
+            this.eExpand.hidden = false;
+            this.eExpand.innerHTML =  `<span>${(this.bExpanded ? ['Show less', 'Свернуть'] : ['Show full', 'Показать полностью'])[_iLanguage]}</span>
                                         <custom-icon icon='${this.bExpanded ? 'Expand_Less' : 'Expand_More'}''></svg>`;
         };
     }
 
     Resize()
     {
-        this.etTextarea.style.height = 0;
-        this.etTextarea.style.height = (this.etTextarea.scrollHeight - 20 + 2) + 'px';
+        this.eTextarea.style.overflow = 'hidden';
+        this.eTextarea.style.height = 0;
+        this.eTextarea.style.height = (this.eTextarea.scrollHeight - 20 + 2) + 'px';
+        this.eTextarea.style.overflow = '';
     }
 
     get value()
     {
-        return this.etTextarea.value;
+        return this.eTextarea.value;
     }
 
     set value(sValue)
     {
-        this.etTextarea.value = sValue;
+        this.eTextarea.value = sValue;
         this.ExpandHandler();
     }
 
     set placeholder(sValue)
     {
-        this.etTextarea.setAttribute('placeholder', sValue);
+        this.eTextarea.setAttribute('placeholder', sValue);
     }
 }
 

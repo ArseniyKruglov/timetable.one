@@ -1,4 +1,5 @@
 _aOverlay_Escapes = [];
+_aOverlay_Backs = [];
 
 
 class Overlay
@@ -22,31 +23,35 @@ class Overlay
         this.Element.style.visibility = '';
         FocusDiv(this.Element);
 
-        const Esc = this.Callback_Close || (() => { this.Close(); });
+
+
+        const Esc = this.Callback_Close || (() => { history.back(); });
+
         this.Element.children[0].addEventListener('click', Esc);
+
         _aOverlay_Escapes.push(event =>
         {
             if (event.code == 'Escape')
                 Esc();
         });
-        document.addEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 1]);
-        document.removeEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 2]);
+        removeEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 2]);
+        addEventListener('keydown',  _aOverlay_Escapes[_aOverlay_Escapes.length - 1]);
+
+        _aOverlay_Backs.push(() => { this.Close(); });
+
+        window.onpopstate = _aOverlay_Backs[_aOverlay_Backs.length - 1];
     }
 
     Close()
     {
         this.Element.remove();
 
-        document.removeEventListener('keydown', _aOverlay_Escapes.pop());
+        removeEventListener('keydown', _aOverlay_Escapes.pop());
+
+        _aOverlay_Backs.pop();
+        window.onpopstate = _aOverlay_Backs[_aOverlay_Backs.length - 1];
 
         this.eLastFocused.focus();
-
-
-        const eOverlay = document.querySelector('.Overlay');
-        let sLink;
-        if (eOverlay)
-            sLink = eOverlay.getAttribute('link');
-        history.pushState('', '', '/' + _sURL + (sLink || ''));
     }
 
 

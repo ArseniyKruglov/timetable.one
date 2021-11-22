@@ -2,6 +2,8 @@ let _iToday = new Date().to1970();
 let _iWeekOffset = Week_GetInitialWeekOffset();
 const _iLanguage = Language_Get();
 
+document.querySelector('meta[name="theme-color"]').content = window.getComputedStyle(document.body).backgroundColor;
+
 document.body.innerHTML =  `<main>
                                 <div id='TimetableTab'>
                                     <div id='Information' class='Island EmptyHidden'></div>
@@ -22,6 +24,7 @@ document.body.innerHTML =  `<main>
 Week_Select();
 Timetable_Height(false);
 addEventListener('resize', () => { Timetable_Overflow(document.getElementById('Timetable')); _aHeights = []; Timetable_Height(false); });
+
 
 
 Information_Draw();
@@ -83,3 +86,13 @@ setTimeout
     () => { Midnight(); setInterval(Midnight, 24 * 60 * 60 * 1000); },
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
+
+
+
+
+
+// Dev
+
+_aPops = [''];
+_aPops.push(location.pathname.replace('/' + _sURL + '/', '') + location.search)
+addEventListener('popstate', () => { _aPops.push(location.pathname.replace('/' + _sURL + '/', '') + location.search) })

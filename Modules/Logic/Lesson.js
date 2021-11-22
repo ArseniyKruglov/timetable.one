@@ -1,4 +1,4 @@
-function Lesson_SetReplacement(iDate, iIndex, sReplacement, oInWeek, bDraw, bPush, bSend)
+function Lesson_SetChange(iDate, iIndex, sChange, oInWeek, bDraw, bPush, bSend)
 {
     
 }

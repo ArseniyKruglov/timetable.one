@@ -1,6 +1,6 @@
-function Alarm_Get(iLessonNumber, iDate = _iToday)
+function Alarm_Get(iIndex, iDate = _iToday)
 {
-    const aAlarms = _mAlarms.get(iLessonNumber);
+    const aAlarms = _mAlarms.get(iIndex);
     if (aAlarms)
     {
         const iTimezoneOffset = new Date().getTimezoneOffset() - 3 * 60;      // To do

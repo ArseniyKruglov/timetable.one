@@ -1,12 +1,12 @@
 function Week_GetInitialWeekOffset()
 {
-    if (Timetable_GetLessonNumbers(_iToday).length !== 0)
+    if (Timetable_GetLessonIndexes(_iToday).length !== 0)
         return 0;
         
     let iDayOfWeek = new Date().getDayOfWeek();
     let iLastStudyDay;
     for (let i = _iToday - iDayOfWeek + 6; i >= _iToday - iDayOfWeek; i--)
-        if (Timetable_GetLessonNumbers(i).length !== 0)
+        if (Timetable_GetLessonIndexes(i).length !== 0)
         {
             iLastStudyDay = i;
             break;
@@ -22,7 +22,7 @@ function Week_GetInitialWeekOffset()
     else
     {
         for (let i = _iToday - iDayOfWeek + 6 + 7; i >= _iToday - iDayOfWeek + 7; i--)
-            if (Timetable_GetLessonNumbers(i).length !== 0)
+            if (Timetable_GetLessonIndexes(i).length !== 0)
                 return 1;
 
         return 0;

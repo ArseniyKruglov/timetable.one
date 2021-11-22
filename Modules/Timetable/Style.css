@@ -246,7 +246,7 @@
             visibility: hidden;
         }
 
-        /* Replacements */
+        /* Changes */
         #Timetable .Lesson > :nth-child(2) > :first-child:empty,
         #Timetable .Lesson > :nth-child(2) > :first-child:not(:empty) + *
         {

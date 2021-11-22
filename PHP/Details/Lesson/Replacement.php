@@ -10,14 +10,14 @@ if ($UserID->num_rows === 1)
     $Date = $_POST['Date'];
     $Index = $_POST['Index'];
     $Title = $_POST['Title'];
-    $Replacement = $_POST['Replacement'];
+    $Change = $_POST['Change'];
 
-    if ($Title == $Replacement)
+    if ($Title == $Change)
         $SQL->multi_query("UPDATE `Changes` SET `Title` = NULL WHERE (`Date` = $Date) AND (`Index` = $Index) AND (`UserID` = $UserID);
                            DELETE FROM `Changes` WHERE (`Title` = NULL) AND (`Place` = NULL) AND (`Educator` = NULL)");
     else
-        $SQL->query("INSERT INTO `Changes` VALUES ($UserID, $Date, $Index, '$Replacement', NULL, NULL)
-                        ON DUPLICATE KEY UPDATE `Title` = '$Replacement'");
+        $SQL->query("INSERT INTO `Changes` VALUES ($UserID, $Date, $Index, '$Change', NULL, NULL)
+                        ON DUPLICATE KEY UPDATE `Title` = '$Change'");
 }
 else
 {

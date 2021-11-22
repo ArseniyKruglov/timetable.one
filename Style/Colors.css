@@ -1,7 +1,7 @@
 *
 {
-    --Accent-Hue: 210;
-    --Accent-Saturation: 17.5%;
+    --Accent-Hue: 15;
+    --Accent-Saturation: 50%;
 
     --Main: HSL(210, 100%, 56%);
     --Secondary: HSL(348, 83%, 47%);
@@ -49,9 +49,9 @@ body
     --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 5%);
     --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 2.5%);
 
-    --Background00: HSL(var(--Accent-Hue), calc(var(--Accent-Saturation) / 2), 7.5%);
-    --Background01: HSL(var(--Accent-Hue), calc(var(--Accent-Saturation) / 2), 12.5%);
-    --Background02: HSL(var(--Accent-Hue), calc(var(--Accent-Saturation) / 2), 15%);
+    --Background00: HSL(var(--Accent-Hue), 1%, 7.5%);
+    --Background01: HSL(var(--Accent-Hue), 1%, 12.5%);
+    --Background02: HSL(var(--Accent-Hue), 1%, 15%);
 
     --Text: #FFFFFF;
 

@@ -15,7 +15,7 @@ class Day_UI
             this.UpdateAlarms_Listener = () => { this.UpdateAlarms(); };
             addEventListener('TimetableChange', this.UpdateAlarms_Listener);
 
-            this.Overlay.Link = `?Date=${this.Date}`;
+            this.Overlay.Link = `/Day?Date=${this.Date}`;
         };
         this.Overlay.Open();
     }
