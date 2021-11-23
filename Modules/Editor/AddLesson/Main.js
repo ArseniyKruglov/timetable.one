@@ -1,6 +1,6 @@
 class SuddenLesson_ConstructorUI
 {
-    constructor(iDate)
+    constructor(iDate, bAnimation = true)
     {
         this.Title = '';
         this.Date = iDate;
@@ -13,6 +13,7 @@ class SuddenLesson_ConstructorUI
             this.Draw();
             this.Overlay.Link = '/' + location.pathname.split('/')[2] + location.search + `/Add`;
         };
+        this.Overlay.Animation = bAnimation;
         this.Overlay.Open();
     }
 
@@ -220,7 +221,7 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
     
                 const eDay = document.createElement('div');
                 eDay.className = `Day ${sDayClass || ''}`;
-                eDay.innerHTML = `<button onclick='new Day_UI(${iDate})'>
+                eDay.innerHTML = `<button onclick='new Day_UI(${iDate}, true)'>
                                     <div>${Date_Format(Time_From1970(iDate))}</div>
                                     <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
                                   </button>

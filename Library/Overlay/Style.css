@@ -33,7 +33,19 @@
 {
     background: #000000;
     opacity: var(--Background02-BackgroundOpacity);
+}
+
+.Overlay.Animation > :first-child
+{
     animation: Overlay_Background var(--Background02-AppearanceSpeed);
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .Overlay.Animation > :first-child
+    {
+        animation: none;
+    }
 }
 
 @keyframes Overlay_Background

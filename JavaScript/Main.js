@@ -23,7 +23,16 @@ document.body.innerHTML =  `<main>
                             </main>`;
 Week_Select();
 Timetable_Height(false);
-addEventListener('resize', () => { Timetable_Overflow(document.getElementById('Timetable')); _aHeights = []; Timetable_Height(false); });
+addEventListener('resize', () =>
+{
+    _aHeights = [];
+    Timetable_Overflow(document.getElementById('Timetable'));
+    Timetable_Height(false); 
+});
+document.fonts.ready.then(() =>
+{
+    Timetable_Overflow(document.getElementById('Timetable'));
+});
 
 
 
@@ -33,13 +42,23 @@ Information_Draw();
     window._sURL = location.pathname.split('/')[1];
     const oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
 
+
+
+    // Dev
+
+    _aHistory = [];
+    _aHistory.push(location.pathname.replace('/' + _sURL, '') + location.search);
+
+    //
+
+    
     
     if (oQuery.Date)
     {
         if (oQuery.Lesson)
-            new LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.Lesson));
+            new LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.Lesson), false);
         else
-            new Day_UI(parseInt(oQuery.Date));
+            new Day_UI(parseInt(oQuery.Date), false);
     };
 }
 
@@ -60,7 +79,6 @@ onkeydown = (Event) =>
                 break;
         };
 };
-
 
 
 function Midnight()
@@ -86,13 +104,3 @@ setTimeout
     () => { Midnight(); setInterval(Midnight, 24 * 60 * 60 * 1000); },
     new Date().setHours(24, 0, 0, 0) - new Date()
 );
-
-
-
-
-
-// Dev
-
-_aPops = [''];
-_aPops.push(location.pathname.replace('/' + _sURL + '/', '') + location.search)
-addEventListener('popstate', () => { _aPops.push(location.pathname.replace('/' + _sURL + '/', '') + location.search) })

@@ -106,7 +106,7 @@
         {
             display: grid;
             width: max-content;
-            max-width: 250px;
+            max-width: 300px;
             height: fit-content;
             height: -moz-fit-content;
             gap: 4px;
@@ -196,9 +196,8 @@
             gap: 10px;
             width: fit-content;
             width: -moz-fit-content;
-            max-width: 300px;
             line-height: 100%;
-            word-break: break-all;
+            word-break: break-word;
             align-items: center;
         }
 

@@ -1,6 +1,6 @@
 class Day_UI
 {
-    constructor(iDate)
+    constructor(iDate, bAnimation = true)
     {
         this.Date = iDate;
         this.oInWeek_Note = _oWeek.DayNotes.selectWhere({ 'Date': this.Date }, true) || null;
@@ -17,6 +17,7 @@ class Day_UI
 
             this.Overlay.Link = `/Day?Date=${this.Date}`;
         };
+        this.Overlay.Animation = bAnimation;
         this.Overlay.Open();
     }
 

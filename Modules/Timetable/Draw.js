@@ -136,50 +136,44 @@ function Timetable_Scroll()
 
 function Timetable_Overflow(eGrid)
 {
-    eGrid.style.gridTemplateColumns = '1fr 1fr';
-    eGrid.style.gridTemplateRows = '';
-    eGrid.style.gridAutoFlow = '';
-
-    let iWidth = eGrid.clientWidth;
-    let iScrollWidth = eGrid.scrollWidth;
-    let iHeight = eGrid.parentElement.clientHeight;
-    let iScrollHeight = eGrid.parentElement.scrollHeight;
-
-    if (iScrollWidth > iWidth)
+    function GetOverflow()
     {
-        eGrid.style.gridTemplateColumns = '1fr';
+        return {'Width': (eGrid.scrollWidth > eGrid.clientWidth), 'Height': (eGrid.parentElement.scrollHeight > eGrid.parentElement.clientHeight)};
+    };
+
+    function SetGrid(iColumns, iRows)
+    {
+        if (iColumns)
+            eGrid.style.gridTemplateColumns = `repeat(${iColumns}, auto)`;
+        else
+            eGrid.style.gridTemplateColumns = `repeat(${Math.ceil(eGrid.children.length / iRows)}, auto)`;
     }
-    else if (iScrollHeight > iHeight)
+
+
+
+    SetGrid(2);
+
+    let oOverflow = GetOverflow();
+    if (oOverflow.Width)
     {
-        eGrid.style.gridTemplateColumns = '';
-        eGrid.style.gridTemplateRows = '1fr 1fr';
-        eGrid.style.gridAutoFlow = 'column';
+        SetGrid(1);
+    }
+    else if (oOverflow.Height)
+    {
+        SetGrid(null, 2);
 
-        iWidth = eGrid.clientWidth;
-        iScrollWidth = eGrid.scrollWidth;
-        Height = eGrid.parentElement.clientHeight;
-        iScrollHeight = eGrid.parentElement.scrollHeight;
-
-        if (iScrollWidth > iWidth)
+        let oOverflow = GetOverflow();
+        if (oOverflow.Width)
         {
-            eGrid.style.gridTemplateColumns = '1fr 1fr';
-            eGrid.style.gridTemplateRows = '';
-            eGrid.style.gridAutoFlow = '';
-        };
-
-        if (iScrollHeight > iHeight)
+            SetGrid(2);
+        }
+        else if (oOverflow.Height)
         {
-            eGrid.style.gridTemplateRows = '1fr';
+            SetGrid(null, 1);
 
-            iWidth = eGrid.clientWidth;
-            iScrollWidth = eGrid.scrollWidth;
-
-            if (iScrollWidth > iWidth)
-            {
-                eGrid.style.gridTemplateColumns = '';
-                eGrid.style.gridTemplateRows = '1fr 1fr';
-                eGrid.style.gridAutoFlow = 'column';
-            };
+            let oOverflow = GetOverflow();
+            if (oOverflow.Width)
+                SetGrid(null, 2);
         };
     };
 }
