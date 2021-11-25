@@ -11,7 +11,7 @@ if ($UserID->num_rows === 1)
     $Index = $_POST['Index'];
     $Title = $_POST['Title'];
    
-    $SQL->query("INSERT INTO `AddedLessons` VALUES ($UserID, $Date, $Index, '$Title')");
+    $SQL->query("INSERT INTO `SuddenLessons` VALUES ($UserID, $Date, $Index, '$Title')");
 }
 else
 {

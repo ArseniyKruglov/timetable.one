@@ -12,9 +12,9 @@ if ($UserID->num_rows === 1)
     $Title = $_POST['Title'];
 
     if ($Title === '')
-        $SQL->query("DELETE FROM `AddedLessons` WHERE (`Date` = $Date) AND (`Index` = $Index) AND (`UserID` = $UserID)");
+        $SQL->query("DELETE FROM `SuddenLessons` WHERE (`Date` = $Date) AND (`Index` = $Index) AND (`UserID` = $UserID)");
     else
-        $SQL->query("UPDATE `AddedLessons` SET `Title` = '$Title' WHERE (`Date` = $Date) AND (`Index` = $Index) AND (`UserID` = $UserID)");
+        $SQL->query("UPDATE `SuddenLessons` SET `Title` = '$Title' WHERE (`Date` = $Date) AND (`Index` = $Index) AND (`UserID` = $UserID)");
 }
 else
 {

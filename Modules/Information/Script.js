@@ -28,9 +28,9 @@ function Information_Draw()
                         break;
                     };
     
-            for (let loop_aAddedLesson of _oWeek.SuddenLessons)
-                if (loop_aAddedLesson.Date === iDate)
-                    aTimetable.push([loop_aAddedLesson.Index, loop_aAddedLesson.Title]);
+            for (let loop_aSuddenLesson of _oWeek.SuddenLessons)
+                if (loop_aSuddenLesson.Date === iDate)
+                    aTimetable.push([loop_aSuddenLesson.Index, loop_aSuddenLesson.Title]);
 
             return aTimetable.sort((a, b) => { return a[0] > b[0]; });
         };

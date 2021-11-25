@@ -106,8 +106,8 @@
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aChange)
                 array_push($aChanges, ['Date' => (int) $aChange[0], 'Index' => (int) $aChange[1], 'Change' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
         
-            foreach ($SQL->query("SELECT `Date`, `Index`, `Title` FROM `AddedLessons` WHERE `UserID` = $User[0]")->fetch_all() as &$aAddedLesson)
-                array_push($aSuddenLessons, ['Date' => (int) $aAddedLesson[0], 'Index' => (int) $aAddedLesson[1], 'Title' => $aAddedLesson[2]]);
+            foreach ($SQL->query("SELECT `Date`, `Index`, `Title` FROM `SuddenLessons` WHERE `UserID` = $User[0]")->fetch_all() as &$aSuddenLesson)
+                array_push($aSuddenLessons, ['Date' => (int) $aSuddenLesson[0], 'Index' => (int) $aSuddenLesson[1], 'Title' => $aSuddenLesson[2]]);
 
             if ($AccessLevel > 0)
             {

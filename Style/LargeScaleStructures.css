@@ -7,26 +7,17 @@ html, body
 
 body
 {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    padding: 25px 0;
-    background-color: var(--Background00);
-    gap: 25px;
-    height: calc(100% - 50px);
-}
-
-
-main
-{
     display: flex;
-    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--Background00);
 }
 
 
 
 .Island
 {
-    background-color: var(--Background01);
     border-radius: 8px;
+    background-color: var(--Background01);
     box-shadow: var(--Shadow);
 }

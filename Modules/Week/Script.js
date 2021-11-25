@@ -13,9 +13,9 @@ function Week_Fill(aWeekPeriod)
             };
         };
 
-    for (let loop_oAddedLesson of _oWeek.SuddenLessons)
-        if (aWeekPeriod[0] <= loop_oAddedLesson.Date && loop_oAddedLesson.Date <= aWeekPeriod[1])
-            SuddenLesson_Constructor(loop_oAddedLesson.Date, loop_oAddedLesson.Index, loop_oAddedLesson.Title, true, false, false);
+    for (let loop_oSuddenLesson of _oWeek.SuddenLessons)
+        if (aWeekPeriod[0] <= loop_oSuddenLesson.Date && loop_oSuddenLesson.Date <= aWeekPeriod[1])
+            SuddenLesson_Constructor(loop_oSuddenLesson.Date, loop_oSuddenLesson.Index, loop_oSuddenLesson.Title, true, false, false);
 
     for (let loop_oLessonNote of _oWeek.LessonNotes)
         if (aWeekPeriod[0] <= loop_oLessonNote.Date && loop_oLessonNote.Date <= aWeekPeriod[1])
@@ -36,11 +36,12 @@ function Week_Fill(aWeekPeriod)
         };
 }
 
-function Week_Select()
+function Week_Select(bInit)
 {
     Timetable_Draw();
+    Timetable_Height(!bInit);
     Timetable_Overflow(document.getElementById('Timetable'));
-    document.fonts.ready.then(Timetable_Scroll);
+    Timetable_Scroll();
 
     let sWeekClass;
     if (_iWeekOffset === 0)
@@ -49,16 +50,19 @@ function Week_Select()
         sWeekClass = 'Next';
     else if (_iWeekOffset < 0)
         sWeekClass = 'Past';
-    document.getElementById('Week').className = `Island ${sWeekClass}`;
+    document.getElementById('Week').className = `Island ${sWeekClass || ''}`;
 
     const aWeekPeriod = Week_GetPeriod(_iWeekOffset);
     Week_Fill(aWeekPeriod);
 
     const iCurrentYear = new Date().getFullYear();
+    const eWeek = document.getElementById('Week');
+
     aWeekPeriod[0] = Time_From1970(aWeekPeriod[0]);
     aWeekPeriod[1] = Time_From1970(aWeekPeriod[1]);
+
     if (aWeekPeriod[0].getFullYear() === iCurrentYear && aWeekPeriod[1].getFullYear() === iCurrentYear)
-        document.getElementById('Week_Period').innerHTML = `${Date_Format_Short(aWeekPeriod[0])} – ${Date_Format_Short(aWeekPeriod[1])}`;
+        eWeek.children[1].innerHTML = `${Date_Format_Short(aWeekPeriod[0])} – ${Date_Format_Short(aWeekPeriod[1])}`;
     else
-        document.getElementById('Week_Period').innerHTML = `${Date_Format_Short(aWeekPeriod[0], true)} – ${Date_Format_Short(aWeekPeriod[1], true)}`;
+        eWeek.children[1].innerHTML = `${Date_Format_Short(aWeekPeriod[0], true)} – ${Date_Format_Short(aWeekPeriod[1], true)}`;
 }

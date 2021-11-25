@@ -32,9 +32,9 @@ function Timetable_GetLessonIndexes(iDate, bIncludeCanceled)
                         aLessonIndexes.splice(iIndex, 1);
                 };
     };
-    for (let loop_aAddedLesson of _oWeek.SuddenLessons)
-        if (loop_aAddedLesson.Date === iDate)
-            aLessonIndexes.push(loop_aAddedLesson.Index);
+    for (let loop_aSuddenLesson of _oWeek.SuddenLessons)
+        if (loop_aSuddenLesson.Date === iDate)
+            aLessonIndexes.push(loop_aSuddenLesson.Index);
 
     return aLessonIndexes;
 }

@@ -1,42 +1,57 @@
+// Basic variables
+
 let _iToday = new Date().to1970();
 let _iWeekOffset = Week_GetInitialWeekOffset();
 const _iLanguage = Language_Get();
 
-document.querySelector('meta[name="theme-color"]').content = window.getComputedStyle(document.body).backgroundColor;
+
+
+// Body
 
 document.body.innerHTML =  `<main>
-                                <div id='TimetableTab'>
-                                    <div id='Information' class='Island EmptyHidden'></div>
+                                <div id='Information' class='Island EmptyHidden'></div>
 
-                                    <div id='TimetableHeight'>
-                                        <div id='TimetableScroll' class='Island'>
-                                            <div id='Timetable'></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id='Week' class='Island'>
-                                        <custom-round-button icon='Chevron Left' onclick='Week_Previous()'></custom-round-button>
-                                        <button id='Week_Period' onclick='Week_Current()'></button>
-                                        <custom-round-button icon='Chevron Right' onclick='Week_Next()'></custom-round-button>
+                                <div id='TimetableHeight'>
+                                    <div id='TimetableScroll' class='Island'>
+                                        <div id='Timetable'></div>
                                     </div>
                                 </div>
+                                
+                                <div id='Week' class='Island'>
+                                    <custom-round-button icon='Chevron Left' onclick='Week_Previous()'></custom-round-button>
+                                    <button id='Week_Period' onclick='Week_Current()'></button>
+                                    <custom-round-button icon='Chevron Right' onclick='Week_Next()'></custom-round-button>
+                                </div>
                             </main>`;
-Week_Select();
-Timetable_Height(false);
-addEventListener('resize', () =>
-{
-    _aHeights = [];
-    Timetable_Overflow(document.getElementById('Timetable'));
-    Timetable_Height(false); 
-});
-document.fonts.ready.then(() =>
-{
-    Timetable_Overflow(document.getElementById('Timetable'));
-});
 
 
+
+// Information
 
 Information_Draw();
+
+
+                            
+// Timetable
+
+_mHeights = new Map();
+Week_Select(true);
+
+{
+    const Redraw = () =>
+    {
+        _mHeights = new Map();
+        Timetable_Overflow(document.getElementById('Timetable'));
+        Timetable_Height(false);
+    };
+
+    addEventListener('resize', Redraw);
+    document.fonts.ready.then(Redraw);
+}
+
+
+
+// URL
 
 {
     window._sURL = location.pathname.split('/')[1];
