@@ -79,6 +79,8 @@ Week_Select(true);
 
 
 
+// Events
+
 addEventListener('focus', Information_Draw);
 onkeydown = (Event) =>
 {
@@ -94,6 +96,17 @@ onkeydown = (Event) =>
                 break;
         };
 };
+addEventListener('swiped-right', () =>
+{
+    if (!Overlay_IsOpened())
+        document.getElementById('Week').firstElementChild.click();
+});
+addEventListener('swiped-left', () =>
+{
+    if (!Overlay_IsOpened())
+        document.getElementById('Week').lastElementChild.click();
+});
+
 
 
 function Midnight()

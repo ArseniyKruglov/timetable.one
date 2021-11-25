@@ -120,7 +120,7 @@ class LessonDetails
 
 
     
-        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Overlay.Back(); });
+        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Overlay.Close(); });
 
         this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
         {
@@ -129,7 +129,7 @@ class LessonDetails
             aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], () =>
             {
                 Timetable_FocusLesson(this.Date, this.Index);
-                this.Overlay.Back();
+                this.Overlay.Close();
             }]);
     
             if (_iAccessLevel === 2)
@@ -200,7 +200,7 @@ class LessonDetails
 
         this.Overlay.GetUIElement('button').addEventListener('click', (Event) =>
         {
-            Event.target.addEventListener('click', () => { this.Overlay.Back(); });
+            Event.target.addEventListener('click', () => { this.Overlay.Close(); });
         });
     }
 

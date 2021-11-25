@@ -122,6 +122,8 @@
         #Timetable .Day > :first-child
         {
             text-align: left;
+            /* display: grid; */
+            /* gap: 5px; */
         }
 
         #Timetable .Day > :first-child > :first-child

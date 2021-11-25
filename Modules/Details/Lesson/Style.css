@@ -13,8 +13,7 @@
 
 .Lesson.Details .Info > * > :last-child > :first-child
 {
-    color: HSL(39, 85%, 45%);
-    font-weight: 500;
+    color: HSL(39, 97.5%, 45%);
 }
 
 .Lesson.Details .Info > * > :last-child > :first-child:empty,

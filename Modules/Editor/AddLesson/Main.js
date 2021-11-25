@@ -168,11 +168,12 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
     if (bSend)
         SendRequest('/PHP/AddLesson/AddLesson.php', {'Date': iDate, 'Index': iIndex, 'Title': sTitle});
 
+    let eDay = Timetable_GetDayElement(iDate);
+
     if (bPush)
     {
         _oWeek.SuddenLessons.push({'Date': iDate, 'Index': iIndex, 'Title': sTitle});
 
-        let eDay = Timetable_GetDayElement(iDate);
         if (eDay)
             eDay.children[0].children[1].innerHTML = Timetable_GetPeriod(iDate);
 
@@ -185,14 +186,14 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
         const aWeekPeriod = Week_GetPeriod(_iWeekOffset);
         if (aWeekPeriod[0] <= iDate && iDate <= aWeekPeriod[1])
         {
-            let HTML = `<span>${iIndex}</span>
-                        <a ${Timetable_GetLessonLinkAttributes(iDate, iIndex)}>
+            const HTML = `<span>${iIndex}</span>
+                          <a ${Timetable_GetLessonLinkAttributes(iDate, iIndex)}>
                             <span></span>
                             <span>${sTitle}</span>
-                        </a>
-                        <span></span>`;
+                          </a>
+                          <span></span>`;
 
-            if (Timetable_GetDayElement(iDate))
+            if (eDay)
             {
                 const eLesson = document.createElement('div');
                 eLesson.className = 'Lesson Added';
@@ -209,7 +210,7 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
                         break;
                     };
                 };
-                Timetable_GetDayElement(iDate).children[1].insertBefore(eLesson, eAfter);
+                eDay.children[1].insertBefore(eLesson, eAfter);
             }
             else
             {
@@ -219,9 +220,9 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
                 else if (iDate === _iToday + 1)
                     sDayClass = 'Tomorrow';
     
-                const eDay = document.createElement('div');
-                eDay.className = `Day ${sDayClass || ''}`;
-                eDay.innerHTML = `<button onclick='new Day_UI(${iDate}, true)'>
+                eDay = document.createElement('div');
+                eDay.className = `Day ${sDayClass || ''} ${_oWeek.DayNotes.selectWhere({ 'Date': iDate }, true) ? 'Note' : ''}`;
+                eDay.innerHTML = `<button onclick='new Day_UI(${iDate})'>
                                     <div>${Date_Format(Time_From1970(iDate))}</div>
                                     <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
                                   </button>
@@ -229,7 +230,20 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
                                   <div>
                                     <div class='Lesson Added'>${HTML}</div>
                                   </div>`;
-                document.getElementById('Timetable').append(eDay);
+
+                let eAfter = null;
+                const eTimetable = document.getElementById('Timetable');
+                for (let loop_eDay of eTimetable.children)
+                {
+                    const loop_iDate = parseInt(loop_eDay.children[0].getAttribute('onclick').replace(/\D/g, ''));
+    
+                    if (loop_iDate > iDate)
+                    {
+                        eAfter = loop_eDay;
+                        break;
+                    };
+                };
+                eTimetable.insertBefore(eDay, eAfter);
             };
         };
     };

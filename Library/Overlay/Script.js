@@ -11,6 +11,9 @@ class Overlay
 
     Open()
     {
+        for (let loop_eElement of document.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, [tabindex], [contentEditable=true]'))
+            loop_eElement.setAttribute('tabindex', '-1');
+
         this.eLastFocused = document.activeElement;
 
         this.Element = document.createElement('div');
@@ -47,6 +50,8 @@ class Overlay
         this.Element.remove();
         this.eLastFocused.focus();
         removeEventListener('keydown', _aOverlay_Escapes.pop());
+        for (let loop_eElement of document.querySelectorAll('body > :not(.Overlay:last-of-type) *'))
+            loop_eElement.removeAttribute('tabindex');
 
 
 

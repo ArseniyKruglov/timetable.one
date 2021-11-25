@@ -35,7 +35,7 @@
 #Week_Period
 {
     font-weight: 500;
-    min-width: 150px;
+    width: 150px;
 }
 
 #Week.Past > #Week_Period
