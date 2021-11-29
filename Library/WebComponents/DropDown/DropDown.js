@@ -1,17 +1,18 @@
 function DropDown(eButton, aActions)
 {
-    eDropDown = document.createElement('div');
+    const eDropDown = document.createElement('div');
     eDropDown.className = 'DropDown';
     document.body.append(eDropDown);
 
     for (let loop_aAction of aActions)
     {
-        let loop_eButton = document.createElement('button');
+        const loop_eButton = document.createElement('button');
         loop_eButton.innerHTML =   `<custom-icon icon=${loop_aAction[0]}></custom-icon>
                                     <span>${loop_aAction[1]}</span>`;
         loop_eButton.addEventListener('click', loop_aAction[2])
         eDropDown.append(loop_eButton);
     };
+    eDropDown.firstElementChild.focus();
 
     function Coordinates()
     {
@@ -34,26 +35,24 @@ function DropDown(eButton, aActions)
 
         eDropDown.style.top = fTop + 'px';
         eDropDown.style.left = fLeft + 'px';
-    };
+    }
     Coordinates();
     addEventListener('resize', Coordinates);
-
-    FocusDiv(eDropDown);
 
     setTimeout(() =>
     {
         function Close()
         {
-            document.querySelector('.DropDown').remove();
+            eDropDown.remove();
             removeEventListener('click', Close);
             removeEventListener('keydown', Escape);
             removeEventListener('resize', Coordinates);
-        };
+        }
 
         function Escape(Event)
         {
-            if (Event.which === 27)
-            Close();
+            if (Event.key === 'Escape')
+                Close();
         }
 
         addEventListener('click', Close);

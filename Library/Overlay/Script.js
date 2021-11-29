@@ -1,79 +1,86 @@
-_aOverlay_Escapes = [];
-_aOverlay_Backs = [];
+_aOverlays = [];
+
+addEventListener('keydown', (Event) =>
+{
+    if (Event.key === 'Tab')
+        dispatchEvent(new CustomEvent('focus-change'));
+});
+
 
 
 class Overlay
 {
     constructor()
     {
+        _aOverlays.push(this);
+
+        this.Esc_Listener = (Event) =>
+        {
+            if (_aOverlays[_aOverlays.length - 1] === this)
+                if (Event.code == 'Escape')
+                    this.Close();
+        };
+        this.Focus_Listener = () =>
+        {
+            if (_aOverlays[_aOverlays.length - 1] === this)
+                setTimeout(() =>
+                {
+                    if (!this.Element.querySelector(':focus') && !document.querySelector('.DropDown:focus-within'))
+                        this.Focus();
+                }, 0);
+        };
+        this.PopState_Listener = () =>
+        {
+            if (_aOverlays[_aOverlays.length - 1] === this)
+                this.Close();
+        };
+
         this.Animation = true;
     }
 
     Open()
     {
-        for (let loop_eElement of document.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, [tabindex], [contentEditable=true]'))
-            loop_eElement.setAttribute('tabindex', '-1');
-
-        this.eLastFocused = document.activeElement;
-
         this.Element = document.createElement('div');
         this.Element.className = 'Overlay' + (this.Animation ? ' Animation' : '');
         this.Element.innerHTML =   `<div></div>
-                                    <div>
+                                    <div tabindex=0>
                                         <div></div>
                                     </div>`;
+        this.Element.children[0].addEventListener('click', () => { this.Close(); });
         
         document.body.appendChild(this.Element);
         this.Callback_Open();
-        FocusDiv(this.Element);
 
+        this.LastFocus = document.activeElement;
+        this.Focus();
 
-
-        this.Element.children[0].addEventListener('click', () => { this.Close(); });
-
-        _aOverlay_Escapes.push(event =>
-        {
-            if (event.code == 'Escape')
-                this.Close();
-        });
-        removeEventListener('keydown', _aOverlay_Escapes[_aOverlay_Escapes.length - 2]);
-        addEventListener('keydown',  _aOverlay_Escapes[_aOverlay_Escapes.length - 1]);
-
-        _aOverlay_Backs.push(() => { this.Close(true); });
-        window.onpopstate = _aOverlay_Backs[_aOverlay_Backs.length - 1];
-
-        _aHistory.push(location.pathname.replace('/' + _sURL, '') + location.search);
+        addEventListener('keydown', this.Esc_Listener);
+        addEventListener('focus-change', this.Focus_Listener);
+        addEventListener('popstate', this.PopState_Listener);
     }
 
-    Close(bFromPopState)
+    Close()
     {
         this.Element.remove();
-        this.eLastFocused.focus();
-        removeEventListener('keydown', _aOverlay_Escapes.pop());
-        for (let loop_eElement of document.querySelectorAll('body > :not(.Overlay:last-of-type) *'))
-            loop_eElement.removeAttribute('tabindex');
+        _aOverlays.pop();
 
+        // Listeners
+        removeEventListener('keydown', this.Esc_Listener);
+        removeEventListener('focus-change', this.Focus_Listener);
+        removeEventListener('popstate', this.PopState_Listener);
 
+        // Focus
+        if (_aOverlays.length)
+            _aOverlays[_aOverlays.length - 1].Focus();
+        else
+            this.LastFocus.focus();
 
-        if (!bFromPopState)
-        {
-            const eOverlay = document.querySelector('.Overlay');
-            let sLink = '';
-            if (eOverlay)
-                sLink = eOverlay.getAttribute('link');
-    
-            if (sLink === _aHistory[_aHistory.length - 2])
-                history.back();
-            else
-                history.pushState('', '', '/' + _sURL + sLink);
-        };
+        // Link
+        let sLink = '';
+        if (_aOverlays.length)
+            sLink = _aOverlays[_aOverlays.length - 1].Link;
 
-        _aOverlay_Backs.pop();
-        setTimeout(() =>
-        {
-            window.onpopstate = _aOverlay_Backs[_aOverlay_Backs.length - 1];
-            _aHistory.push(location.pathname.replace('/' + _sURL, '') + location.search);
-        }, 0);
+        history.pushState('', '', '/' + _sURL + sLink);
     }
 
 
@@ -90,8 +97,14 @@ class Overlay
 
     set Link(sLink)
     {
+        this._Link = sLink;
         this.Element.setAttribute('link', sLink);
         history.pushState('', '', '/' + _sURL + sLink);
+    }
+
+    get Link()
+    {
+        return this._Link;
     }
 
     GetUIElement(sSelector)
@@ -102,6 +115,11 @@ class Overlay
     GetUIElements(sSelector)
     {
         return this.Body.querySelectorAll(sSelector);
+    }
+
+    Focus()
+    {
+        this.Container.focus();
     }
 }
 

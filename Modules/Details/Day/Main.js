@@ -35,14 +35,16 @@ class Day_UI
     
                     <div class='Date'>${Date_Format(Time_From1970(this.Date), true)}</div>
     
-                    <div class='Info EmptyHidden'>${
-                        (_mAlarms.size !== 0) ? 
-                       `<div class='Alarms'>
+                ${
+                    !_Alarms.Empty ?
+                    `<div class='Info'>
+                        <div class='Alarms'>
                             <custom-icon icon='Alarm'></custom-icon>
                             <span>${Timetable_GetPeriod(this.Date)}</span>
-                        </div>`
-                        : ''
-                    }</div>
+                        </div>
+                    </div>`
+                    : ''
+                }
     
                     <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${this.Note}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
     
@@ -58,7 +60,7 @@ class Day_UI
 
     UpdateAlarms()
     {
-        this.Overlay.GetUIElement('.Info').innerHTML =  (_mAlarms.size !== 0) ? 
+        this.Overlay.GetUIElement('.Info').innerHTML =  !_Alarms.Empty ? 
                                                 `<div class='Alarms'>
                                                     <custom-icon icon='Alarm'></custom-icon>
                                                     <span>${Timetable_GetPeriod(this.Date)}</span>
@@ -108,7 +110,7 @@ class Day_UI
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/PHP/Details/Day/Note.php', {'Date': this.Date, 'Note': this.Note});
+        SendRequest('/PHP/Handlers/Day_Note.php', { 'Date': this.Date, 'Note': this.Note });
 
         Timetable_SetPoint_Day(this.Date, this.oInWeek_Note);
     }

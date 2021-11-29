@@ -16,10 +16,10 @@ function Timetable_Draw()
                 sDayClass = 'Tomorrow';
 
             HTML += `<div class='Day ${sDayClass || ''}'>
-                        <button onclick='new Day_UI(${iDate})'>
+                        <a href='${location.pathname}?Date=${iDate}' onclick='event.preventDefault(); new Day_UI(${iDate});'>
                             <div>${Date_Format(Time_From1970(iDate))}</div>
                             <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
-                        </button>
+                        </a>
 
                         <div>`;
             for (let loop_aLesson of mTodayTimetable)

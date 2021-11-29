@@ -166,7 +166,7 @@ class SuddenLesson_ConstructorUI
 function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
 {
     if (bSend)
-        SendRequest('/PHP/AddLesson/AddLesson.php', {'Date': iDate, 'Index': iIndex, 'Title': sTitle});
+        SendRequest('/PHP/Handlers/SuddenLesson_Constructor.php', {'Date': iDate, 'Index': iIndex, 'Title': sTitle});
 
     let eDay = Timetable_GetDayElement(iDate);
 
@@ -177,8 +177,7 @@ function SuddenLesson_Constructor(iDate, iIndex, sTitle, bDraw, bPush, bSend)
         if (eDay)
             eDay.children[0].children[1].innerHTML = Timetable_GetPeriod(iDate);
 
-        if (_iToday <= iDate && iDate <= _iToday + 1)
-            Information_Draw();
+        Information_Update(iDate);
     };
 
     if (bDraw)

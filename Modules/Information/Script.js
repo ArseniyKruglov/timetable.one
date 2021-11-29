@@ -1,6 +1,6 @@
 function Information_Draw()
 {
-    if (_mAlarms.size > 0)
+    if (!_Alarms.Empty)
     {
         function GetTimetable(iDate)
         {
@@ -10,7 +10,7 @@ function Information_Draw()
     
             let aTimetable = [];
             for (let loop_aLesson of mTimetable)
-                if (_mAlarms.has(loop_aLesson[0]) === true)
+                if (_Alarms.Get(loop_aLesson[0]))
                     aTimetable.push([loop_aLesson[0], loop_aLesson[1].Title, (_oWeek.Changes.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || {}).Place ?? loop_aLesson[1].Fields.LectureHall])
                 else
                     bLessonsWithoutAlarms = true;
@@ -32,7 +32,9 @@ function Information_Draw()
                 if (loop_aSuddenLesson.Date === iDate)
                     aTimetable.push([loop_aSuddenLesson.Index, loop_aSuddenLesson.Title]);
 
-            return aTimetable.sort((a, b) => { return a[0] > b[0]; });
+            aTimetable.sort((a, b) => { return a[0] - b[0]; });
+
+            return aTimetable;
         };
     
         
@@ -44,10 +46,10 @@ function Information_Draw()
     
         function Difference(tDate00, tDate01)
         {
-            let iTimeLeft = tDate01 - tDate00;
+            const iTimeLeft = tDate01 - tDate00;
     
-            let iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
-            let iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
+            const iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
+            const iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
     
             return `<span>${iHours > 0 ? `${iHours} ${[(iHours === 1 ? 'hour' : 'hours'), ['час', 'часа', 'часов'][Language_RussianNumberDeclension(iHours)]][_iLanguage]}` : ''} ${iMinutes} ${[(iMinutes === 1 ? 'minute' : 'minutes'), ['минута', 'минуты', 'минут'][Language_RussianNumberDeclension(iMinutes)]][_iLanguage]}</span>`
         }
@@ -62,45 +64,45 @@ function Information_Draw()
         function BeforeLessons()
         {
             HTML +=    `<div>
-                            Сегодня к ${Time_Format(Alarm_Get(aTodayTimetable[0][0])[0])} на <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[0][0])}>${aTodayTimetable[0][1]}</a>${aTodayTimetable[0][2] ? ` (${aTodayTimetable[0][2]})` : ''}, осталось ${Timer(Alarm_Get(aTodayTimetable[0][0])[0])}
+                            Сегодня к ${Time_Format(_Alarms.Get(aTodayTimetable[0][0])[0])} на <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[0][0])}>${aTodayTimetable[0][1]}</a>${aTodayTimetable[0][2] ? ` (${aTodayTimetable[0][2]})` : ''}, осталось ${Timer(_Alarms.Get(aTodayTimetable[0][0])[0])}
                         </div>`;
     
-            Timeout(Alarm_Get(aTodayTimetable[0][0])[0]);
+            Timeout(_Alarms.Get(aTodayTimetable[0][0])[0]);
         }
     
         function OnLessons()
         {
             for (let i = 0; i < aTodayTimetable.length; i++)
             {
-                if (Alarm_Get(aTodayTimetable[i][0])[0] <= new Date() && new Date() <= Alarm_Get(aTodayTimetable[i][0])[1])
+                if (_Alarms.Get(aTodayTimetable[i][0])[0] <= new Date() && new Date() <= _Alarms.Get(aTodayTimetable[i][0])[1])
                 {
                     HTML +=    `<div>
-                                    Сейчас <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i][0])}>${aTodayTimetable[i][1]}</a>${aTodayTimetable[i][2] ? ` (${aTodayTimetable[i][2]})` : ''}, до конца ${Timer(Alarm_Get(aTodayTimetable[i][0])[1])}
+                                    Сейчас <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i][0])}>${aTodayTimetable[i][1]}</a>${aTodayTimetable[i][2] ? ` (${aTodayTimetable[i][2]})` : ''}, до конца ${Timer(_Alarms.Get(aTodayTimetable[i][0])[1])}
                                 </div>`;
     
                     if (i + 1 < aTodayTimetable.length)
                         HTML +=    `<div>
-                                        Затем перерыв ${Difference(Alarm_Get(aTodayTimetable[i][0])[1], Alarm_Get(aTodayTimetable[i + 1][0])[0])} и <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}
+                                        Затем перерыв ${Difference(_Alarms.Get(aTodayTimetable[i][0])[1], _Alarms.Get(aTodayTimetable[i + 1][0])[0])} и <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}
                                     </div>`;
                     else
                         HTML += `<div>Затем свобода</div>`;
     
-                    Timeout(Alarm_Get(aTodayTimetable[i][0])[1]);
+                    Timeout(_Alarms.Get(aTodayTimetable[i][0])[1]);
     
                     break;
                 };
     
-                if (i + 1 < aTodayTimetable.length && Alarm_Get(aTodayTimetable[i][0])[1] <= new Date() && new Date() <= Alarm_Get(aTodayTimetable[i + 1][0])[0])
+                if (i + 1 < aTodayTimetable.length && _Alarms.Get(aTodayTimetable[i][0])[1] <= new Date() && new Date() <= _Alarms.Get(aTodayTimetable[i + 1][0])[0])
                 {
                     HTML +=    `<div>
-                                    Сейчас перерыв, до конца ${Timer(Alarm_Get(aTodayTimetable[i + 1][0])[0])}
+                                    Сейчас перерыв, до конца ${Timer(_Alarms.Get(aTodayTimetable[i + 1][0])[0])}
                                 </div>
     
                                 <div>
-                                    Затем <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''} в ${Time_Format(Alarm_Get(aTodayTimetable[i + 1][0])[0])}
+                                    Затем <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''} в ${Time_Format(_Alarms.Get(aTodayTimetable[i + 1][0])[0])}
                                 </div>`;
     
-                    Timeout(Alarm_Get(aTodayTimetable[i + 1][0])[0]);
+                    Timeout(_Alarms.Get(aTodayTimetable[i + 1][0])[0]);
     
                     break;
                 };
@@ -109,20 +111,21 @@ function Information_Draw()
     
         function AfterLessons()
         {
-            let aTomorrowTimetable = GetTimetable(_iToday + 1);
+            const aTomorrowTimetable = GetTimetable(_iToday + 1);
+
             if (aTomorrowTimetable !== false && aTomorrowTimetable.length !== 0)
                 HTML +=    `<div>
                                 Завтра к 
-                                ${Time_Format(Alarm_Get(aTomorrowTimetable[0][0], _iToday + 1)[0])}
+                                ${Time_Format(_Alarms.Get(aTomorrowTimetable[0][0], _iToday + 1)[0])}
                                 на
                                 <a ${Timetable_GetLessonLinkAttributes(_iToday + 1, aTomorrowTimetable[0][0])}>${aTomorrowTimetable[0][1]}</a>,
                                 осталось
-                                ${Timer(Alarm_Get(aTomorrowTimetable[0][0], _iToday + 1)[0])}
+                                ${Timer(_Alarms.Get(aTomorrowTimetable[0][0], _iToday + 1)[0])}
                             </div>`;
             else
                 HTML +=    `<div>Отдых</div>`;
     
-            let tTomorrow = new Date();
+            const tTomorrow = new Date();
             tTomorrow.setHours(24, 0, 0, 0);
             Timeout(tTomorrow);
         }
@@ -132,12 +135,12 @@ function Information_Draw()
         let HTML = '';
     
         let bLessonsWithoutAlarms = false;
-        let aTodayTimetable = GetTimetable(_iToday);
+        const aTodayTimetable = GetTimetable(_iToday);
         if (aTodayTimetable !== false && aTodayTimetable.length !== 0)
         {
-            if (new Date() < Alarm_Get(aTodayTimetable[0][0])[0])
+            if (new Date() < _Alarms.Get(aTodayTimetable[0][0])[0])
                 BeforeLessons();
-            else if (new Date() > Alarm_Get(aTodayTimetable[aTodayTimetable.length - 1][0])[1])
+            else if (new Date() > _Alarms.Get(aTodayTimetable[aTodayTimetable.length - 1][0])[1])
                 AfterLessons();
             else
                 OnLessons();
@@ -153,4 +156,10 @@ function Information_Draw()
     
         document.getElementById('Information').innerHTML = HTML;
     };
+}
+
+function Information_Update(iDate)
+{
+    if (_iToday === iDate || _iToday + 1 === iDate)
+        Information_Draw();    
 }

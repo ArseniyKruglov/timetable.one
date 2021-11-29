@@ -41,14 +41,14 @@ function Timetable_GetLessonIndexes(iDate, bIncludeCanceled)
 
 function Timetable_GetPeriod(iDate)
 {
-    if (_mAlarms.size)
+    if (!_Alarms.Empty)
     {
         const aLessonIndexes = Timetable_GetLessonIndexes(iDate);
 
         if (aLessonIndexes.length)
         {
-            const aBegin = Alarm_Get(Math.min(...aLessonIndexes), iDate);
-            const aEnd = Alarm_Get(Math.max(...aLessonIndexes), iDate);
+            const aBegin = _Alarms.Get(Math.min(...aLessonIndexes), iDate);
+            const aEnd = _Alarms.Get(Math.max(...aLessonIndexes), iDate);
             
             return `${aBegin ? Time_Format(aBegin[0]) : '?'} – ${aEnd ? Time_Format(aEnd[1]) : '?'}`;
         }

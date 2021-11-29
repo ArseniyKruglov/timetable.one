@@ -61,7 +61,7 @@ Week_Select(true);
 
     // Dev
 
-    _aHistory = [];
+    window._aHistory = [];
     _aHistory.push(location.pathname.replace('/' + _sURL, '') + location.search);
 
     //

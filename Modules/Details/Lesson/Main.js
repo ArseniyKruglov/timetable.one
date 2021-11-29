@@ -251,7 +251,7 @@ class LessonDetails
         {
             if (confirm(`${['Remove lesson', 'Удалить занятие'][_iLanguage]} "${this.Added}" (${Date_Format(Time_From1970(this.Date))})?`))
             {
-                SendRequest('/PHP/Details/Lesson/Added.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : ''});
+                SendRequest('/PHP/Handlers/Lesson_Sudden.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : ''});
 
                 _oWeek.SuddenLessons.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
 
@@ -271,9 +271,10 @@ class LessonDetails
         {
             this.oInWeek_Added.Title = sTitle;
             
-            SendRequest('/PHP/Details/Lesson/Added.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : this.Added});
+            SendRequest('/PHP/Handlers/Lesson_Sudden.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : this.Added});
 
-            Information_Draw();
+            Information_Update(this.Date);
+
             if (this.Element)
                 this.Element.children[1].children[1].innerHTML = this.Added;
 
@@ -320,11 +321,11 @@ class LessonDetails
             };
         };
 
-        SendRequest('/PHP/Details/Lesson/Replacement.php', {'Date': this.Date, 'Index': this.Index, 'Title': this.Title, 'Change': sChange});
+        SendRequest('/PHP/Handlers/Lesson_ChangeTitle.php', {'Date': this.Date, 'Index': this.Index, 'Title': this.Title, 'Change': sChange});
 
 
 
-        Information_Draw();
+        Information_Update(this.Date);
 
         if (this.Element)
         {
@@ -381,7 +382,7 @@ class LessonDetails
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/PHP/Details/Lesson/Note.php', {'Date': this.Date, 'Title': this.TimetableTitle, 'Note': this.Note});
+        SendRequest('/PHP/Handlers/Lesson_Note.php', {'Date': this.Date, 'Title': this.TimetableTitle, 'Note': this.Note});
 
         Timetable_SetPoint_Lesson(this.Date, this.TimetableTitle, this.oInWeek_Note);
     }
@@ -415,6 +416,6 @@ class LessonDetails
 
     get Alarms()
     {
-        return Alarm_Get(this.Index, this.Date);
+        return _Alarms.Get(this.Index, this.Date);
     }
 }

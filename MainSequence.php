@@ -121,13 +121,13 @@
             echo json_encode(['LessonNotes' => $aLessonNotes, 'SuddenLessons' => $aSuddenLessons, 'Changes' => $aChanges, 'DayNotes' => $aDayNotes], JSON_UNESCAPED_UNICODE);
         ?>;
 
-        _mAlarms = new Map(
+        _Alarms = new Alarms(new Map(
         <?
             $aAlarms = [];
             foreach ($SQL->query("SELECT `Index`, `Begin`, `End` FROM `Alarms` WHERE `UserID` = $User[0]")->fetch_all() as &$aAlarm)
                 array_push($aAlarms, [(int) $aAlarm[0], [(int) $aAlarm[1], (int) $aAlarm[2]]]);
             echo json_encode($aAlarms, JSON_UNESCAPED_UNICODE);
-        ?>);
+        ?>));
     </script>
 
     <script src='/JavaScript/Main.js?<? echo $Time ?>'></script>
