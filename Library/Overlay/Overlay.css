@@ -33,6 +33,7 @@
 {
     background: #000000;
     opacity: var(--Background02-BackgroundOpacity);
+    backdrop-filter: grayscale(100);
 }
 
 .Overlay.Animation > :first-child
@@ -65,8 +66,10 @@
 
 .Overlay_Rectangular
 {
-    background-color: var(--Background01);
-    border-radius: 8px;
     overflow: auto;
-    box-shadow: var(--Shadow);
+}
+
+.Overlay_Rectangular:focus
+{
+    outline: none;
 }

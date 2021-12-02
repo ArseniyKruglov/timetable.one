@@ -1,4 +1,4 @@
-class LessonDetails
+class Lesson_UI
 {
     constructor(iDate, iIndex, bAnimation = true)
     {
@@ -56,7 +56,7 @@ class LessonDetails
 
     Draw()
     {
-        this.Overlay.Container.className = 'Overlay_Rectangular DetailsContainer';
+        this.Overlay.Container.className = 'Island Overlay_Rectangular DetailsContainer';
         this.Overlay.Body.className = 'Lesson Details';
 
         let HTML = `<div class='Header'>
@@ -64,7 +64,7 @@ class LessonDetails
                         <span><custom-round-button icon='More'></custom-round-button></span>
                     </div>
                     
-                    <custom-textarea class='Title' placeholder='${this.Title}' value='${this.Added || (this.Canceled ? '' : this.Change ?? this.Title)}' ${(_iAccessLevel < 2) ? 'readonly' : ''}></custom-textarea>
+                    <custom-textarea class='Title' placeholder='${this.Title}' ${(_iAccessLevel < 2) ? 'readonly' : ''}>${this.Added || (this.Canceled ? '' : this.Change ?? this.Title)}</custom-textarea>
     
                     <div class='Info'>
                         <div class='Calendar'>
@@ -82,19 +82,19 @@ class LessonDetails
                     }
     
                     ${
-                        this.Fields.LectureHall || (this.oInWeek_Changes || {}).Place ? 
+                        this.Fields.Place || (this.oInWeek_Changes ? this.oInWeek_Changes.Place : false) ? 
                         `<div>
                             <custom-icon icon='Location'></custom-icon>
                             <span>
                                 <span>${(this.oInWeek_Changes || {}).Place || ''}</span>
-                                <span>${this.Fields.LectureHall}</span>
+                                <span>${this.Fields.Place}</span>
                             </span>
                         </div>`
                         : ''
                     }
     
                     ${
-                        this.Fields.Educator || (this.oInWeek_Changes || {}).Educator ? 
+                        this.Fields.Educator || (this.oInWeek_Changes ? this.oInWeek_Changes.Educator : false) ? 
                         `<div>
                             <custom-icon icon='Educator'></custom-icon>
                             <span>
@@ -114,7 +114,7 @@ class LessonDetails
 
         HTML +=     `</div>
                     
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${this.Note}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}>${this.Note}</custom-textarea>`;
     
         this.Overlay.Body.innerHTML = HTML;
 
@@ -183,24 +183,6 @@ class LessonDetails
         this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) =>
         {
             this.Note = Event.target.value;
-        });
-    }
-
-    Draw_404()
-    {
-        this.Overlay.Container.className = 'Overlay_Rectangular DetailsContainer';
-        this.Overlay.Body.className = 'Lesson Details NotFound';
-
-        let HTML = `<span>${['Lesson not found', 'Занятие не найдено'][_iLanguage]}</span>
-                    <button>OK</button>`;
-
-        this.Overlay.Body.innerHTML = HTML;
-
-
-
-        this.Overlay.GetUIElement('button').addEventListener('click', (Event) =>
-        {
-            Event.target.addEventListener('click', () => { this.Overlay.Close(); });
         });
     }
 
@@ -273,13 +255,15 @@ class LessonDetails
             
             SendRequest('/PHP/Handlers/Lesson_Sudden.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : this.Added});
 
-            Information_Update(this.Date);
+            _Information.Update(this.Date);
 
             if (this.Element)
                 this.Element.children[1].children[1].innerHTML = this.Added;
 
             this.FindInWeek_Note();
         };
+
+        Timetable_UpdatePeriod(this.Date);
     }
 
 
@@ -325,7 +309,7 @@ class LessonDetails
 
 
 
-        Information_Update(this.Date);
+        _Information.Update(this.Date);
 
         if (this.Element)
         {
@@ -336,6 +320,10 @@ class LessonDetails
     
             this.Element.children[1].children[0].innerHTML = this.Change ?? '';
         };
+
+        Timetable_UpdatePeriod(this.Date);
+
+
 
         this.FindInWeek_Note();
     }
@@ -371,7 +359,7 @@ class LessonDetails
                     'Note': sNote
                 };
 
-                _oWeek.LessonNotes.push(this.oInWeek_Note);                
+                _oWeek.LessonNotes.push(this.oInWeek_Note);
             };
         }
         else

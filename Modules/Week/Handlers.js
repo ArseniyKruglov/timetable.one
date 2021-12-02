@@ -1,25 +1,31 @@
 function Week_Previous()
 {
-    _iWeekOffset--;
-    Week_Select();
+    if (_iWeekOffset > -Math.floor(_iToday / 7))
+    {
+        _iWeekOffset--;
+        Week_Select();
+    };
 }
 
 function Week_Current()
 {
     const iInitial = Week_GetInitialWeekOffset();
-    if (_iWeekOffset !== iInitial)
+    if (_iWeekOffset === iInitial)
     {
-        _iWeekOffset = iInitial;
-        Week_Select();
+        Timetable_Scroll(true);
     }
     else
     {
-        Timetable_Scroll(true);
+        _iWeekOffset = iInitial;
+        Week_Select();
     };
 }
 
 function Week_Next()
 {
-    _iWeekOffset++;
-    Week_Select();
+    if (_iWeekOffset < Math.floor(2147483647 / 7))
+    {
+        _iWeekOffset++;
+        Week_Select();
+    };
 }

@@ -28,7 +28,7 @@ document.body.innerHTML =  `<main>
 
 // Information
 
-Information_Draw();
+const _Information = new Information();
 
 
                             
@@ -53,35 +53,12 @@ Week_Select(true);
 
 // URL
 
-{
-    window._sURL = location.pathname.split('/')[1];
-    const oQuery = Object.fromEntries(new URLSearchParams(window.location.search));
-
-
-
-    // Dev
-
-    window._aHistory = [];
-    _aHistory.push(location.pathname.replace('/' + _sURL, '') + location.search);
-
-    //
-
-    
-    
-    if (oQuery.Date)
-    {
-        if (oQuery.Lesson)
-            new LessonDetails(parseInt(oQuery.Date), parseInt(oQuery.Lesson), false);
-        else
-            new Day_UI(parseInt(oQuery.Date), false);
-    };
-}
-
+_sURL = location.pathname.split('/')[1];
+Route();
 
 
 // Events
 
-addEventListener('focus', Information_Draw);
 onkeydown = (Event) =>
 {
     if (!Overlay_IsOpened())

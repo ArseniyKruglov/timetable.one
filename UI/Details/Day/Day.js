@@ -25,7 +25,7 @@ class Day_UI
 
     Draw()
     {
-        this.Overlay.Container.className = 'Overlay_Rectangular DetailsContainer';
+        this.Overlay.Container.className = 'Island Overlay_Rectangular DetailsContainer';
         this.Overlay.Body.className = 'Details';
         
         let HTML = `<div class='Header'>
@@ -46,7 +46,7 @@ class Day_UI
                     : ''
                 }
     
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' value='${this.Note}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}></custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}>${this.Note}</custom-textarea>`;
     
         this.Overlay.Body.innerHTML = HTML;
 
@@ -54,7 +54,19 @@ class Day_UI
 
         this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Overlay.Close(); });
         if (_iAccessLevel === 2)
-            this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) => { DropDown(Event.target, [['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () => { new SuddenLesson_ConstructorUI(this.Date); }]]); });
+            this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
+            {
+                DropDown
+                (
+                    Event.target,
+                    [
+                        ['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () =>
+                        {
+                            Route_Forward(`/Day?Date=${this.Date}/Add`);
+                        }]
+                    ]
+                );
+            });
         this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) => { this.Note = Event.target.value; });
     }
 

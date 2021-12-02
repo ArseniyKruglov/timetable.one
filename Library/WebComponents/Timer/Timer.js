@@ -2,13 +2,14 @@ class Timer extends HTMLElement
 {
     connectedCallback()
     {
+        this.Time = parseInt(this.getAttribute('time'));
         this.Update();
-        setInterval(() => { this.Update(); }, 1000);
+        setInterval(() => { this.Update() }, 1000);
     }
 
     Update()
     {   
-        const iTimeLeft = parseInt(this.getAttribute('time')) - new Date();
+        const iTimeLeft = this.Time - new Date();
 
         if (iTimeLeft < 0)
         {
@@ -35,10 +36,7 @@ class Timer extends HTMLElement
     
             function DoubleDigits(i)
             {
-                if (i < 10)
-                    return `0${i}`;
-                else
-                    return i;
+                return ((i < 10) ? '0' : '') + i;
             }
     
             this.innerHTML = `${iDays > 0 ? `${iDays}:` : ''}${iDays > 0 || iHours > 0 ? `${DoubleDigits(iHours)}:` : ''}${DoubleDigits(iMinutes)}:${DoubleDigits(iSeconds)}`;

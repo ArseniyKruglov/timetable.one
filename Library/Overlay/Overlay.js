@@ -16,23 +16,20 @@ class Overlay
 
         this.Esc_Listener = (Event) =>
         {
-            if (_aOverlays[_aOverlays.length - 1] === this)
-                if (Event.code == 'Escape')
-                    this.Close();
+            if (Event.code == 'Escape')
+                this.Close();
         };
         this.Focus_Listener = () =>
         {
-            if (_aOverlays[_aOverlays.length - 1] === this)
-                setTimeout(() =>
-                {
-                    if (!this.Element.querySelector(':focus') && !document.querySelector('.DropDown:focus-within'))
-                        this.Focus();
-                }, 0);
+            setTimeout(() =>
+            {
+                if (!this.Element.querySelector(':focus') && !document.querySelector('.DropDown:focus-within'))
+                    this.Focus();
+            }, 0);
         };
         this.PopState_Listener = () =>
         {
-            if (_aOverlays[_aOverlays.length - 1] === this)
-                this.Close();
+            this.Close();
         };
 
         this.Animation = true;
@@ -51,15 +48,23 @@ class Overlay
         document.body.appendChild(this.Element);
         this.Callback_Open();
 
+        // Focus
         this.LastFocus = document.activeElement;
         this.Focus();
 
+        // Listeners
+        if (_aOverlays.length >= 2)
+        {
+            removeEventListener('keydown', _aOverlays[_aOverlays.length - 2].Esc_Listener);
+            removeEventListener('focus-change', _aOverlays[_aOverlays.length - 2].Focus_Listener);
+            removeEventListener('popstate', _aOverlays[_aOverlays.length - 2].PopState_Listener);
+        };
         addEventListener('keydown', this.Esc_Listener);
         addEventListener('focus-change', this.Focus_Listener);
         addEventListener('popstate', this.PopState_Listener);
     }
 
-    Close()
+    Remove()
     {
         this.Element.remove();
         _aOverlays.pop();
@@ -68,19 +73,25 @@ class Overlay
         removeEventListener('keydown', this.Esc_Listener);
         removeEventListener('focus-change', this.Focus_Listener);
         removeEventListener('popstate', this.PopState_Listener);
+        if (_aOverlays.length)
+        {
+            addEventListener('keydown', _aOverlays[_aOverlays.length - 1].Esc_Listener);
+            addEventListener('focus-change', _aOverlays[_aOverlays.length - 1].Focus_Listener);
+            addEventListener('popstate', _aOverlays[_aOverlays.length - 1].PopState_Listener);
+        };
 
         // Focus
         if (_aOverlays.length)
             _aOverlays[_aOverlays.length - 1].Focus();
         else
             this.LastFocus.focus();
+    }
 
-        // Link
-        let sLink = '';
-        if (_aOverlays.length)
-            sLink = _aOverlays[_aOverlays.length - 1].Link;
 
-        history.pushState('', '', '/' + _sURL + sLink);
+
+    Close()
+    {
+        history.back();
     }
 
 
@@ -99,7 +110,6 @@ class Overlay
     {
         this._Link = sLink;
         this.Element.setAttribute('link', sLink);
-        history.pushState('', '', '/' + _sURL + sLink);
     }
 
     get Link()

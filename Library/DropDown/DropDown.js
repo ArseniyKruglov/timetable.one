@@ -43,6 +43,7 @@ function DropDown(eButton, aActions)
     {
         function Close()
         {
+            eButton.focus();
             eDropDown.remove();
             removeEventListener('click', Close);
             removeEventListener('keydown', Escape);

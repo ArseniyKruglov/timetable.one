@@ -9,7 +9,7 @@ function Timetable_GetDayTimetable(iDate)
 
 function Timetable_GetLessonLinkAttributes(iDate, iIndex)
 {
-    return `href='${location.pathname}?Date=${iDate}&Lesson=${iIndex}' onclick='event.preventDefault(); new LessonDetails(${iDate}, ${iIndex});'`    
+    return `href='${location.pathname}?Date=${iDate}&Lesson=${iIndex}' onclick="event.preventDefault(); Route_Forward('/Lesson?Date=${iDate}&Lesson=${iIndex}');"`;
 }
 
 function Timetable_GetLessonIndexes(iDate, bIncludeCanceled)

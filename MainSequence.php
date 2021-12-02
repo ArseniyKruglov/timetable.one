@@ -40,7 +40,7 @@
 
             global $Files_JS;
             foreach (glob("$Path*.js") as &$File_JS)
-                if ($File_JS !== 'JavaScript/Main.js')
+                if ($File_JS !== 'Logic/Main.js')
                     array_push($Files_JS, $File_JS);
 
             global $Files_CSS;
@@ -72,13 +72,13 @@
             foreach ($SQL->query("SELECT `TimetableID`, `Begin`, `End`, `AnchorDate`, `Days` FROM `timetables` WHERE `UserID` = $User[0]")->fetch_all() as &$aTimetable)
             {
                 $aLessons = array_fill(0, strlen($aTimetable[4]), []);
-                foreach ($SQL->query("SELECT `DayOfTimetable`, `Index`, `Title`, `LectureHall`, `Educator`, `UserFieldsAI` FROM lessons_timetable WHERE `TimetableID` = $User[0] ORDER BY `DayOfTimetable`, `Index`")->fetch_all() as &$aLesson)
+                foreach ($SQL->query("SELECT `DayOfTimetable`, `Index`, `Title`, `Place`, `Educator`, `UserFieldsAI` FROM lessons_timetable WHERE `TimetableID` = $User[0] ORDER BY `DayOfTimetable`, `Index`")->fetch_all() as &$aLesson)
                 {
                     $UserFields = $SQL->query("SELECT `FieldID`, `Text` FROM `Fields` WHERE (`UserID` = $User[0]) AND (`TimetableID` = $aTimetable[0]) AND (`DayOfTimetable` = $aLesson[0]) AND (`Index` = $aLesson[1])")->fetch_all();
                     foreach ($UserFields as &$UserField)
                         $UserField[0] = (int) $UserField[0];
 
-                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Title' => $aLesson[2], 'Fields' => [ 'LectureHall' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $UserFields], 'UserFieldsAI' => (int) $aLesson[5]]]);
+                    array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Title' => $aLesson[2], 'Fields' => [ 'Place' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $UserFields], 'UserFieldsAI' => (int) $aLesson[5]]]);
                 }
 
                 array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : (int) $aTimetable[1], 'End' => $aTimetable[2] === NULL ? NULL : (int) $aTimetable[2], 'AnchorDate' => (int) $aTimetable[3], 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
@@ -121,7 +121,7 @@
             echo json_encode(['LessonNotes' => $aLessonNotes, 'SuddenLessons' => $aSuddenLessons, 'Changes' => $aChanges, 'DayNotes' => $aDayNotes], JSON_UNESCAPED_UNICODE);
         ?>;
 
-        _Alarms = new Alarms(new Map(
+        const _Alarms = new Alarms(new Map(
         <?
             $aAlarms = [];
             foreach ($SQL->query("SELECT `Index`, `Begin`, `End` FROM `Alarms` WHERE `UserID` = $User[0]")->fetch_all() as &$aAlarm)
@@ -130,5 +130,5 @@
         ?>));
     </script>
 
-    <script src='/JavaScript/Main.js?<? echo $Time ?>'></script>
+    <script src='/Logic/Main.js?<? echo $Time ?>'></script>
 </html>

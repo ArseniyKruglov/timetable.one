@@ -8,7 +8,7 @@ class Textarea extends HTMLElement
                 sAttributes += `${loop_sAttribute.nodeName}='${loop_sAttribute.nodeValue}' `;
 
         this.innerHTML =   `<div class='Underline'>
-                                <textarea ${sAttributes}>${this.getAttribute('value') || ''}</textarea>
+                                <textarea ${sAttributes}>${this.innerHTML}</textarea>
                             </div>
                             
                             <button></button>`;
@@ -17,9 +17,9 @@ class Textarea extends HTMLElement
         this.eExpand = this.children[1];
 
         this.iMinimized = 150;
-        this.iLimit = this.iMinimized + 35;
+        this.iLimit = this.iMinimized + 55;
         
-        this.Resize();
+        this.Scale();
         
         this.bExpanded = parseInt(this.eTextarea.style.height) < this.iLimit;
         this.ExpandHandler();
@@ -38,7 +38,7 @@ class Textarea extends HTMLElement
 
     ExpandHandler()
     {
-        this.Resize();
+        this.Scale();
 
         if (parseInt(this.eTextarea.style.height) < this.iLimit)
         {
@@ -53,7 +53,7 @@ class Textarea extends HTMLElement
         };
     }
 
-    Resize()
+    Scale()
     {
         this.eTextarea.style.overflow = 'hidden';
         this.eTextarea.style.height = 0;

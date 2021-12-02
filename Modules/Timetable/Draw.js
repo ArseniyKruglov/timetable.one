@@ -16,7 +16,7 @@ function Timetable_Draw()
                 sDayClass = 'Tomorrow';
 
             HTML += `<div class='Day ${sDayClass || ''}'>
-                        <a href='${location.pathname}?Date=${iDate}' onclick='event.preventDefault(); new Day_UI(${iDate});'>
+                        <a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); Route_Forward('/Day?Date=${iDate}');">
                             <div>${Date_Format(Time_From1970(iDate))}</div>
                             <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
                         </a>
@@ -67,11 +67,11 @@ function Timetable_Scroll(bSmooth)
 
             if (eToday === eTimetable.firstElementChild)
             {
-                eTimetableScroll.scrollTop = 0;
+                eTimetableScroll.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
             }
             else if (eToday === eTimetable.lastElementChild)
             {
-                eTimetableScroll.scrollTop = eTimetable.scrollHeight;
+                eTimetableScroll.scrollTo({ top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
             }
             else
             {
@@ -109,9 +109,9 @@ function Timetable_Scroll(bSmooth)
                         if (eDay)
                         {
                             if (eDay.clientHeight + 50 <= iTimetableHeight)
-                                eDay.scrollIntoView({block: 'end'});
+                                eDay.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
                             else
-                                eDay.scrollIntoView();
+                                eDay.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
                                 
                             bBreak = true;
                             break;
@@ -119,18 +119,18 @@ function Timetable_Scroll(bSmooth)
                     };
     
                     if (bBreak === false)
-                        eTimetable.scrollTop = eTimetable.scrollHeight;
+                        eTimetableScroll.scrollTo({ top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
                 };
             };
         };
     }
     else if (_iWeekOffset > 0)
     {
-        eTimetableScroll.scrollTop = 0;
+        eTimetableScroll.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
     }
     else if (_iWeekOffset < 0)
     {
-        eTimetableScroll.scrollTop = eTimetable.scrollHeight;
+        eTimetableScroll.scrollTo({ top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
     };
 }
 
@@ -248,4 +248,11 @@ function Timetable_Height(bAnimation)
         eHeight.style.height = '1000000px';
         eHeight.style.transition = '';
     };
+}
+
+function Timetable_UpdatePeriod(iDate)
+{
+    const eDate = Timetable_GetDayElement(iDate)
+    if (eDate)
+        eDate.children[0].children[1].innerHTML = Timetable_GetPeriod(iDate);
 }
