@@ -30,7 +30,7 @@ class SuddenLesson_UI
                     </div>
         
                     <div>
-                        <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' required></custom-textarea>
+                        <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' maxlength=${_iMaxTitleLength} required></custom-textarea>
                         <div class='Strict Invalid Caution Top'>
                             <span></span>
                             <span>${['Enter a lesson title', 'Укажите название занятия'][_iLanguage]}.</span>
@@ -45,7 +45,7 @@ class SuddenLesson_UI
                                 <span></span>
                             </div>
                             <custom-icon icon='Calendar'></custom-icon>
-                            <input type=date value='${Time_From1970(this.Date).toISOString().slice(0, 10)}' class='Calendar' required placeholder='${['Date', 'Дата'][_iLanguage]}'>
+                            <input type=date min='1970-01-01' value='${Time_From1970(this.Date).toISOString().slice(0, 10)}' class='Calendar' required placeholder='${['Date', 'Дата'][_iLanguage]}'>
                         </div>
                         
                         <div>
@@ -113,10 +113,7 @@ class SuddenLesson_UI
             }
             else
             {
-                if (event.target.validity.badInput)
-                    SetError(false, true, [`Date isn't fully entered or doesn't exist.`, 'Дата введена не полностью или не существует.'][_iLanguage]);
-                else
-                    SetError(false, true, ['Enter the date.', 'Укажите дату.'][_iLanguage]);
+                SetError(false, true, event.target.validationMessage);
             };
         });
         this.Overlay.GetUIElement('.Index').addEventListener('input', (event) =>
@@ -138,17 +135,8 @@ class SuddenLesson_UI
 
                 if (event.target.checkValidity())
                     SetError(true);
-            }
-            else
-            {
-                if (!event.target.validity.badInput && event.target.validity.valueMissing)
-                    SetError(false, true, ['Enter a lesson number.', 'Укажите номер занятия.'][_iLanguage]);
-                else if (event.target.validity.stepMismatch || event.target.validity.valueMissing)
-                    SetError(false, false, ['Enter an integer value.', 'Введите целое значение.'][_iLanguage]);
-                else if (event.target.validity.rangeOverflow)
-                    SetError(false, false, [`The value can't be more than 127.`, 'Значение не может быть больше 127.'][_iLanguage]);
-                else if (event.target.validity.rangeUnderflow)
-                    SetError(false, false, [`The value can't be less than -128.`, 'Значение не может быть меньше -128.'][_iLanguage]);
+                else
+                    SetError(false, true, event.target.validationMessage);
             };
         });
     }
@@ -161,5 +149,3 @@ class SuddenLesson_UI
         this.Overlay.Close();
     }
 }
-
-

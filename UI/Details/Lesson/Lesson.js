@@ -12,7 +12,7 @@ class Lesson_UI
         {
             this.Init();
 
-            if (this.Title || this.Added)
+            if (this.oInTimetable || this.oInWeek_Added)
             {
                 this.Draw();
 
@@ -38,9 +38,7 @@ class Lesson_UI
         {
             this.oInTimetable = mDayTimetable.get(this.Index);
 
-            if (this.oInTimetable)
-                this.Title = this.oInTimetable.Title;
-            else
+            if (!mDayTimetable.get(this.Index))
                 this.FindInWeek_Added();
         }
         else
@@ -64,7 +62,7 @@ class Lesson_UI
                         <span><custom-round-button icon='More'></custom-round-button></span>
                     </div>
                     
-                    <custom-textarea class='Title' placeholder='${this.Title}' ${(_iAccessLevel < 2) ? 'readonly' : ''}>${this.Added || (this.Canceled ? '' : this.Change ?? this.Title)}</custom-textarea>
+                    <custom-textarea class='Title' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength}>${this.Title}</custom-textarea>
     
                     <div class='Info'>
                         <div class='Calendar'>
@@ -86,7 +84,7 @@ class Lesson_UI
                         `<div>
                             <custom-icon icon='Location'></custom-icon>
                             <span>
-                                <span>${(this.oInWeek_Changes || {}).Place || ''}</span>
+                                <span>${this.oInWeek_Changes ? (this.oInWeek_Changes.Place || '') : ''}</span>
                                 <span>${this.Fields.Place}</span>
                             </span>
                         </div>`
@@ -98,7 +96,7 @@ class Lesson_UI
                         `<div>
                             <custom-icon icon='Educator'></custom-icon>
                             <span>
-                                <span>${(this.oInWeek_Changes || {}).Educator || ''}</span>
+                                <span>${this.oInWeek_Changes ? (this.oInWeek_Changes.Educator || '') : ''}</span>
                                 <span>${this.Fields.Educator}</span>
                             </span>
                         </div>`
@@ -114,7 +112,7 @@ class Lesson_UI
 
         HTML +=     `</div>
                     
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''}>${this.Note}</custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength}>${this.Note}</custom-textarea>`;
     
         this.Overlay.Body.innerHTML = HTML;
 
@@ -134,13 +132,13 @@ class Lesson_UI
     
             if (_iAccessLevel === 2)
             {
-                if (!this.IsAdded)
+                if (!this.Added)
                 {  
                     if (!this.Canceled)
                         aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () =>
                         {
                             this.Overlay.GetUIElement('.Title').value = '';
-                            this.Change = '';
+                            this.ChangedTitle = '';
                         }]);
                 }
                 else
@@ -151,20 +149,20 @@ class Lesson_UI
                     }]);
                 };
         
-                if (this.Change)
+                if (this.ChangedTitle)
                 {
                     aActions.push(['Restore', ['Remove replacement', 'Убрать замену'][_iLanguage], () =>
                     {
-                        this.Overlay.GetUIElement('.Title').value = this.Title;
-                        this.Change = this.Title;
+                        this.Overlay.GetUIElement('.Title').value = this.oInTimetable.Title;
+                        this.ChangedTitle = this.oInTimetable.Title;
                     }]);
                 }
                 else if (this.Canceled)
                 {
                     aActions.push(['Restore', ['Undo cancellation', 'Отменить отмену'][_iLanguage], () =>
                     {
-                        this.Overlay.GetUIElement('.Title').value = this.Title;
-                        this.Change = this.Title;
+                        this.Overlay.GetUIElement('.Title').value = this.oInTimetable.Title;
+                        this.ChangedTitle = this.oInTimetable.Title;
                     }]);
                 };
             };
@@ -177,7 +175,7 @@ class Lesson_UI
             if (this.Added)
                 this.Added = Event.target.value;
             else
-                this.Change = Event.target.value;
+                this.ChangedTitle = Event.target.value;
         });
 
         this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) =>
@@ -192,13 +190,13 @@ class Lesson_UI
     {
         if (this.oInWeek_Note === undefined)
         {
-            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Title': this.TimetableTitle }, true) || null;
+            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Title': this.Title }, true) || null;
         }
         else
         {
-            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Title': this.TimetableTitle }, true) || null;
+            this.oInWeek_Note = _oWeek.LessonNotes.selectWhere({ 'Date': this.Date, 'Title': this.Title }, true) || null;
             
-            Timetable_SetPoint_Lesson(this.Date, this.TimetableTitle, this.oInWeek_Note);
+            Timetable_SetPoint_Lesson(this.Date, this.Title, this.oInWeek_Note);
             this.Overlay.GetUIElement('.Note').value = this.Note;
         };
     }
@@ -217,67 +215,72 @@ class Lesson_UI
 
     get Added()
     {
-        return this.oInWeek_Added ? this.oInWeek_Added.Title : null;
-    }
-
-    get IsAdded()
-    {
-        return this.oInWeek_Added ? true : false;
+        return Boolean(this.oInWeek_Added);
     }
 
     set Added(sTitle)
     {
         sTitle = sTitle.trim();
 
-        if (sTitle === '')
+        if (sTitle)
         {
-            if (confirm(`${['Remove lesson', 'Удалить занятие'][_iLanguage]} "${this.Added}" (${Date_Format(Time_From1970(this.Date))})?`))
+            this.oInWeek_Added.Title = sTitle;
+            
+            SendRequest('/PHP/Handlers/Lesson_Sudden.php', { 'Date' : this.Date, 'Index' : this.Index, 'Title' : sTitle });
+
+            if (this.Element)
+                this.Element.children[1].children[1].innerHTML = sTitle;
+
+            Timetable_UpdatePeriod(this.Date);
+            _Information.Update(this.Date);
+
+            this.FindInWeek_Note();
+        }
+        else
+        {
+            if (confirm(`${['Remove lesson', 'Удалить занятие'][_iLanguage]} "${this.Title}" (${Date_Format(Time_From1970(this.Date))})?`))
             {
                 SendRequest('/PHP/Handlers/Lesson_Sudden.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : ''});
-
+    
                 _oWeek.SuddenLessons.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
+    
+                if (this.Element)
+                {
+                    if (this.Element.parentElement.children.length === 1)
+                        this.DayElement.remove();
+                    else
+                        this.Element.remove();
+                };
 
-                if (this.Element.parentElement.children.length === 1)
-                    this.DayElement.remove();
-                else
-                    this.Element.remove();
-
+                Timetable_UpdatePeriod(this.Date);
+                _Information.Update(this.Date);
+    
                 this.Overlay.Close();
             }
             else
             {
-                this.Overlay.GetUIElement('.Title').value = this.Added;
+                this.Overlay.GetUIElement('.Title').value = this.Title;
             };
-        }
-        else
-        {
-            this.oInWeek_Added.Title = sTitle;
-            
-            SendRequest('/PHP/Handlers/Lesson_Sudden.php', {'Date' : this.Date, 'Index' : this.Index, 'Title' : this.Added});
-
-            _Information.Update(this.Date);
-
-            if (this.Element)
-                this.Element.children[1].children[1].innerHTML = this.Added;
-
-            this.FindInWeek_Note();
         };
-
-        Timetable_UpdatePeriod(this.Date);
     }
 
 
 
-    get Change()
+    get ChangedTitle()
     {
-        return (this.oInWeek_Changes && !this.Canceled) ? this.oInWeek_Changes.Change : null;
+        return Boolean(this.oInWeek_Changes && this.oInWeek_Changes.Title !== null);
     }
 
-    set Change(sChange)
+    get Canceled()
+    {
+        return Boolean(this.oInWeek_Changes && this.oInWeek_Changes.ChangedTitle === '');
+    }
+
+    set ChangedTitle(sChange)
     {
         sChange = sChange.trim();
         
-        if (sChange === this.Title)
+        if (sChange === this.oInTimetable.Title)
         {    
             if (this.oInWeek_Changes)
                 _oWeek.Changes.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
@@ -288,7 +291,7 @@ class Lesson_UI
         {
             if (this.oInWeek_Changes)
             {
-                this.oInWeek_Changes.Change = sChange;
+                this.oInWeek_Changes.ChangedTitle = sChange;
             }
             else
             {
@@ -296,7 +299,7 @@ class Lesson_UI
                 {
                     'Date': this.Date,
                     'Index': this.Index,
-                    'Change': sChange,
+                    'ChangedTitle': sChange,
                     'Place': null,
                     'Educator': null
                 };
@@ -305,7 +308,7 @@ class Lesson_UI
             };
         };
 
-        SendRequest('/PHP/Handlers/Lesson_ChangeTitle.php', {'Date': this.Date, 'Index': this.Index, 'Title': this.Title, 'Change': sChange});
+        SendRequest('/PHP/Handlers/Lesson_ChangeTitle.php', { 'Date': this.Date, 'Index': this.Index, 'Title': this.oInTimetable.Title, 'Change': sChange });
 
 
 
@@ -318,7 +321,7 @@ class Lesson_UI
             else
                 this.Element.classList.remove('Canceled');
     
-            this.Element.children[1].children[0].innerHTML = this.Change ?? '';
+            this.Element.children[1].children[0].innerHTML = this.ChangedTitle ? this.Title : '';
         };
 
         Timetable_UpdatePeriod(this.Date);
@@ -326,11 +329,6 @@ class Lesson_UI
 
 
         this.FindInWeek_Note();
-    }
-
-    get Canceled()
-    {
-        return !this.Added && this.oInWeek_Changes && this.oInWeek_Changes.Change === '';
     }
 
 
@@ -354,7 +352,7 @@ class Lesson_UI
             {
                 this.oInWeek_Note = 
                 {
-                    'Title': this.TimetableTitle,
+                    'Title': this.Title,
                     'Date': this.Date,
                     'Note': sNote
                 };
@@ -365,30 +363,34 @@ class Lesson_UI
         else
         {
             if (this.oInWeek_Note)
-                _oWeek.LessonNotes.removeWhere({ 'Date': this.Date, 'Title': this.TimetableTitle }, true);
+                _oWeek.LessonNotes.removeWhere({ 'Date': this.Date, 'Title': this.Title }, true);
 
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/PHP/Handlers/Lesson_Note.php', {'Date': this.Date, 'Title': this.TimetableTitle, 'Note': this.Note});
+        SendRequest('/PHP/Handlers/Lesson_Note.php', { 'Date': this.Date, 'Title': this.Title, 'Note': sNote });
 
-        Timetable_SetPoint_Lesson(this.Date, this.TimetableTitle, this.oInWeek_Note);
+        Timetable_SetPoint_Lesson(this.Date, this.Title, Boolean(this.oInWeek_Note));
     }
 
 
 
+    get Title()
+    {
+        return (this.oInWeek_Added ? this.oInWeek_Added.Title : false) || ((this.oInWeek_Changes ? this.oInWeek_Changes.Title : false) || this.oInTimetable.Title);
+    }
 
     get Fields()
     {
         return this.oInTimetable ? this.oInTimetable.Fields : {};
     }
 
-
-
-    get TimetableTitle()
+    get Alarms()
     {
-        return this.Added || (this.Change ?? this.Title);
+        return _Alarms.Get(this.Index, this.Date);
     }
+
+
 
     get DayElement()
     {
@@ -398,12 +400,5 @@ class Lesson_UI
     get Element()
     {
         return Timetable_GetLessonElement(this.Date, this.Index);
-    }
-
-
-
-    get Alarms()
-    {
-        return _Alarms.Get(this.Index, this.Date);
     }
 }

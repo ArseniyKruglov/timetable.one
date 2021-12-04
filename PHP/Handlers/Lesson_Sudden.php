@@ -5,7 +5,7 @@ function Callback($SQL, $POST, $UserID)
 {
     $Date = $POST['Date'];
     $Index = $POST['Index'];
-    $Title = $POST['Title'];
+    $Title = substr($POST['Title'], 0, 100);
 
     if ($Title === '')
         $SQL->query("DELETE FROM `SuddenLessons` WHERE (`Date` = $Date) AND (`Index` = $Index) AND (`UserID` = $UserID)");

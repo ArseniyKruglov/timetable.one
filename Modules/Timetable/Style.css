@@ -236,9 +236,10 @@
         /* Note */
         #Timetable .Lesson > :last-child
         {
-            height: 5px;
-            width: 5px;
-            border-radius: 2.5px;
+            height: 10px;
+            width: 10px;
+            margin: -2.5px;
+            clip-path: circle(2.5px);
             background-color: var(--Text);
         }
 

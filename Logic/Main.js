@@ -34,27 +34,38 @@ const _Information = new Information();
                             
 // Timetable
 
-_mHeights = new Map();
-Week_Select(true);
+const _Timetable = new Timetable();
+
+_aHeights = [];
+Week_Select();
+Timetable_Height(false);
 
 {
     const Redraw = () =>
     {
-        _mHeights = new Map();
-        Timetable_Overflow(document.getElementById('Timetable'));
+        _mHeights = [];
         Timetable_Height(false);
+        Timetable_Overflow();
+        Timetable_Scroll();
     };
 
     addEventListener('resize', Redraw);
     document.fonts.ready.then(Redraw);
 }
 
+_iMaxTitleLength = 100;
+_iMaxNoteLength = 65535;
+
 
 
 // URL
 
 _sURL = location.pathname.split('/')[1];
+_aHistory = [];
+
 Route();
+addEventListener('popstate', Route);
+
 
 
 // Events

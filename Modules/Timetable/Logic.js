@@ -24,7 +24,7 @@ function Timetable_GetLessonIndexes(iDate, bIncludeCanceled)
     
         if (!bIncludeCanceled)
             for (let loop_oChange of _oWeek.Changes)
-                if (loop_oChange.Date === iDate && loop_oChange.Change === '')
+                if (loop_oChange.Date === iDate && loop_oChange.Title === '')
                 {
                     const iIndex = aLessonIndexes.indexOf(loop_oChange.Index);
 
@@ -98,7 +98,8 @@ function Timetable_FocusLesson(iDate, iIndex)
     Week_Select();
 
     let eLesson = Timetable_GetLessonElement(iDate, iIndex);
-    eLesson.children[1].focus();
+    eLesson.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
+    eLesson.children[1].focus({ preventScroll: true });
     eLesson.classList.add('Focused');
     setTimeout(() => { addEventListener('click', () => { eLesson.classList.remove('Focused'); }, { once: true }); }, 0);
 }

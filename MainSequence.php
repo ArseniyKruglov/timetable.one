@@ -104,7 +104,7 @@
             $aDayNotes = [];
         
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aChange)
-                array_push($aChanges, ['Date' => (int) $aChange[0], 'Index' => (int) $aChange[1], 'Change' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
+                array_push($aChanges, ['Date' => (int) $aChange[0], 'Index' => (int) $aChange[1], 'Title' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
         
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title` FROM `SuddenLessons` WHERE `UserID` = $User[0]")->fetch_all() as &$aSuddenLesson)
                 array_push($aSuddenLessons, ['Date' => (int) $aSuddenLesson[0], 'Index' => (int) $aSuddenLesson[1], 'Title' => $aSuddenLesson[2]]);

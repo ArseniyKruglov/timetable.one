@@ -4,7 +4,7 @@ include '../Handler.php';
 function Callback($SQL, $POST, $UserID)
 {
     $Date = $POST['Date'];
-    $Note = $POST['Note'];
+    $Note = substr($POST['Note'], 0, 65535);
 
     if ($Note == '')
         $SQL->query("DELETE FROM `DayNotes` WHERE (`Date` = $Date) AND (`UserID` = $UserID)");

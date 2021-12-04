@@ -1,36 +1,27 @@
-_aHistory = [[]];
-
-addEventListener('popstate', Route);
-
-
-
-function WriteHistory()
-{
-    let aPath = location.pathname + location.search;
-    aPath = aPath.split('/');
-    aPath = aPath.slice(2);
-
-    for (let i = 0; i < aPath.length; i++)
-    {
-        aPath[i] = aPath[i].split('?');
-
-        if (aPath[i][1])
-            aPath[i][1] = Object.fromEntries(new URLSearchParams(aPath[i][1]));
-    };
-
-
-
-    _aHistory.push(aPath);
-}
-
 function Route()
 {
-    WriteHistory();
+    let aPath = location.pathname + location.search;
+    aPath = [aPath, aPath];
+
+    aPath[0] = aPath[0].replace(`/${_sURL}/`, '');
+
+    aPath[1] = aPath[1].split('/');
+    aPath[1] = aPath[1].slice(2);
+
+    for (let i = 0; i < aPath[1].length; i++)
+    {
+        aPath[1][i] = aPath[1][i].split('?');
+
+        if (aPath[1][i][1])
+            aPath[1][i][1] = Object.fromEntries(new URLSearchParams(aPath[1][i][1]));
+    };
+
+    _aHistory.push(aPath);
 
 
 
-    let aOldPath = _aHistory[_aHistory.length - 2];
-    let aNewPath = _aHistory[_aHistory.length - 1];
+    let aOldPath = _aHistory[_aHistory.length - 2] ? _aHistory[_aHistory.length - 2][1] : ['', []];
+    let aNewPath = _aHistory[_aHistory.length - 1][1];
 
     let i = 0;
     for ( ; i < aOldPath.length; i++)

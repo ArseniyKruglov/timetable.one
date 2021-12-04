@@ -43,6 +43,8 @@ function Timetable_Scroll(bSmooth)
 {
     const eTimetable = document.getElementById('Timetable');
     const eTimetableScroll = document.getElementById('TimetableScroll');
+
+
     
     if (_iWeekOffset === 0)
     {
@@ -54,7 +56,7 @@ function Timetable_Scroll(bSmooth)
                 const eDay = Timetable_GetDayElement(i + iWeekBeginDate);
                 if (eDay)
                 {
-                    eDay.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                    eDay.scrollIntoView({ inline: 'center', behavior: (bSmooth ? 'smooth' : 'auto') });
                     break;
                 };
             };
@@ -64,6 +66,8 @@ function Timetable_Scroll(bSmooth)
             const eToday = Timetable_GetDayElement(_iToday);
             const eTomorrow = Timetable_GetDayElement(_iToday + 1);
             const iTimetableHeight = eTimetableScroll.clientHeight;
+
+
 
             if (eToday === eTimetable.firstElementChild)
             {
@@ -134,7 +138,7 @@ function Timetable_Scroll(bSmooth)
     };
 }
 
-function Timetable_Overflow(eGrid)
+function Timetable_Overflow()
 {
     function GetOverflow()
     {
@@ -151,6 +155,8 @@ function Timetable_Overflow(eGrid)
 
 
 
+    const eGrid = document.getElementById('Timetable');
+
     SetGrid(2);
 
     let oOverflow = GetOverflow();
@@ -162,19 +168,11 @@ function Timetable_Overflow(eGrid)
     {
         SetGrid(null, 2);
 
-        let oOverflow = GetOverflow();
+        oOverflow = GetOverflow();
         if (oOverflow.Width)
-        {
             SetGrid(2);
-        }
         else if (oOverflow.Height)
-        {
             SetGrid(null, 1);
-
-            let oOverflow = GetOverflow();
-            if (oOverflow.Width)
-                SetGrid(null, 2);
-        };
     };
 }
 
@@ -184,58 +182,43 @@ function Timetable_Height(bAnimation)
 
     if (document.body.clientWidth >= 600)
     {
-        const eTimetable = document.getElementById('Timetable');
         const eScroll = document.getElementById('TimetableScroll');
-        
-        const temp_eTimetable = eTimetable.cloneNode(true);
     
-        const iInitialHeight = bAnimation ? eHeight.clientHeight - 10 : null;
+        if (!_aHeights[_iWeekOffset])
+            _aHeights[_iWeekOffset] = eScroll.scrollHeight;
+        const iInitialHeight = bAnimation ? document.getElementById('TimetableHeight').clientHeight - 10 : null;
         const iInitialWeekOffset = _iWeekOffset;
-        const sInitialGridStyle = eTimetable.style.gridTemplateColumns;
-    
     
     
         eHeight.style.height = '';
         eHeight.style.transition = '';
-        eTimetable.style.gridTemplateColumns = '1fr 1fr';
-        temp_eTimetable.style.gridTemplateColumns = '1fr 1fr';
-    
-        _mHeights.set(_iWeekOffset, eScroll.scrollHeight);
-    
-        eScroll.insertBefore(temp_eTimetable, eScroll.firstChild);
-        eTimetable.hidden = true;
     
         for (let i = -3; i < 3; i++)
-            if (i !== 0 && !_mHeights.has(iInitialWeekOffset + i))
+            if (i !== 0 && !_aHeights[iInitialWeekOffset + i])
             {
                 _iWeekOffset = iInitialWeekOffset + i;
-                Timetable_Draw();
-                Week_Fill(Week_GetPeriod(_iWeekOffset));
-                Timetable_Overflow(eTimetable);
+                Week_Select();
     
-                _mHeights.set(_iWeekOffset, eScroll.scrollHeight);
+                _aHeights[_iWeekOffset] = eScroll.scrollHeight;
             };
+    
         _iWeekOffset = iInitialWeekOffset;
+        Week_Select();
     
-        temp_eTimetable.remove();
-        eTimetable.hidden = false;
-        eTimetable.style.gridTemplateColumns = sInitialGridStyle;
-    
-    
-    
-        const iMaxHeight = Math.max(_mHeights.get(_iWeekOffset - 3), _mHeights.get(_iWeekOffset - 2), _mHeights.get(_iWeekOffset - 1), _mHeights.get(_iWeekOffset), _mHeights.get(_iWeekOffset + 1), _mHeights.get(_iWeekOffset + 2));
+        let iMaxHeight = Math.max(_aHeights[_iWeekOffset - 3], _aHeights[_iWeekOffset - 2], _aHeights[_iWeekOffset - 1], _aHeights[_iWeekOffset], _aHeights[_iWeekOffset + 1], _aHeights[_iWeekOffset + 2]);
     
         if (bAnimation === true)
         {
-            eHeight.style.height = Math.max(iInitialHeight, (_mHeights.get(_iWeekOffset) + 5)) + 'px';
+            eHeight.style.height = Math.max(iInitialHeight, (_aHeights[_iWeekOffset] + 5)) + 'px';
+    
             setTimeout(() =>
             {
                 eHeight.style.transition = 'height 500ms';
-
+                
                 setTimeout(() =>
                 {
                     eHeight.style.height = (iMaxHeight + 75) + 'px';
-                });
+                }, 0);
             }, 0);
         }
         else
@@ -245,8 +228,7 @@ function Timetable_Height(bAnimation)
     }
     else
     {
-        eHeight.style.height = '1000000px';
-        eHeight.style.transition = '';
+        eHeight.style.height = '100000px';
     };
 }
 

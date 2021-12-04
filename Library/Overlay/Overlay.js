@@ -91,7 +91,13 @@ class Overlay
 
     Close()
     {
-        history.back();
+        const sLowerLevel = _aOverlays[_aOverlays.length - 2] ? _aOverlays[_aOverlays.length - 2].Link : '';
+        const sPrevious = _aHistory[_aHistory.length - 2] ? _aHistory[_aHistory.length - 2][0] : null;
+
+        if (sPrevious === sLowerLevel)
+            history.back();
+        else
+            Route_Forward(sLowerLevel);
     }
 
 
@@ -106,16 +112,7 @@ class Overlay
         return this.Element.children[1].children[0];
     }
 
-    set Link(sLink)
-    {
-        this._Link = sLink;
-        this.Element.setAttribute('link', sLink);
-    }
-
-    get Link()
-    {
-        return this._Link;
-    }
+    
 
     GetUIElement(sSelector)
     {

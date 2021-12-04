@@ -19,34 +19,22 @@ class Information
         
                 let aTimetable = [];
                 for (let loop_aLesson of mTimetable)
-                    if (_Alarms.Get(loop_aLesson[0]))
-                    {
-                        let sChanagedPlace = _oWeek.Changes.selectWhere({ 'Date': iDate, 'Index': loop_aLesson[0] }, true);
-                        if (sChanagedPlace)
-                            sChanagedPlace = sChanagedPlace.Place;
+                {
+                    const oReplacement = _oWeek.Changes.selectWhere({ 'Date': iDate, 'Index': loop_aLesson[0] }, true);
 
-                        aTimetable.push([loop_aLesson[0], loop_aLesson[1].Title, (sChanagedPlace ?? loop_aLesson[1].Fields.Place)])
-                    }
-                    else
-                    {
-                        this.Warning = true;
-                    };
+                    if (!oReplacement || oReplacement.Title !== '')
+                        if (_Alarms.Get(loop_aLesson[0]))
+                            aTimetable.push([loop_aLesson[0], (oReplacement ? oReplacement.Title : false) ?? loop_aLesson[1].Title, ((oReplacement ? oReplacement.Place : false) ?? loop_aLesson[1].Fields.Place)])
+                        else
+                            this.Warning = true;
+                };
         
-                for (let loop_aSuddenLesson of _oWeek.SuddenLessons)
-                    if (loop_aSuddenLesson.Date === iDate)
-                        aTimetable.push([loop_aSuddenLesson.Index, loop_aSuddenLesson.Title]);
+                for (let loop_aSuddenLesson of _oWeek.SuddenLessons.selectWhere({ 'Date': iDate }))
+                {
+                    const oReplacement = _oWeek.Changes.selectWhere({ 'Date': iDate, 'Index': loop_aSuddenLesson.Index }, true);
 
-                for (let loop_oChange of _oWeek.Changes.selectWhere({ 'Date': iDate }))
-                    for (let i = 0; i < aTimetable.length; i++)
-                        if (aTimetable[i][0] === loop_oChange.Index)
-                        {
-                            if (loop_oChange.Change === '')
-                                aTimetable.splice(i, 1);
-                            else if (loop_oChange.Change)
-                                aTimetable[i][1] = loop_oChange.Change;
-                                
-                            break;
-                        };
+                    aTimetable.push([loop_aSuddenLesson.Index, loop_aSuddenLesson.Title, (oReplacement ? oReplacement.Place : null)]);
+                };
     
                 aTimetable.sort((a, b) => { return a[0] - b[0]; });
     

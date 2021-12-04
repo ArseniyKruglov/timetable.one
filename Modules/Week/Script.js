@@ -6,10 +6,10 @@ function Week_Fill(aWeekPeriod)
             let eLesson = Timetable_GetLessonElement(loop_oChange.Date, loop_oChange.Index);
             if (eLesson)
             {
-                if (loop_oChange.Change === '')
+                if (loop_oChange.Title === '')
                     eLesson.classList.add('Canceled');
                 else
-                    eLesson.children[1].children[0].innerHTML = loop_oChange.Change;
+                    eLesson.children[1].children[0].innerHTML = loop_oChange.Title;
             };
         };
 
@@ -36,11 +36,10 @@ function Week_Fill(aWeekPeriod)
         };
 }
 
-function Week_Select(bInit)
+function Week_Select()
 {
     Timetable_Draw();
-    Timetable_Height(!bInit);
-    Timetable_Overflow(document.getElementById('Timetable'));
+    Timetable_Overflow();
     Timetable_Scroll();
 
     let sWeekClass;

@@ -6,7 +6,7 @@ function Callback($SQL, $POST, $UserID)
     $Date = $POST['Date'];
     $Index = $POST['Index'];
     $Title = $POST['Title'];
-    $Change = $POST['Change'];
+    $Change = substr($POST['Change'], 0, 100);
 
     if ($Title == $Change)
         $SQL->multi_query("UPDATE `Changes` SET `Title` = NULL WHERE (`Date` = $Date) AND (`Index` = $Index) AND (`UserID` = $UserID);
