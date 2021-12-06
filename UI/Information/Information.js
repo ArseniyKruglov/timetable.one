@@ -24,7 +24,7 @@ class Information
 
                     if (!oReplacement || oReplacement.Title !== '')
                         if (_Alarms.Get(loop_aLesson[0]))
-                            aTimetable.push([loop_aLesson[0], (oReplacement ? oReplacement.Title : false) ?? loop_aLesson[1].Title, ((oReplacement ? oReplacement.Place : false) ?? loop_aLesson[1].Fields.Place)])
+                            aTimetable.push([loop_aLesson[0], (oReplacement ? oReplacement.Title : false) || loop_aLesson[1].Title, ((oReplacement ? oReplacement.Place : false) || loop_aLesson[1].Fields.Place)])
                         else
                             this.Warning = true;
                 };
@@ -55,7 +55,13 @@ class Information
                 const iHours = Math.floor((iTimeLeft / (1000 * 60 * 60)) % 24);
                 const iMinutes = Math.floor((iTimeLeft / (1000 * 60)) % 60);
         
-                return `<span>${iHours > 0 ? `${iHours} ${[(iHours === 1 ? 'hour' : 'hours'), ['час', 'часа', 'часов'][Language_RussianNumberDeclension(iHours)]][_iLanguage]}` : ''} ${iMinutes} ${[(iMinutes === 1 ? 'minute' : 'minutes'), ['минута', 'минуты', 'минут'][Language_RussianNumberDeclension(iMinutes)]][_iLanguage]}</span>`
+                return `<span>
+                            ${iHours > 0 ? `${iHours} 
+                            ${[(iHours === 1 ? 'hour' : 'hours'), ['час', 'часа', 'часов'][Language_RussianNumberDeclension(iHours)]][_iLanguage]}` : ''}
+
+                            ${iMinutes}
+                            ${[(iMinutes === 1 ? 'minute' : 'minutes'), ['минута', 'минуты', 'минут'][Language_RussianNumberDeclension(iMinutes)]][_iLanguage]}
+                        </span>`
             }
         
             const SetTimeout = (tDate) =>
@@ -71,7 +77,13 @@ class Information
             const BeforeLessons = () =>
             {
                 HTML +=    `<div>
-                                Сегодня к ${Time_Format(_Alarms.Get(aTodayTimetable[0][0])[0])} на <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[0][0])}>${aTodayTimetable[0][1]}</a>${aTodayTimetable[0][2] ? ` (${aTodayTimetable[0][2]})` : ''}, осталось ${Timer(_Alarms.Get(aTodayTimetable[0][0])[0])}
+                                Сегодня к
+                                ${Time_Format(_Alarms.Get(aTodayTimetable[0][0])[0])}
+                                на
+                                <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[0][0])}>${aTodayTimetable[0][1]}</a>
+                                ${aTodayTimetable[0][2] ? ` (${aTodayTimetable[0][2]})` : ''},
+                                осталось
+                                ${Timer(_Alarms.Get(aTodayTimetable[0][0])[0])}
                             </div>`;
         
                 SetTimeout(_Alarms.Get(aTodayTimetable[0][0])[0]);
@@ -84,15 +96,23 @@ class Information
                     if (_Alarms.Get(aTodayTimetable[i][0])[0] <= new Date() && new Date() <= _Alarms.Get(aTodayTimetable[i][0])[1])
                     {
                         HTML +=    `<div>
-                                        Сейчас <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i][0])}>${aTodayTimetable[i][1]}</a>${aTodayTimetable[i][2] ? ` (${aTodayTimetable[i][2]})` : ''}, до конца ${Timer(_Alarms.Get(aTodayTimetable[i][0])[1])}
+                                        Сейчас
+                                        <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i][0])}>${aTodayTimetable[i][1]}</a>${aTodayTimetable[i][2] ? ` (${aTodayTimetable[i][2]})` : ''}, 
+                                        до конца
+                                        ${Timer(_Alarms.Get(aTodayTimetable[i][0])[1])}
                                     </div>`;
         
                         if (i + 1 < aTodayTimetable.length)
                             HTML +=    `<div>
-                                            Затем перерыв ${Difference(_Alarms.Get(aTodayTimetable[i][0])[1], _Alarms.Get(aTodayTimetable[i + 1][0])[0])} и <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}
+                                            Затем перерыв
+                                            ${Difference(_Alarms.Get(aTodayTimetable[i][0])[1], _Alarms.Get(aTodayTimetable[i + 1][0])[0])}
+                                            и
+                                            <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}
                                         </div>`;
                         else
-                            HTML += `<div>Затем свобода</div>`;
+                            HTML += `<div>
+                                        Затем свобода
+                                     </div>`;
         
                         SetTimeout(_Alarms.Get(aTodayTimetable[i][0])[1]);
         
@@ -106,7 +126,10 @@ class Information
                                     </div>
         
                                     <div>
-                                        Затем <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''} в ${Time_Format(_Alarms.Get(aTodayTimetable[i + 1][0])[0])}
+                                        Затем
+                                        <a ${Timetable_GetLessonLinkAttributes(_iToday, aTodayTimetable[i + 1][0])}>${aTodayTimetable[i + 1][1]}</a>${aTodayTimetable[i + 1][2] ? ` (${aTodayTimetable[i + 1][2]})` : ''}
+                                        в
+                                        ${Time_Format(_Alarms.Get(aTodayTimetable[i + 1][0])[0])}
                                     </div>`;
         
                         SetTimeout(_Alarms.Get(aTodayTimetable[i + 1][0])[0]);

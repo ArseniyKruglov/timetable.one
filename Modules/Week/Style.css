@@ -36,6 +36,7 @@
 {
     font-weight: 500;
     width: 150px;
+    white-space: nowrap;
 }
 
 #Week.Past > #Week_Period
