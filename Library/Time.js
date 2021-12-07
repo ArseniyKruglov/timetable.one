@@ -17,14 +17,14 @@ function Date_Format(tDate, bLong)
 {
     let HTML = '';
 
-    let sDayOfWeek = tDate.toLocaleDateString(navigator.language, { weekday: (bLong ? 'long' : 'short') });
+    let sDayOfWeek = tDate.toLocaleDateString(navigator.language, {weekday: (bLong ? 'long' : 'short')});
     sDayOfWeek = sDayOfWeek.charAt(0).toUpperCase() + sDayOfWeek.slice(1);
     HTML += sDayOfWeek + ', ';
     
     if (tDate.getFullYear() === new Date().getFullYear())
-        HTML += tDate.toLocaleString(navigator.language, { month: 'long', day: 'numeric' });
+        HTML += tDate.toLocaleString(navigator.language, {month: 'long', day: 'numeric'});
     else
-        HTML += tDate.toLocaleString(navigator.language, { year: 'numeric', month: 'short', day: '2-digit' });
+        HTML += tDate.toLocaleString(navigator.language, {year: 'numeric', month: 'short', day: '2-digit'});
 
     return HTML;
 }
@@ -32,14 +32,14 @@ function Date_Format(tDate, bLong)
 function Date_Format_Short(tDate, bForceYear)
 {
     if (bForceYear === true)
-        return tDate.toLocaleString([], { year: '2-digit', month: 'numeric', day: 'numeric' });
+        return tDate.toLocaleString([], {year: '2-digit', month: 'numeric', day: 'numeric'});
     else
-        return tDate.toLocaleString([], { month: 'numeric', day: 'numeric' });
+        return tDate.toLocaleString([], {month: 'numeric', day: 'numeric'});
 }
 
 function Time_Format(tDate)
 {
-    return tDate.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' });
+    return tDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 }
 
 function Date_ToWeek(iDate)

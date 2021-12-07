@@ -1,60 +1,71 @@
-function Route()
+class Router
 {
-    let aPath = location.pathname + location.search;
-    aPath = [aPath, aPath];
-
-    aPath[0] = aPath[0].replace(`/${_sURL}/`, '');
-
-    aPath[1] = aPath[1].split('/');
-    aPath[1] = aPath[1].slice(2);
-
-    for (let i = 0; i < aPath[1].length; i++)
+    constructor()
     {
-        aPath[1][i] = aPath[1][i].split('?');
+        this.URL = location.pathname.split('/')[1];
+        this.History = [];
 
-        if (aPath[1][i][1])
-            aPath[1][i][1] = Object.fromEntries(new URLSearchParams(aPath[1][i][1]));
-    };
+        document.addEventListener('popstate', () => {this.Route()});
+    }
 
-    _aHistory.push(aPath);
+    Route()
+    {
+        let aPath = location.pathname + location.search;
+        aPath = [aPath, aPath];
 
+        aPath[0] = aPath[0].replace(`/${this.URL}/`, '');
 
+        aPath[1] = aPath[1].split('/');
+        aPath[1] = aPath[1].slice(2);
 
-    let aOldPath = _aHistory[_aHistory.length - 2] ? _aHistory[_aHistory.length - 2][1] : ['', []];
-    let aNewPath = _aHistory[_aHistory.length - 1][1];
-
-    let i = 0;
-    for ( ; i < aOldPath.length; i++)
-        if (!aNewPath[i] || aOldPath[i][0] !== aNewPath[i][0])
+        for (let i = 0; i < aPath[1].length; i++)
         {
-            for (let j = i; j < _aOverlays.length; j++)
-                _aOverlays[j].Remove();
+            aPath[1][i] = aPath[1][i].split('?');
 
-            break;
+            if (aPath[1][i][1])
+                aPath[1][i][1] = Object.fromEntries(new URLSearchParams(aPath[1][i][1]));
         };
 
+        this.History.push(aPath);
 
-    for ( ; i < aNewPath.length; i++)
-        switch (aNewPath[i][0])
-        {
-            case 'Lesson':
-                new Lesson_UI(parseInt(aNewPath[i][1].Date), parseInt(aNewPath[i][1].Lesson));
+
+
+        let aOldPath = this.History[this.History.length - 2] ? this.History[this.History.length - 2][1] : ['', []];
+        let aNewPath = this.History[this.History.length - 1][1];
+
+        let i = 0;
+        for ( ; i < aOldPath.length; i++)
+            if (!aNewPath[i] || aOldPath[i][0] !== aNewPath[i][0])
+            {
+                for (let j = i; j < _aOverlays.length; j++)
+                    _aOverlays[j].Remove();
+
                 break;
-
-            case 'Day':
-                new Day_UI(parseInt(aNewPath[i][1].Date));
-                break;
-
-            case 'Add':
-                new SuddenLesson_UI(_iToday);       // TO DO: _iToday
-                break;
-        };
-}
+            };
 
 
+        for ( ; i < aNewPath.length; i++)
+            switch (aNewPath[i][0])
+            {
+                case 'Lesson':
+                    new Lesson_UI(parseInt(aNewPath[i][1].Date), parseInt(aNewPath[i][1].Lesson));
+                    break;
 
-function Route_Forward(sURL)
-{
-    history.pushState('', '', '/' + _sURL + sURL);
-    Route();
+                case 'Day':
+                    new Day_UI(parseInt(aNewPath[i][1].Date));
+                    break;
+
+                case 'Add':
+                    new SuddenLesson_UI(_iToday);       // TO DO: _iToday
+                    break;
+            };
+    }
+
+
+
+    Forward(sURL)
+    {
+        history.pushState('', '', '/' + this.URL + sURL);
+        this.Route();
+    }
 }

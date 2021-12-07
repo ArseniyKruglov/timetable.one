@@ -4,7 +4,7 @@ class SuddenLesson_UI
     {
         this.Title = '';
         this.Date = iDate;
-        const aLessons = Timetable_GetLessonIndexes(this.Date);
+        const aLessons = _Timetable.DateToIndexes(this.Date);
         this.Index = ((aLessons.length) ? Math.max(...aLessons) : 0) + 1;
 
         this.Overlay = new Overlay();
@@ -62,90 +62,100 @@ class SuddenLesson_UI
         this.Overlay.Body.innerHTML = HTML;
 
 
-
-        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Overlay.Close(); });
-        this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', () =>
         {
-            if (this.Title && this.Date && this.Index)
-                this.Send();
-            else
-                this.Overlay.Body.classList.add('Strict');
-        });
-        
-        let SetError = (bValid, bStrict, sError) =>
-        {
-            if (bValid)
+            this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => {this.Overlay.Close();});
+            this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', () =>
             {
-                event.target.previousElementSibling.previousElementSibling.classList.remove('Invalid');
-            }
-            else
-            {
-                event.target.previousElementSibling.previousElementSibling.classList.add('Invalid');
-
-                if (bStrict === true)
-                    event.target.previousElementSibling.previousElementSibling.classList.add('Strict');
+                if (this.Title && this.Date && this.Index)
+                    this.Send();
                 else
-                    event.target.previousElementSibling.previousElementSibling.classList.remove('Strict');
+                    this.Overlay.Body.classList.add('Strict');
+           });
             
-                event.target.previousElementSibling.previousElementSibling.children[1].innerHTML = sError;
-            };
-        };
-        this.Overlay.GetUIElement('.Title').addEventListener('input', (event) =>
-        {
-            this.Title = event.target.value.trim();
-
-            if (this.Title)
-                event.target.parentElement.parentElement.nextElementSibling.classList.remove('Invalid');
-            else
-                event.target.parentElement.parentElement.nextElementSibling.classList.add('Invalid');
-        });
-        this.Overlay.GetUIElement('.Calendar').addEventListener('input', (event) =>
-        {
-            this.Date = event.target.value;
-
-            this.Overlay.GetUIElement('.Index').dispatchEvent(new Event('input'));
-
-            if (this.Date)
+            let SetError = (bValid, bStrict, sError) =>
             {
-                this.Date = new Date(this.Date).to1970();
-
-                SetError(true);
-            }
-            else
-            {
-                SetError(false, true, event.target.validationMessage);
-            };
-        });
-        this.Overlay.GetUIElement('.Index').addEventListener('input', (event) =>
-        {
-            this.Index = event.target.value;
-
-            event.target.setCustomValidity('');
-            if (event.target.checkValidity())
-            {
-                this.Index = parseInt(this.Index);
-
-                if (this.Overlay.GetUIElement('.Calendar').value)
-                    if (Timetable_GetLessonIndexes(new Date(this.Overlay.GetUIElement('.Calendar').value).to1970(), true).includes(this.Index))
-                    {
-                        this.Index = false;
-                        event.target.setCustomValidity([`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
-                        SetError(false, false, [`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
-                    };
-
-                if (event.target.checkValidity())
-                    SetError(true);
+                if (bValid)
+                {
+                    event.target.previousElementSibling.previousElementSibling.classList.remove('Invalid');
+                }
                 else
-                    SetError(false, true, event.target.validationMessage);
+                {
+                    event.target.previousElementSibling.previousElementSibling.classList.add('Invalid');
+    
+                    if (bStrict === true)
+                        event.target.previousElementSibling.previousElementSibling.classList.add('Strict');
+                    else
+                        event.target.previousElementSibling.previousElementSibling.classList.remove('Strict');
+                
+                    event.target.previousElementSibling.previousElementSibling.children[1].innerHTML = sError;
+                };
             };
-        });
+            this.Overlay.GetUIElement('.Title').addEventListener('input', (event) =>
+            {
+                this.Title = event.target.value.trim();
+    
+                if (this.Title)
+                    event.target.parentElement.parentElement.nextElementSibling.classList.remove('Invalid');
+                else
+                    event.target.parentElement.parentElement.nextElementSibling.classList.add('Invalid');
+           });
+            this.Overlay.GetUIElement('.Calendar').addEventListener('input', (event) =>
+            {
+                this.Date = event.target.value;
+    
+                this.Overlay.GetUIElement('.Index').dispatchEvent(new Event('input'));
+    
+                if (this.Date)
+                {
+                    this.Date = new Date(this.Date).to1970();
+    
+                    SetError(true);
+                }
+                else
+                {
+                    SetError(false, true, event.target.validationMessage);
+                };
+           });
+            this.Overlay.GetUIElement('.Index').addEventListener('input', (event) =>
+            {
+                this.Index = event.target.value;
+    
+                event.target.setCustomValidity('');
+                if (event.target.checkValidity())
+                {
+                    this.Index = parseInt(this.Index);
+    
+                    if (this.Overlay.GetUIElement('.Calendar').value)
+                        if (_Timetable.DateToIndexes(new Date(this.Overlay.GetUIElement('.Calendar').value).to1970(), true).includes(this.Index))
+                        {
+                            this.Index = false;
+                            event.target.setCustomValidity([`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
+                            SetError(false, false, [`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
+                        };
+    
+                    if (event.target.checkValidity())
+                        SetError(true);
+                    else
+                        SetError(false, true, event.target.validationMessage);
+                };
+           });
+        }
     }
 
 
 
     Send()
     {
-        SuddenLesson_Constructor(this.Date, this.Index, this.Title, true, true, true);
+        SendRequest('/PHP/Handlers/SuddenLesson_Constructor.php', {'Date': this.Date, 'Index': this.Index, 'Title': this.Title});
+
+        _oWeek.Changes.push({ 'Date': this.Date, 'Index': this.Index, 'Title': this.Title, 'Place': null, 'Educator': null });
+
+        _Timetable.SetChange(this.Date, this.Index, this.Title);
+
+        _Timetable.UpdateAlarmsPeriod(this.Date);
+
+
+
         this.Overlay.Close();
     }
 }

@@ -43,7 +43,7 @@ class Overlay
                                     <div tabindex=0>
                                         <div></div>
                                     </div>`;
-        this.Element.children[0].addEventListener('click', () => { this.Close(); });
+        this.Element.children[0].addEventListener('click', () => {this.Close();});
         
         document.body.appendChild(this.Element);
         this.Callback_Open();
@@ -92,12 +92,12 @@ class Overlay
     Close()
     {
         const sLowerLevel = _aOverlays[_aOverlays.length - 2] ? _aOverlays[_aOverlays.length - 2].Link : '';
-        const sPrevious = _aHistory[_aHistory.length - 2] ? _aHistory[_aHistory.length - 2][0] : null;
+        const sPrevious = _Router.History[_Router.History.length - 2] ? _Router.History[_Router.History.length - 2][0] : null;
 
         if (sPrevious === sLowerLevel)
             history.back();
         else
-            Route_Forward(sLowerLevel);
+            _Router.Forward(sLowerLevel);
     }
 
 
@@ -132,7 +132,7 @@ class Overlay
 
 
 
-function Overlay_IsOpened()
+function Overlays_Opened()
 {
     return document.querySelector('.Overlay');
 }

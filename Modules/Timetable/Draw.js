@@ -1,44 +1,3 @@
-function Timetable_Draw()
-{   
-    let HTML = '';
-
-    const aWeekPeriod = Week_GetPeriod(_iWeekOffset);
-    for (let iDate = aWeekPeriod[0]; iDate <= aWeekPeriod[1]; iDate++)
-    {
-        const mTodayTimetable = Timetable_GetDayTimetable(iDate);
-
-        if (mTodayTimetable !== false && mTodayTimetable.size > 0)
-        {
-            let sDayClass;
-            if (iDate === _iToday)
-                sDayClass = 'Today';
-            else if (iDate === _iToday + 1)
-                sDayClass = 'Tomorrow';
-
-            HTML += `<div class='Day ${sDayClass || ''}'>
-                        <a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); Route_Forward('/Day?Date=${iDate}');">
-                            <div>${Date_Format(Time_From1970(iDate))}</div>
-                            <div class='EmptyHidden'>${Timetable_GetPeriod(iDate)}</div>
-                        </a>
-
-                        <div>`;
-            for (let loop_aLesson of mTodayTimetable)
-                HTML +=    `<div class='Lesson'>
-                                <span>${loop_aLesson[0]}</span>
-                                <a ${Timetable_GetLessonLinkAttributes(iDate, loop_aLesson[0])}>
-                                    <span></span>
-                                    <span>${loop_aLesson[1]['Title']}</span>
-                                </a>
-                                <span></span>
-                            </div>`;
-            HTML +=   `</div>
-                    </div>`;
-        };
-    };
-
-    document.getElementById('Timetable').innerHTML = HTML;
-}
-
 function Timetable_Scroll(bSmooth)
 {
     const eTimetable = document.getElementById('Timetable');
@@ -56,7 +15,7 @@ function Timetable_Scroll(bSmooth)
                 const eDay = Timetable_GetDayElement(i + iWeekBeginDate);
                 if (eDay)
                 {
-                    eDay.scrollIntoView({ inline: 'center', behavior: (bSmooth ? 'smooth' : 'auto') });
+                    eDay.scrollIntoView({inline: 'center', behavior: (bSmooth ? 'smooth' : 'auto')});
                     break;
                 };
             };
@@ -71,11 +30,11 @@ function Timetable_Scroll(bSmooth)
 
             if (eToday === eTimetable.firstElementChild)
             {
-                eTimetableScroll.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
+                eTimetableScroll.scrollTo({top: 0, behavior: (bSmooth ? 'smooth' : 'auto')});
             }
             else if (eToday === eTimetable.lastElementChild)
             {
-                eTimetableScroll.scrollTo({ top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
+                eTimetableScroll.scrollTo({top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto')});
             }
             else
             {
@@ -84,24 +43,24 @@ function Timetable_Scroll(bSmooth)
                     if (eTomorrow)
                     {
                         if (eToday.clientHeight + eTomorrow.clientHeight + 50 <= iTimetableHeight)
-                            eTomorrow.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                            eTomorrow.scrollIntoView({block: 'end', behavior: (bSmooth ? 'smooth' : 'auto')});
                         else
-                            eToday.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                            eToday.scrollIntoView({behavior: (bSmooth ? 'smooth' : 'auto')});
                     }
                     else
                     {
                         if (eToday.clientHeight + 50 <= iTimetableHeight)
-                            eToday.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                            eToday.scrollIntoView({block: 'end', behavior: (bSmooth ? 'smooth' : 'auto')});
                         else
-                            eToday.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                            eToday.scrollIntoView({behavior: (bSmooth ? 'smooth' : 'auto')});
                     };
                 }
                 else if (eTomorrow)
                 {
                     if (eTomorrow.clientHeight + 50 <= iTimetableHeight)
-                        eTomorrow.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                        eTomorrow.scrollIntoView({block: 'end', behavior: (bSmooth ? 'smooth' : 'auto')});
                     else
-                        eTomorrow.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                        eTomorrow.scrollIntoView({behavior: (bSmooth ? 'smooth' : 'auto')});
                 }
                 else
                 {
@@ -113,9 +72,9 @@ function Timetable_Scroll(bSmooth)
                         if (eDay)
                         {
                             if (eDay.clientHeight + 50 <= iTimetableHeight)
-                                eDay.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                                eDay.scrollIntoView({block: 'end', behavior: (bSmooth ? 'smooth' : 'auto')});
                             else
-                                eDay.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                                eDay.scrollIntoView({behavior: (bSmooth ? 'smooth' : 'auto')});
                                 
                             bBreak = true;
                             break;
@@ -123,56 +82,18 @@ function Timetable_Scroll(bSmooth)
                     };
     
                     if (bBreak === false)
-                        eTimetableScroll.scrollTo({ top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
+                        eTimetableScroll.scrollTo({top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto')});
                 };
             };
         };
     }
     else if (_iWeekOffset > 0)
     {
-        eTimetableScroll.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
+        eTimetableScroll.scrollTo({top: 0, behavior: (bSmooth ? 'smooth' : 'auto')});
     }
     else if (_iWeekOffset < 0)
     {
-        eTimetableScroll.scrollTo({ top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
-    };
-}
-
-function Timetable_Overflow()
-{
-    function GetOverflow()
-    {
-        return {'Width': (eGrid.scrollWidth > eGrid.clientWidth), 'Height': (eGrid.parentElement.scrollHeight > eGrid.parentElement.clientHeight)};
-    };
-
-    function SetGrid(iColumns, iRows)
-    {
-        if (iColumns)
-            eGrid.style.gridTemplateColumns = `repeat(${iColumns}, auto)`;
-        else
-            eGrid.style.gridTemplateColumns = `repeat(${Math.ceil(eGrid.children.length / iRows)}, auto)`;
-    }
-
-
-
-    const eGrid = document.getElementById('Timetable');
-
-    SetGrid(2);
-
-    let oOverflow = GetOverflow();
-    if (oOverflow.Width)
-    {
-        SetGrid(1);
-    }
-    else if (oOverflow.Height)
-    {
-        SetGrid(null, 2);
-
-        oOverflow = GetOverflow();
-        if (oOverflow.Width)
-            SetGrid(2);
-        else if (oOverflow.Height)
-            SetGrid(null, 1);
+        eTimetableScroll.scrollTo({top: eTimetable.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto')});
     };
 }
 
@@ -230,11 +151,4 @@ function Timetable_Height(bAnimation)
     {
         eHeight.style.height = '100000px';
     };
-}
-
-function Timetable_UpdatePeriod(iDate)
-{
-    const eDate = Timetable_GetDayElement(iDate)
-    if (eDate)
-        eDate.children[0].children[1].innerHTML = Timetable_GetPeriod(iDate);
 }

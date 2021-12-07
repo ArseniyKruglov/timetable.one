@@ -39,11 +39,6 @@
     white-space: nowrap;
 }
 
-#Week.Past > #Week_Period
-{
-    opacity: var(--Gray70-Opacity);
-}
-
 #Week.Current > #Week_Period
 {
     color: var(--Main);

@@ -3,7 +3,7 @@ class Day_UI
     constructor(iDate, bAnimation = true)
     {
         this.Date = iDate;
-        this.oInWeek_Note = _oWeek.DayNotes.selectWhere({ 'Date': this.Date }, true) || null;
+        this.oInWeek_Note = _oWeek.DayNotes.selectWhere({'Date': this.Date }, true) || null;
 
 
 
@@ -12,7 +12,7 @@ class Day_UI
         {
             this.Draw();
 
-            this.UpdateAlarms_Listener = () => { this.UpdateAlarms(); };
+            this.UpdateAlarms_Listener = () => {this.UpdateAlarms(); };
             addEventListener('TimetableChange', this.UpdateAlarms_Listener);
 
             this.Overlay.Link = `/Day?Date=${this.Date}`;
@@ -30,7 +30,7 @@ class Day_UI
         
         let HTML = `<div class='Header'>
                         <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
-                        ${ (_iAccessLevel === 2) ? `<span><custom-round-button icon='More'></custom-round-button></span>`: '' }
+                        ${(_iAccessLevel === 2) ? `<span><custom-round-button icon='More'></custom-round-button></span>`: '' }
                     </div>
     
                     <div class='Date'>${Date_Format(Time_From1970(this.Date), true)}</div>
@@ -40,7 +40,7 @@ class Day_UI
                     `<div class='Info'>
                         <div class='Alarms'>
                             <custom-icon icon='Alarm'></custom-icon>
-                            <span>${Timetable_GetPeriod(this.Date)}</span>
+                            <span>${_Timetable.DateToAlarmsPeriod(this.Date)}</span>
                         </div>
                     </div>`
                     : ''
@@ -52,7 +52,7 @@ class Day_UI
 
 
 
-        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => { this.Overlay.Close(); });
+        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => {this.Overlay.Close();});
         if (_iAccessLevel === 2)
             this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
             {
@@ -62,12 +62,12 @@ class Day_UI
                     [
                         ['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () =>
                         {
-                            Route_Forward(`/Day?Date=${this.Date}/Add`);
+                            _Router.Forward(`/Day?Date=${this.Date}/Add`);
                         }]
                     ]
                 );
-            });
-        this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) => { this.Note = Event.target.value; });
+           });
+        this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) => {this.Note = Event.target.value;});
     }
 
     UpdateAlarms()
@@ -75,7 +75,7 @@ class Day_UI
         this.Overlay.GetUIElement('.Info').innerHTML =  !_Alarms.Empty ? 
                                                 `<div class='Alarms'>
                                                     <custom-icon icon='Alarm'></custom-icon>
-                                                    <span>${Timetable_GetPeriod(this.Date)}</span>
+                                                    <span>${_Timetable.DateToAlarmsPeriod(this.Date)}</span>
                                                 </div>`
                                                 : '';
     }
@@ -117,13 +117,13 @@ class Day_UI
         else
         {
             if (this.oInWeek_Note)
-                _oWeek.DayNotes.removeWhere({ 'Date': this.Date }, true);
+                _oWeek.DayNotes.removeWhere({'Date': this.Date }, true);
 
             this.oInWeek_Note = null;
         };
 
-        SendRequest('/PHP/Handlers/Day_Note.php', { 'Date': this.Date, 'Note': this.Note });
+        SendRequest('/PHP/Handlers/Day_Note.php', {'Date': this.Date, 'Note': this.Note});
 
-        Timetable_SetPoint_Day(this.Date, this.oInWeek_Note);
+        _Timetable.SetPoint_Day(this.Date, this.oInWeek_Note);
     }
 }

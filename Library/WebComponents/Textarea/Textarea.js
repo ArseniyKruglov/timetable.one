@@ -10,7 +10,7 @@ class Textarea extends HTMLElement
         this.innerHTML =   `<div class='Underline'>
                                 <textarea ${sAttributes}>${this.innerHTML}</textarea>
                             </div>
-                            
+
                             <button></button>`;
 
         this.eTextarea = this.children[0].children[0];
@@ -18,19 +18,19 @@ class Textarea extends HTMLElement
 
         this.iMinimized = 150;
         this.iLimit = this.iMinimized + 55;
-        
+
         this.Scale();
-        
+
         this.bExpanded = parseInt(this.eTextarea.style.height) < this.iLimit;
         this.ExpandHandler();
-        this.eTextarea.addEventListener('input', () => { this.ExpandHandler(); });
-        addEventListener('resize', () => { this.ExpandHandler(); });
+        this.eTextarea.addEventListener('input', () => this.ExpandHandler());
+        addEventListener('resize', () => this.ExpandHandler());
         this.eExpand.addEventListener('click', () =>
         {
             this.bExpanded = !this.bExpanded;
             this.ExpandHandler();
         });
-        document.fonts.addEventListener('ready', () => { this.ExpandHandler(); });
+        document.fonts.ready.then(() => this.ExpandHandler());
 
         const iLength = (this.getAttribute('value') || '').length;
         this.eTextarea.setSelectionRange(iLength, iLength);

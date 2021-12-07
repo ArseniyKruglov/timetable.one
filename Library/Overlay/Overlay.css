@@ -51,8 +51,8 @@
 
 @keyframes Overlay_Background
 {
-    0%   { opacity: 0% }
-    100% { opacity: var(--Background02-BackgroundOpacity) }
+    0%   {opacity: 0% }
+    100% {opacity: var(--Background02-BackgroundOpacity) }
 }
 
 .Overlay > :last-child

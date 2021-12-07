@@ -178,6 +178,7 @@
         }
 
 
+
     /* Lessons */
     #Timetable .Day > :last-child
     {
@@ -210,6 +211,7 @@
             display: flex;
             justify-content: center;
             width: 15px;
+            white-space: nowrap;
             height: 1em;
             opacity: var(--Gray70-Opacity);
         }
