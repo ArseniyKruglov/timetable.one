@@ -5,7 +5,10 @@ Date.prototype.getDayOfWeek = function()
 
 Date.prototype.to1970 = function()
 {
-    return Math.floor((this.getTime() - this.getTimezoneOffset() * 60 * 1000) / 1000 / 60 / 60 / 24);
+    const tDate = this;
+    tDate.setHours(0, 0, 0, 0);
+
+    return Math.ceil(tDate.getTime() / 1000 / 60 / 60 / 24);
 }
 
 function Time_From1970(iDaysSince1970)

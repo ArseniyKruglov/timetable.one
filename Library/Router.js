@@ -5,7 +5,7 @@ class Router
         this.URL = location.pathname.split('/')[1];
         this.History = [];
 
-        document.addEventListener('popstate', () => {this.Route()});
+        document.addEventListener('popstate', () => this.Route());
     }
 
     Route()

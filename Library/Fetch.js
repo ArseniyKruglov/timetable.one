@@ -5,7 +5,7 @@ function SendRequest(sURL, oData, bCallback)
         FD.append(loop_sField, oData[loop_sField]);
 
     if (bCallback === true)
-        return fetch(sURL, {method: 'POST', body: FD}).then((response) => {return response.json();});
+        return fetch(sURL, {method: 'POST', body: FD}).then(Response => Response.json());
     else
         fetch(sURL, {method: 'POST', body: FD});
 }

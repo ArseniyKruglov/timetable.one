@@ -12,7 +12,7 @@ class Day_UI
         {
             this.Draw();
 
-            this.UpdateAlarms_Listener = () => {this.UpdateAlarms(); };
+            this.UpdateAlarms_Listener = () => this.UpdateAlarms();
             addEventListener('TimetableChange', this.UpdateAlarms_Listener);
 
             this.Overlay.Link = `/Day?Date=${this.Date}`;
@@ -52,7 +52,7 @@ class Day_UI
 
 
 
-        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => {this.Overlay.Close();});
+        this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => this.Overlay.Close());
         if (_iAccessLevel === 2)
             this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
             {
@@ -67,7 +67,7 @@ class Day_UI
                     ]
                 );
            });
-        this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) => {this.Note = Event.target.value;});
+        this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) => this.Note = Event.target.value);
     }
 
     UpdateAlarms()

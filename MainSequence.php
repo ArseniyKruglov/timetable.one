@@ -26,13 +26,13 @@
         <meta name='msapplication-TileColor' content='#F1F2F3'>
         <meta name='msapplication-TileImage' content='/Style/Icons/ms-icon-144x144.png'>
         <meta name='theme-color' content='#F1F2F3'>
-        
+
         <? 
         $Time = time();
 
         $Files_JS = [];
         $Files_CSS = [];
-        
+
         function GetFiles($Path)
         {
             foreach (glob($Path . '*', GLOB_ONLYDIR) as &$Folder)
@@ -67,8 +67,10 @@
 
         _aTimetable = 
         <?
+            include 'PHP/Timestamp.php';
+
             $aTimetables = [];
-            
+
             foreach ($SQL->query("SELECT `TimetableID`, `Begin`, `End`, `AnchorDate`, `Days` FROM `timetables` WHERE `UserID` = $User[0]")->fetch_all() as &$aTimetable)
             {
                 $aLessons = array_fill(0, strlen($aTimetable[4]), []);
@@ -81,7 +83,7 @@
                     array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Title' => $aLesson[2], 'Fields' => [ 'Place' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $UserFields], 'UserFieldsAI' => (int) $aLesson[5]]]);
                 }
 
-                array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : (int) $aTimetable[1], 'End' => $aTimetable[2] === NULL ? NULL : (int) $aTimetable[2], 'AnchorDate' => (int) $aTimetable[3], 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
+                array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : To1970($aTimetable[1]), 'End' => $aTimetable[2] === NULL ? NULL : To1970($aTimetable[2]), 'AnchorDate' => To1970($aTimetable[3]), 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
             };
 
             echo json_encode($aTimetables, JSON_UNESCAPED_UNICODE);
@@ -91,7 +93,7 @@
             for (let loop_aDay of loop_aTimetable[1].Lessons)
                 for (let loop_aLesson of loop_aDay)
                     loop_aLesson[1].Fields.UserFields = new Map(loop_aLesson[1].Fields.UserFields);
-                    
+
             loop_aTimetable[1].Lessons = loop_aTimetable[1].Lessons.map(loop_aDay => new Map(loop_aDay));
         };
         _aTimetable = new Map(_aTimetable);
@@ -101,19 +103,19 @@
             $aChanges = [];
             $aLessonNotes = [];
             $aDayNotes = [];
-        
+
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aChange)
-                array_push($aChanges, ['Date' => (int) $aChange[0], 'Index' => (int) $aChange[1], 'Title' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
+                array_push($aChanges, ['Date' => To1970($aChange[0]), 'Index' => (int) $aChange[1], 'Title' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
 
             if ($AccessLevel > 0)
             {
                 foreach ($SQL->query("SELECT `Title`, `Date`, `Note` FROM `LessonNotes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
-                    array_push($aLessonNotes, ['Title' => $aLesson[0], 'Date' => (int) $aLesson[1], 'Note' => $aLesson[2]]);
+                    array_push($aLessonNotes, ['Title' => $aLesson[0], 'Date' => To1970($aLesson[1]), 'Note' => $aLesson[2]]);
 
                 foreach ($SQL->query("SELECT `Date`, `Note` FROM `DayNotes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
-                    array_push($aDayNotes, ['Date' => (int) $aLesson[0], 'Note' => $aLesson[1]]);
+                    array_push($aDayNotes, ['Date' => To1970($aLesson[0]), 'Note' => $aLesson[1]]);
             };
-        
+
             echo json_encode(['LessonNotes' => $aLessonNotes, 'Changes' => $aChanges, 'DayNotes' => $aDayNotes], JSON_UNESCAPED_UNICODE);
         ?>;
 

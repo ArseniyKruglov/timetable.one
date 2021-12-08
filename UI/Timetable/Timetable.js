@@ -1,6 +1,6 @@
 class Timetable
 {
-    constructor()
+    constructor(aTimetable)
     {
         /*
         function GetDefaultWeekOffset()
@@ -35,7 +35,7 @@ class Timetable
         };
         */
 
-        this.Timetable = _aTimetable;
+        this.Timetable = aTimetable;
 
         this.Body = document.getElementById('Timetable');
         this.Week = document.getElementById('Week');
@@ -109,6 +109,15 @@ class Timetable
 
     //// Logic
 
+    DateToTimetableIndex(iDate)
+    {
+        for (let loop_aTimetable of this.Timetable)
+            if ((loop_aTimetable[1].Begin || Number.MIN_SAFE_INTEGER) <= iDate && iDate <= (loop_aTimetable[1].End || Number.MAX_SAFE_INTEGER))
+                return loop_aTimetable[0];
+
+        return null;
+    }
+
     DateToTimetable(iDate)
     {
         const iTimetable = this.DateToTimetableIndex(iDate);
@@ -119,26 +128,14 @@ class Timetable
         }
         else
         {
-            const oTimetable = _aTimetable.get(iTimetable);
+            const oTimetable = this.Timetable.get(iTimetable);
             return oTimetable.Lessons[(iDate - oTimetable.AnchorDate % oTimetable.Days.length + oTimetable.Days.length) % oTimetable.Days.length];
         }
     }
 
-    DateToTimetableIndex(iDate)
-    {
-        for (let loop_aTimetable of this.Timetable)
-            if ((loop_aTimetable[1]['Begin'] || Number.MIN_SAFE_INTEGER) <= iDate && iDate <= (loop_aTimetable[1]['End'] || Number.MAX_SAFE_INTEGER))
-                return loop_aTimetable[0];
-
-        return null;
-    }
-
     DateToIndexes(iDate, bCanceled)
     {
-        let aLessonIndexes = [];
-
-        for (let loop_aLesson of this.DateToTimetable(iDate))
-            aLessonIndexes.push(loop_aLesson[0]);
+        const aLessonIndexes = [...this.DateToTimetable(iDate).keys()];
 
         for (let loop_oChange of _oWeek.Changes)
             if (loop_oChange.Date === iDate)
@@ -159,7 +156,7 @@ class Timetable
                 }
             };
 
-        aLessonIndexes.sort((a, b) => a - b);
+        aLessonIndexes.sort((A, B) => A - B);
 
         return aLessonIndexes;
     }
@@ -188,6 +185,11 @@ class Timetable
         };
     }
 
+    GetLessonAttributes(iDate, iIndex)
+    {
+        return `href='${location.pathname}?Date=${iDate}&Lesson=${iIndex}' onclick="event.preventDefault(); _Router.Forward('/Lesson?Date=${iDate}&Lesson=${iIndex}');"`;
+    }
+
 
 
     //// Draw
@@ -212,7 +214,7 @@ class Timetable
                 for (let loop_aLesson of mTodayTimetable)
                     HTML +=    `<div class='Lesson'>
                                     <span>${loop_aLesson[0]}</span>
-                                    <a ${Timetable_GetLessonLinkAttributes(iDate, loop_aLesson[0])}>
+                                    <a ${this.GetLessonAttributes(iDate, loop_aLesson[0])}>
                                         <span></span>
                                         <span>${loop_aLesson[1]['Title']}</span>
                                     </a>
@@ -508,7 +510,7 @@ class Timetable
             if (this.WeekPeriod[0] <= iDate && iDate <= this.WeekPeriod[1])
             {
                 const HTML = `<span>${iIndex}</span>
-                              <a ${Timetable_GetLessonLinkAttributes(iDate, iIndex)}>
+                              <a ${this.GetLessonAttributes(iDate, iIndex)}>
                                 <span></span>
                                 <span>${sTitle}</span>
                               </a>

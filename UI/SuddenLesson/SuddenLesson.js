@@ -63,7 +63,7 @@ class SuddenLesson_UI
 
 
         {
-            this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => {this.Overlay.Close();});
+            this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => this.Overlay.Close());
             this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', () =>
             {
                 if (this.Title && this.Date && this.Index)
@@ -90,7 +90,7 @@ class SuddenLesson_UI
                     event.target.previousElementSibling.previousElementSibling.children[1].innerHTML = sError;
                 };
             };
-            this.Overlay.GetUIElement('.Title').addEventListener('input', (event) =>
+            this.Overlay.GetUIElement('.Title').addEventListener('input', event =>
             {
                 this.Title = event.target.value.trim();
     
@@ -99,7 +99,7 @@ class SuddenLesson_UI
                 else
                     event.target.parentElement.parentElement.nextElementSibling.classList.add('Invalid');
            });
-            this.Overlay.GetUIElement('.Calendar').addEventListener('input', (event) =>
+            this.Overlay.GetUIElement('.Calendar').addEventListener('input', event =>
             {
                 this.Date = event.target.value;
     
@@ -116,7 +116,7 @@ class SuddenLesson_UI
                     SetError(false, true, event.target.validationMessage);
                 };
            });
-            this.Overlay.GetUIElement('.Index').addEventListener('input', (event) =>
+            this.Overlay.GetUIElement('.Index').addEventListener('input', event =>
             {
                 this.Index = event.target.value;
     

@@ -46,17 +46,19 @@ function DropDown(eButton, aActions)
             eButton.focus();
             eDropDown.remove();
             removeEventListener('click', Close);
+            removeEventListener('popstate', Close);
             removeEventListener('keydown', Escape);
             removeEventListener('resize', Coordinates);
-        }
+        };
 
         function Escape(Event)
         {
             if (Event.key === 'Escape')
                 Close();
-        }
+        };
 
         addEventListener('click', Close);
+        addEventListener('popstate', Close);
         addEventListener('keydown', Escape);
     }, 0);
 }

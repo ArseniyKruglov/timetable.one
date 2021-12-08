@@ -2,6 +2,8 @@ class Lesson_UI
 {
     constructor(iDate, iIndex, bAnimation = true)
     {
+        window._Lesson_UI = this;
+
         this.Date = iDate;
         this.Index = iIndex;
 
@@ -31,6 +33,7 @@ class Lesson_UI
                 alert('Не найдено');
             };
         };
+        this.Overlay.Callback_Close = () => delete window._Lesson_UI;
         this.Overlay.Animation = bAnimation;
         this.Overlay.Open();
     }
@@ -205,7 +208,7 @@ class Lesson_UI
 
 
             if (this.oInWeek_Changes)
-                _oWeek.Changes.removeWhere({'Date': this.Date, 'Index': this.Index }, true);
+                _oWeek.Changes.removeWhere({ 'Date': this.Date, 'Index': this.Index }, true);
 
             this.oInWeek_Changes = null;
 
@@ -232,7 +235,7 @@ class Lesson_UI
                 {
                     'Date': this.Date,
                     'Index': this.Index,
-                    'Change': sChange,
+                    'Title': sChange,
                     'Place': null,
                     'Educator': null
                 };
@@ -244,7 +247,7 @@ class Lesson_UI
             {
                 'Date': this.Date,
                 'Index': this.Index,
-                'Change': sChange
+                'Title': sChange
             });
         };
 

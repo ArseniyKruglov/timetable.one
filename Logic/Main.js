@@ -15,7 +15,7 @@ document.body.innerHTML =  `<main>
                                         <div id='Timetable'></div>
                                     </div>
                                 </div>
-                                
+
                                 <div id='Week' class='Island'>
                                     <custom-round-button icon='Chevron Left'></custom-round-button>
                                     <button id='Week_Period'></button>
@@ -25,18 +25,18 @@ document.body.innerHTML =  `<main>
 
 
 
-// Information
-
-const _Information = new Information();
-
-
-
 // Timetable
 
-const _Timetable = new Timetable();
+const _Timetable = new Timetable(_aTimetable);
 
 _iMaxTitleLength = 100;
 _iMaxNoteLength = 65535;
+
+
+
+// Information
+
+const _Information = new Information();
 
 
 
@@ -54,23 +54,32 @@ _Router.Route();
     {
         _iToday++;
 
+        if (new Date().getDayOfWeek() === 0)
+        {
+            _Timetable.WeekOffset--;
+        }
+        else
+        {
+            for (let loop_eDay of _Timetable.Body.children)
+                loop_eDay.classList.remove('Today', 'Tomorrow');
 
+            const eToday = _Timetable.DaySelector(_iToday);
+            if (eToday)
+                eToday.parentElement.classList.add('Today');
 
-        for (let loop_eDay of document.getElementById('Timetable').children)
-            loop_eDay.classList.remove('Today', 'Tomorrow');
-
-        const eToday = _Timetable.DateToElement(_iToday);
-        if (eToday)
-            eToday.classList.add('Today');
-
-        const eTomorrow = _Timetable.DateToElement(_iToday + 1);
-        if (eTomorrow)
-            eTomorrow.classList.add('Tomorrow');
+            const eTomorrow = _Timetable.DaySelector(_iToday + 1);
+            if (eTomorrow)
+                eTomorrow.parentElement.classList.add('Tomorrow');
+        };
     }
 
     setTimeout
     (
-        () => {Midnight(); setInterval(Midnight, 24 * 60 * 60 * 1000); },
+        () =>
+        {
+            Midnight();
+            setInterval(Midnight, 24 * 60 * 60 * 1000);
+        },
         new Date().setHours(24, 0, 0, 0) - new Date()
     );
 }

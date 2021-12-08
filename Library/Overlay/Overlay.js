@@ -1,6 +1,6 @@
 _aOverlays = [];
 
-addEventListener('keydown', (Event) =>
+addEventListener('keydown', Event =>
 {
     if (Event.key === 'Tab')
         dispatchEvent(new CustomEvent('focus-change'));
@@ -14,7 +14,7 @@ class Overlay
     {
         _aOverlays.push(this);
 
-        this.Esc_Listener = (Event) =>
+        this.Esc_Listener = Event =>
         {
             if (Event.code == 'Escape')
                 this.Close();
@@ -27,10 +27,7 @@ class Overlay
                     this.Focus();
             }, 0);
         };
-        this.PopState_Listener = () =>
-        {
-            this.Close();
-        };
+        this.PopState_Listener = () => this.Close();
 
         this.Animation = true;
     }
@@ -43,7 +40,7 @@ class Overlay
                                     <div tabindex=0>
                                         <div></div>
                                     </div>`;
-        this.Element.children[0].addEventListener('click', () => {this.Close();});
+        this.Element.children[0].addEventListener('click', () => this.Close());
         
         document.body.appendChild(this.Element);
         this.Callback_Open();
@@ -66,6 +63,9 @@ class Overlay
 
     Remove()
     {
+        if (this.Callback_Close)
+            this.Callback_Close();
+
         this.Element.remove();
         _aOverlays.pop();
 

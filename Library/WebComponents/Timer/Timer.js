@@ -4,7 +4,7 @@ class Timer extends HTMLElement
     {
         this.Time = parseInt(this.getAttribute('time'));
         this.Update();
-        setInterval(() => {this.Update() }, 1000);
+        setInterval(() => this.Update(), 1000);
     }
 
     Update()
