@@ -8,11 +8,9 @@ function Callback($SQL, $POST, $UserID)
     $Title = $POST['Title'];
     $Note = substr($POST['Note'], 0, 65535);
 
-    if ($Note === '')
-        $SQL->query("INSERT INTO `LessonNotes` VALUES ($UserID, '$Date', '$Title', '$Note')
-                        ON DUPLICATE KEY UPDATE `Note` = '$Note'");
-    else
-    $SQL->query("DELETE FROM `LessonNotes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date')");
+    $SQL->query("DELETE FROM `Notes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Title` = '$Title')");
+    if ($Note !== '')
+        $SQL->query("INSERT INTO `Notes` VALUES ($UserID, '$Date', '$Title', '$Note')");
 };
 
 Handler('Callback');

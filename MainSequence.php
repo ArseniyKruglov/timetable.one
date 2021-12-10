@@ -40,7 +40,7 @@
 
             global $Files_JS;
             foreach (glob("$Path*.js") as &$File_JS)
-                if ($File_JS !== 'Logic/Main.js')
+                if ($File_JS !== 'Frontend/Main.js')
                     array_push($Files_JS, $File_JS);
 
             global $Files_CSS;
@@ -71,10 +71,10 @@
 
             $aTimetables = [];
 
-            foreach ($SQL->query("SELECT `TimetableID`, `Begin`, `End`, `AnchorDate`, `Days` FROM `timetables` WHERE `UserID` = $User[0]")->fetch_all() as &$aTimetable)
+            foreach ($SQL->query("SELECT `TimetableID`, `Begin`, `End`, `AnchorDate`, `Days` FROM `Timetables` WHERE `UserID` = $User[0]")->fetch_all() as &$aTimetable)
             {
                 $aLessons = array_fill(0, strlen($aTimetable[4]), []);
-                foreach ($SQL->query("SELECT `DayOfTimetable`, `Index`, `Title`, `Place`, `Educator`, `UserFieldsAI` FROM lessons_timetable WHERE `TimetableID` = $User[0] ORDER BY `DayOfTimetable`, `Index`")->fetch_all() as &$aLesson)
+                foreach ($SQL->query("SELECT `DayOfTimetable`, `Index`, `Title`, `Place`, `Educator`, `UserFieldsAI` FROM `Lessons` WHERE `TimetableID` = $User[0] ORDER BY `DayOfTimetable`, `Index`")->fetch_all() as &$aLesson)
                 {
                     $UserFields = $SQL->query("SELECT `FieldID`, `Text` FROM `Fields` WHERE (`UserID` = $User[0]) AND (`TimetableID` = $aTimetable[0]) AND (`DayOfTimetable` = $aLesson[0]) AND (`Index` = $aLesson[1])")->fetch_all();
                     foreach ($UserFields as &$UserField)
@@ -98,35 +98,31 @@
         };
         _aTimetable = new Map(_aTimetable);
 
-        _oWeek = 
+        _Records = 
         <?
             $aChanges = [];
-            $aLessonNotes = [];
-            $aDayNotes = [];
+            $aNotes = [];
 
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aChange)
                 array_push($aChanges, ['Date' => To1970($aChange[0]), 'Index' => (int) $aChange[1], 'Title' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
 
             if ($AccessLevel > 0)
             {
-                foreach ($SQL->query("SELECT `Title`, `Date`, `Note` FROM `LessonNotes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
-                    array_push($aLessonNotes, ['Title' => $aLesson[0], 'Date' => To1970($aLesson[1]), 'Note' => $aLesson[2]]);
-
-                foreach ($SQL->query("SELECT `Date`, `Note` FROM `DayNotes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
-                    array_push($aDayNotes, ['Date' => To1970($aLesson[0]), 'Note' => $aLesson[1]]);
+                foreach ($SQL->query("SELECT `Title`, `Date`, `Note` FROM `Notes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
+                    array_push($aNotes, ['Title' => $aLesson[0], 'Date' => To1970($aLesson[1]), 'Note' => $aLesson[2]]);
             };
 
-            echo json_encode(['LessonNotes' => $aLessonNotes, 'Changes' => $aChanges, 'DayNotes' => $aDayNotes], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['Notes' => $aNotes, 'Changes' => $aChanges], JSON_UNESCAPED_UNICODE);
         ?>;
 
         const _Alarms = new Alarms(new Map(
         <?
             $aAlarms = [];
             foreach ($SQL->query("SELECT `Index`, `Begin`, `End` FROM `Alarms` WHERE `UserID` = $User[0]")->fetch_all() as &$aAlarm)
-                array_push($aAlarms, [(int) $aAlarm[0], [(int) $aAlarm[1], (int) $aAlarm[2]]]);
+                array_push($aAlarms, [(int) $aAlarm[0], [TimeToInt($aAlarm[1]), TimeToInt($aAlarm[2])]]);
             echo json_encode($aAlarms, JSON_UNESCAPED_UNICODE);
         ?>));
     </script>
 
-    <script src='/Logic/Main.js?<? echo $Time ?>'></script>
+    <script src='/Frontend/Main.js?<? echo $Time ?>'></script>
 </html>

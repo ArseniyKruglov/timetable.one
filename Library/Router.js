@@ -4,6 +4,7 @@ class Router
     {
         this.URL = location.pathname.split('/')[1];
         this.History = [];
+        this.Initial = true;
 
         document.addEventListener('popstate', () => this.Route());
     }
@@ -48,17 +49,21 @@ class Router
             switch (aNewPath[i][0])
             {
                 case 'Lesson':
-                    new Lesson_UI(parseInt(aNewPath[i][1].Date), parseInt(aNewPath[i][1].Lesson));
+                    window._Lesson_UI = new Lesson_UI(parseInt(aNewPath[i][1].Date), parseInt(aNewPath[i][1].Lesson), !this.Initial);
                     break;
 
                 case 'Day':
-                    new Day_UI(parseInt(aNewPath[i][1].Date));
+                    window._Day_UI = new Day_UI(parseInt(aNewPath[i][1].Date), !this.Initial);
                     break;
 
                 case 'Add':
-                    new SuddenLesson_UI(_iToday);       // TO DO: _iToday
+                    new SuddenLesson_UI(_iToday, !this.Initial);       // TO DO: _iToday
                     break;
             };
+
+
+
+        this.Initial = false;
     }
 
 

@@ -260,7 +260,7 @@
         /* Orange */
         #Timetable .Lesson > :nth-child(2) > :first-child
         {
-            color: HSL(39, 100%, 40%);
+            color: var(--Change);
         }
 
         /* Crossed Out */
@@ -277,7 +277,7 @@
         /* Added */
         #Timetable .Lesson.Added *
         {
-            color: Green;
+            color: var(--Sudden);
         }
 
 

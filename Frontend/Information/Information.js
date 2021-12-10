@@ -27,7 +27,7 @@ class Information
                     else
                         this.Warning = true;
 
-                for (let loop_oChange of _oWeek.Changes.selectWhere({ 'Date': iDate }))
+                for (let loop_oChange of _Records.Changes.selectWhere({ 'Date': iDate }))
                     if (loop_oChange.Title === '')
                     {
                         aTimetable.removeWhere({ 'Index': loop_oChange.Index }, true);
@@ -105,7 +105,7 @@ class Information
                                 Сегодня к
                                 ${Time_Format(_Alarms.Get(aTodayTimetable[0].Index)[0])}
                                 на
-                                <a ${_Timetable.GetLessonAttributes(_iToday, aTodayTimetable[0].Index)}>${aTodayTimetable[0].Title}</a>
+                                <a ${_Timetable.LessonAttributes(_iToday, aTodayTimetable[0].Index)}>${aTodayTimetable[0].Title}</a>
                                 ${aTodayTimetable[0].Place ? ` (${aTodayTimetable[0].Place})` : ''},
                                 осталось
                                 ${Timer(_Alarms.Get(aTodayTimetable[0].Index)[0])}
@@ -122,7 +122,7 @@ class Information
                     {
                         HTML +=    `<div>
                                         Сейчас
-                                        <a ${_Timetable.GetLessonAttributes(_iToday, aTodayTimetable[i].Index)}>${aTodayTimetable[i].Title}</a>${aTodayTimetable[i].Place ? ` (${aTodayTimetable[i].Place})` : ''}, 
+                                        <a ${_Timetable.LessonAttributes(_iToday, aTodayTimetable[i].Index)}>${aTodayTimetable[i].Title}</a>${aTodayTimetable[i].Place ? ` (${aTodayTimetable[i].Place})` : ''}, 
                                         до конца
                                         ${Timer(_Alarms.Get(aTodayTimetable[i].Index)[1])}
                                     </div>`;
@@ -132,7 +132,7 @@ class Information
                                             Затем перерыв
                                             ${Difference(_Alarms.Get(aTodayTimetable[i].Index)[1], _Alarms.Get(aTodayTimetable[i + 1].Index)[0])}
                                             и
-                                            <a ${_Timetable.GetLessonAttributes(_iToday, aTodayTimetable[i + 1].Index)}>${aTodayTimetable[i + 1].Title}</a>${aTodayTimetable[i + 1].Place ? ` (${aTodayTimetable[i + 1].Place})` : ''}
+                                            <a ${_Timetable.LessonAttributes(_iToday, aTodayTimetable[i + 1].Index)}>${aTodayTimetable[i + 1].Title}</a>${aTodayTimetable[i + 1].Place ? ` (${aTodayTimetable[i + 1].Place})` : ''}
                                         </div>`;
                         else
                             HTML += `<div>
@@ -152,7 +152,7 @@ class Information
 
                                     <div>
                                         Затем
-                                        <a ${_Timetable.GetLessonAttributes(_iToday, aTodayTimetable[i + 1].Index)}>${aTodayTimetable[i + 1].Title}</a>${aTodayTimetable[i + 1].Place ? ` (${aTodayTimetable[i + 1].Place})` : ''}
+                                        <a ${_Timetable.LessonAttributes(_iToday, aTodayTimetable[i + 1].Index)}>${aTodayTimetable[i + 1].Title}</a>${aTodayTimetable[i + 1].Place ? ` (${aTodayTimetable[i + 1].Place})` : ''}
                                         в
                                         ${Time_Format(_Alarms.Get(aTodayTimetable[i + 1].Index)[0])}
                                     </div>`;
@@ -173,7 +173,7 @@ class Information
                                     Завтра к 
                                     ${Time_Format(_Alarms.Get(aTomorrowTimetable[0].Index, _iToday + 1)[0])}
                                     на
-                                    <a ${_Timetable.GetLessonAttributes(_iToday + 1, aTomorrowTimetable[0].Index)}>${aTomorrowTimetable[0].Title}</a>,
+                                    <a ${_Timetable.LessonAttributes(_iToday + 1, aTomorrowTimetable[0].Index)}>${aTomorrowTimetable[0].Title}</a>,
                                     осталось
                                     ${Timer(_Alarms.Get(aTomorrowTimetable[0].Index, _iToday + 1)[0])}
                                 </div>`;

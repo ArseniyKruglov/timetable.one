@@ -1,6 +1,6 @@
 class SuddenLesson_UI
 {
-    constructor(iDate, bAnimation = true)
+    constructor(iDate, bAnimation)
     {
         this.Title = '';
         this.Date = iDate;
@@ -146,15 +146,7 @@ class SuddenLesson_UI
 
     Send()
     {
-        SendRequest('/PHP/Handlers/SuddenLesson_Constructor.php', {'Date': this.Date, 'Index': this.Index, 'Title': this.Title});
-
-        _oWeek.Changes.push({ 'Date': this.Date, 'Index': this.Index, 'Title': this.Title, 'Place': null, 'Educator': null });
-
-        _Timetable.SetChange(this.Date, this.Index, this.Title);
-
-        _Timetable.UpdateAlarmsPeriod(this.Date);
-
-
+        Lesson_SetChange(this.Date, this.Index, { 'Title': this.Title }, true, true, true, false, null, null);
 
         this.Overlay.Close();
     }

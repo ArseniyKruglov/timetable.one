@@ -20,6 +20,9 @@
 
     --Border: 1px solid var(--Gray20);
     --Shadow: 0 1px 2px 0 RGB(0 0 0 / 17.5%), 0 1px 3px 1px RGB(0 0 0 / 7.5%);
+
+    --Change: HSL(39, 100%, 40%);
+    --Sudden: Green;
 }
 
 body
@@ -49,8 +52,8 @@ body
     --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 5%);
     --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 2.5%);
 
-    --Background00: HSL(var(--Accent-Hue), 1%, 7.5%);
-    --Background01: HSL(var(--Accent-Hue), 1%, 12.5%);
+    --Background00: HSL(var(--Accent-Hue), 1%, 2.5%);
+    --Background01: HSL(var(--Accent-Hue), 1%, 10%);
     --Background02: HSL(var(--Accent-Hue), 1%, 15%);
 
     --Text: #FFFFFF;

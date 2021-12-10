@@ -41,15 +41,17 @@ class Timetable
         this.Week = document.getElementById('Week');
         this.Heights = new Map();
 
+        this.Initial = true;
+
         this.WeekOffset_Default = 0;
-        this.WeekOffset = this.WeekOffset_Default;
 
         {
             const Scale = () =>
             {
-                this.Body_Overflow();
+                this.Heights = new Map();
                 this.Body_Height();
-                this.Body_Scroll();    
+                this.Body_Overflow();
+                this.Body_Scroll();
             };
 
             addEventListener('resize', Scale);
@@ -57,8 +59,7 @@ class Timetable
 
             this.Week.children[0].addEventListener('click', () =>
             {
-                if (this.WeekOffset > -Math.floor(_iToday / 7))
-                    this.WeekOffset = this.WeekOffset - 1;
+                this.WeekOffset--;
             });
 
             this.Week.children[1].addEventListener('click', () =>
@@ -68,8 +69,7 @@ class Timetable
 
             this.Week.children[2].addEventListener('click', () =>
             {
-                if (this.WeekOffset > -Math.floor(_iToday / 7))
-                    this.WeekOffset = this.WeekOffset + 1;
+                this.WeekOffset++;
             });
 
             addEventListener('keydown', Event =>
@@ -89,13 +89,13 @@ class Timetable
 
             addEventListener('swiped-right', () =>
             {
-                if (!Overlays_Opened())
+                if ((_Timetable.Body.scrollWidth === _Timetable.Body.clientWidth) && !Overlays_Opened())
                     this.Week.children[0].click();
             });
 
             addEventListener('swiped-left', () =>
             {
-                if (!Overlays_Opened())
+                if ((_Timetable.Body.scrollWidth === _Timetable.Body.clientWidth) && !Overlays_Opened())
                     this.Week.children[2].click();
             });
         }
@@ -137,21 +137,17 @@ class Timetable
     {
         const aLessonIndexes = [...this.DateToTimetable(iDate).keys()];
 
-        for (let loop_oChange of _oWeek.Changes)
+        for (let loop_oChange of _Records.Changes)
             if (loop_oChange.Date === iDate)
             {
                 if (!bCanceled && loop_oChange.Title === '')
                 {
-                    const iIndex = aLessonIndexes.indexOf(loop_oChange.Index);
-
-                    if (iIndex !== -1)
-                        aLessonIndexes.splice(iIndex, 1);
+                    if (aLessonIndexes.includes(loop_oChange.Index))
+                        aLessonIndexes.splice(aLessonIndexes.indexOf(loop_oChange.Index), 1);
                 }
                 else if (loop_oChange.Title !== null)
                 {
-                    const iIndex = aLessonIndexes.indexOf(loop_oChange.Index);
-
-                    if (iIndex === -1)
+                    if (!aLessonIndexes.includes(loop_oChange.Index))
                         aLessonIndexes.push(loop_oChange.Index);
                 }
             };
@@ -185,7 +181,7 @@ class Timetable
         };
     }
 
-    GetLessonAttributes(iDate, iIndex)
+    LessonAttributes(iDate, iIndex)
     {
         return `href='${location.pathname}?Date=${iDate}&Lesson=${iIndex}' onclick="event.preventDefault(); _Router.Forward('/Lesson?Date=${iDate}&Lesson=${iIndex}');"`;
     }
@@ -202,7 +198,7 @@ class Timetable
         {
             const mTodayTimetable = this.DateToTimetable(iDate);
 
-            if (mTodayTimetable.size > 0)
+            if (mTodayTimetable.size)
             {
                 HTML += `<div class='Day ${(iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '')}'>
                             <a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');">
@@ -214,7 +210,7 @@ class Timetable
                 for (let loop_aLesson of mTodayTimetable)
                     HTML +=    `<div class='Lesson'>
                                     <span>${loop_aLesson[0]}</span>
-                                    <a ${this.GetLessonAttributes(iDate, loop_aLesson[0])}>
+                                    <a ${this.LessonAttributes(iDate, loop_aLesson[0])}>
                                         <span></span>
                                         <span>${loop_aLesson[1]['Title']}</span>
                                     </a>
@@ -273,16 +269,49 @@ class Timetable
         };
     }
 
-    Body_Height(bAnimation)      // TO DO
+    Body_Height(bAnimation)
     {
         const eHeight = this.Body.parentElement.parentElement;
 
         if (document.body.clientWidth >= 600)
         {
-            const eScroll = this.Body.parentElement;
-    
-            eHeight.style.height = '800px';
+            const iBefore_WeekOffset = this.WeekOffset;
+            const iBefore_Height = eHeight.clientHeight - 10;
+            
+            eHeight.style.height = '';
+            eHeight.style.transition = '';
 
+
+
+            this.HeightSearch = true;
+
+            for (let i = iBefore_WeekOffset - 3; i <= iBefore_WeekOffset + 3; i++)
+                if (!this.Heights.has(i))
+                    this.WeekOffset = i;
+            this.WeekOffset = iBefore_WeekOffset;
+
+            this.HeightSearch = false;
+
+
+
+            if (bAnimation)
+            {
+                eHeight.style.height = iBefore_Height + 'px';
+
+                setTimeout(() =>
+                {
+                    eHeight.style.transition = 'height 500ms';
+
+                    setTimeout(() =>
+                    {
+                        eHeight.style.height = (Math.max(this.Heights.get(iBefore_WeekOffset - 3), this.Heights.get(iBefore_WeekOffset - 2), this.Heights.get(iBefore_WeekOffset - 1), this.Heights.get(iBefore_WeekOffset), this.Heights.get(iBefore_WeekOffset + 1), this.Heights.get(iBefore_WeekOffset + 2), this.Heights.get(iBefore_WeekOffset + 3)) + 150) + 'px';
+                    }, 0);
+                }, 0);
+            }
+            else
+            {
+                eHeight.style.height = (Math.max(this.Heights.get(iBefore_WeekOffset - 3), this.Heights.get(iBefore_WeekOffset - 2), this.Heights.get(iBefore_WeekOffset - 1), this.Heights.get(iBefore_WeekOffset), this.Heights.get(iBefore_WeekOffset + 1), this.Heights.get(iBefore_WeekOffset + 2), this.Heights.get(iBefore_WeekOffset + 3)) + 150) + 'px';
+            };
         }
         else
         {
@@ -290,9 +319,98 @@ class Timetable
         };
     }
 
-    Body_Scroll()    // TO DO
+    Body_Scroll(bSmooth)
     {
+        if (this.WeekOffset === 0)
+        {
+            if (document.body.clientWidth >= 600)
+            {
+                const iWeekBeginDate = this.OffsetToPeriod(0)[0];
+                for (let i = new Date().getDayOfWeek(); i < 7; i++)
+                {
+                    const eDay = this.DaySelector(i + iWeekBeginDate);
+                    if (eDay)
+                    {
+                        eDay.scrollIntoView({ inline: 'center', behavior: (bSmooth ? 'smooth' : 'auto') });
+                        break;
+                    };
+                };
+            }
+            else
+            {
+                const eToday = this.DaySelector(_iToday);
+                const eTomorrow = this.DaySelector(_iToday + 1);
+                const iTimetableHeight = this.Body.parentElement.clientHeight;
 
+
+
+                if (eToday === this.Body.firstElementChild)
+                {
+                    this.Body.parentElement.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
+                }
+                else if (eToday === this.Body.lastElementChild)
+                {
+                    this.Body.parentElement.scrollTo({ top: this.Body.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
+                }
+                else
+                {
+                    if (eToday)
+                    {
+                        if (eTomorrow)
+                        {
+                            if (eToday.clientHeight + eTomorrow.clientHeight + 50 <= iTimetableHeight)
+                                eTomorrow.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                            else
+                                eToday.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                        }
+                        else
+                        {
+                            if (eToday.clientHeight + 50 <= iTimetableHeight)
+                                eToday.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                            else
+                                eToday.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                        };
+                    }
+                    else if (eTomorrow)
+                    {
+                        if (eTomorrow.clientHeight + 50 <= iTimetableHeight)
+                            eTomorrow.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                        else
+                            eTomorrow.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+                    }
+                    else
+                    {
+                        const iWeekBeginDate = this.OffsetToPeriod(0)[0];
+                        let bBreak = false;
+                        for (let i = new Date().getDayOfWeek() + 2; i < 7; i++)
+                        {
+                            const eDay = this.DaySelector(i + iWeekBeginDate);
+                            if (eDay)
+                            {
+                                if (eDay.clientHeight + 50 <= iTimetableHeight)
+                                    eDay.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
+                                else
+                                    eDay.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
+
+                                bBreak = true;
+                                break;
+                            };
+                        };
+
+                        if (bBreak === false)
+                            this.Body.parentElement.scrollTo({ top: this.Body.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
+                    };
+                };
+            };
+        }
+        else if (this.WeekOffset > 0)
+        {
+            this.Body.parentElement.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
+        }
+        else if (this.WeekOffset < 0)
+        {
+            this.Body.parentElement.scrollTo({ top: this.Body.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
+        };
     }
 
 
@@ -301,33 +419,13 @@ class Timetable
 
     DaySelector(iDate)
     {
-        return document.querySelector(`.Day [onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');`);
+        return this.Body.querySelector(`.Day [onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');`);
     }
 
     LessonSelector(iDate, iIndex)
     {
-        return document.querySelector(`.Lesson [onclick="event.preventDefault(); _Router.Forward('/Lesson?Date=${iDate}&Lesson=${iIndex}');"]`);
+        return this.Body.querySelector(`.Lesson [onclick="event.preventDefault(); _Router.Forward('/Lesson?Date=${iDate}&Lesson=${iIndex}');"]`);
     }
-
-    DateToElement(iDate)
-    {
-        const eDay = this.DaySelector(iDate);
-
-        if (eDay)
-            return eDay.parentElement;
-        else
-            return null;
-    };
-
-    GetLessonElement(iDate, iIndex)
-    {
-        const eLesson = this.LessonSelector(iDate, iIndex);
-
-        if (eLesson)
-            return eLesson.parentElement;
-        else
-            return null;
-    };
 
     DateToElements(iDate)
     {
@@ -342,14 +440,6 @@ class Timetable
 
 
     // Do
-
-    UpdateAlarmsPeriod(iDate)
-    {
-        const eDay = this.DaySelector(iDate);
-
-        if (eDay)
-            eDay.children[1].innerHTML = this.DateToAlarmsPeriod(iDate);
-    }
 
     FocusLesson(iDate, iIndex)
     {
@@ -390,23 +480,31 @@ class Timetable
 
         this.Body_Draw();
         this.Fill();
+        if (!this.HeightSearch)
+            this.Body_Height(!this.Initial);
         this.Body_Overflow();
-        this.Body_Height();
         this.Body_Scroll();
 
+        this.Heights.set(WeekOffset, this.Body.parentElement.scrollHeight);
+
+        if (!this.HeightSearch)
+        {
+            this.Week.className = `Island ${(WeekOffset === 0) ? 'Current' : ((WeekOffset === 1) ? 'Next' : '')}`;
+
+            const aWeekPeriod = this.WeekPeriod.copy();
+            aWeekPeriod[0] = Time_From1970(aWeekPeriod[0]);
+            aWeekPeriod[1] = Time_From1970(aWeekPeriod[1]);
+
+            const iCurrentYear = new Date().getFullYear();
+            if (aWeekPeriod[0].getFullYear() === iCurrentYear && aWeekPeriod[1].getFullYear() === iCurrentYear)
+                this.Week.children[1].innerHTML = `${Date_Format_Short(aWeekPeriod[0])} – ${Date_Format_Short(aWeekPeriod[1])}`;
+            else
+                this.Week.children[1].innerHTML = `${Date_Format_Short(aWeekPeriod[0], true)} – ${Date_Format_Short(aWeekPeriod[1], true)}`;
+        };
 
 
-        this.Week.className = `Island ${(WeekOffset === 0) ? 'Current' : ((WeekOffset === 1) ? 'Next' : '')}`;
 
-        const aWeekPeriod = this.WeekPeriod.copy();
-        aWeekPeriod[0] = Time_From1970(aWeekPeriod[0]);
-        aWeekPeriod[1] = Time_From1970(aWeekPeriod[1]);
-    
-        const iCurrentYear = new Date().getFullYear();
-        if (aWeekPeriod[0].getFullYear() === iCurrentYear && aWeekPeriod[1].getFullYear() === iCurrentYear)
-            this.Week.children[1].innerHTML = `${Date_Format_Short(aWeekPeriod[0])} – ${Date_Format_Short(aWeekPeriod[1])}`;
-        else
-            this.Week.children[1].innerHTML = `${Date_Format_Short(aWeekPeriod[0], true)} – ${Date_Format_Short(aWeekPeriod[1], true)}`;
+        this.Initial = false;
     }
 
     get WeekOffset()
@@ -431,138 +529,15 @@ class Timetable
 
     Fill()
     {
-        for (let loop_oChange of _oWeek.Changes)
+        for (let loop_oChange of _Records.Changes)
             if (this.WeekPeriod[0] <= loop_oChange.Date && loop_oChange.Date <= this.WeekPeriod[1])
-                this.SetChange(loop_oChange.Date, loop_oChange.Index, loop_oChange.Title);
+                Lesson_SetChange(loop_oChange.Date, loop_oChange.Index, { }, true, false, false, false, null, null);
 
-        for (let loop_oLessonNote of _oWeek.LessonNotes)
-            if (this.WeekPeriod[0] <= loop_oLessonNote.Date && loop_oLessonNote.Date <= this.WeekPeriod[1])
-                this.SetPoint_Lesson(loop_oLessonNote.Date, loop_oLessonNote.Title, true);
-
-        for (let loop_oDayNote of _oWeek.DayNotes)
-            if (this.WeekPeriod[0] <= loop_oDayNote.Date && loop_oDayNote.Date <= this.WeekPeriod[1])
-                this.SetPoint_Day(loop_oDayNote.Date, true);
-    }
-
-    SetPoint_Day(iDate, bPoint)
-    {
-        const eDay = this.DaySelector(iDate);
-
-        if (eDay)
-        {
-            if (bPoint)
-                eDay.parentElement.classList.add('Note');
-            else
-                eDay.parentElement.classList.remove('Note');
-        };
-    }
-
-    SetPoint_Lesson(iDate, sTitle, bPoint)
-    {
-        for (let loop_eLesson of this.DateToElements(iDate))
-        {
-            const loop_sChange = loop_eLesson.children[1].children[0].innerHTML;
-            const loop_sTitle = loop_eLesson.children[1].children[1].innerHTML;
-
-            if ((loop_sChange || loop_sTitle) === sTitle)
-            {
-                if (bPoint)
-                    loop_eLesson.classList.add('Note');
+        for (let loop_oNote of _Records.Notes)
+            if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])
+                if (loop_oNote.Title === null)
+                    Day_SetNote(loop_oNote.Date, true, true, false, false, false, null);
                 else
-                    loop_eLesson.classList.remove('Note');
-            };
-        };
-    }
-
-    SetChange(iDate, iIndex, sTitle)
-    {
-        const eLesson = this.LessonSelector(iDate, iIndex);
-
-        if (eLesson)
-        {
-            if (eLesson.parentElement.classList.contains('Added'))
-            {
-                if (sTitle === '')
-                {
-                    if (eLesson.parentElement.parentElement.parentElement.children[1].children.length === 1)
-                        eLesson.parentElement.parentElement.parentElement.remove();
-                    else
-                        eLesson.parentElement.remove();
-                }
-                else
-                    eLesson.children[1].innerHTML = sTitle;
-            }
-            else
-            {
-                if (sTitle === '')
-                    eLesson.parentElement.classList.add('Canceled');
-                else
-                    eLesson.parentElement.classList.remove('Canceled');
-
-                if (sTitle === eLesson.children[1].innerHTML)
-                    eLesson.children[0].innerHTML = '';
-                else
-                    eLesson.children[0].innerHTML = sTitle;
-            };
-        }
-        else if (sTitle !== '' && sTitle !== null)
-        {
-            if (this.WeekPeriod[0] <= iDate && iDate <= this.WeekPeriod[1])
-            {
-                const HTML = `<span>${iIndex}</span>
-                              <a ${this.GetLessonAttributes(iDate, iIndex)}>
-                                <span></span>
-                                <span>${sTitle}</span>
-                              </a>
-                              <span></span>`;
-    
-                let eDay = this.DaySelector(iDate);
-                if (eDay)
-                {
-                    const eLesson = document.createElement('div');
-                    eLesson.className = 'Lesson Added';
-                    eLesson.innerHTML = HTML;
-    
-                    let eAfter = null;
-                    for (let loop_eLesson of eDay.parentElement.children[1].children)
-                    {
-                        const loop_iIndex = parseInt(loop_eLesson.children[0].innerHTML);
-    
-                        if (loop_iIndex > iIndex)
-                        {
-                            eAfter = loop_eLesson;
-                            break;
-                        };
-                    };
-                    eDay.parentElement.children[1].insertBefore(eLesson, eAfter);
-                }
-                else
-                {
-                    eDay = document.createElement('div');
-                    eDay.className = `Day ${(iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '')} ${_oWeek.DayNotes.selectWhere({'Date': iDate }, true) ? 'Note' : ''}`;
-                    eDay.innerHTML = `<a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');">
-                                        <div>${Date_Format(Time_From1970(iDate))}</div>
-                                        <div class='EmptyHidden'>${this.DateToAlarmsPeriod(iDate)}</div>
-                                      </a>
-    
-                                      <div>
-                                        <div class='Lesson Added'>${HTML}</div>
-                                      </div>`;
-    
-                    let eAfter = null;
-                    for (let loop_eDay of this.Body.children)
-                    {
-                        const loop_iDate = parseInt(loop_eDay.children[0].getAttribute('onclick').replace(/\D/g, ''));
-    
-                        if (loop_iDate > iDate)
-                        {
-                            eAfter = loop_eDay;
-                            break;
-                        };
-                    };
-                    this.Body.insertBefore(eDay, eAfter);
-                };
-            };
-        };
+                    Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false, null);
     }
 }

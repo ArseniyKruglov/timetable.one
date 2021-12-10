@@ -1,0 +1,27 @@
+.Details .Title textarea
+{
+    font-size: 115%;
+    font-weight: 500;
+}
+
+.Lesson.Details .Title textarea::placeholder
+{
+    text-decoration: line-through;
+}
+
+
+
+.Lesson.Details .Change > span
+{
+    color: var(--Change);
+}
+
+.Lesson.Details .Sudden > span
+{
+    color: var(--Sudden);
+}
+
+.Lesson.Details .Sudden > custom-icon
+{
+    --Color: var(--Sudden);
+}

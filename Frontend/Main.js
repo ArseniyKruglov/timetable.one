@@ -7,6 +7,8 @@ const _iLanguage = Language_Get();
 
 // Body
 
+document.querySelector(`meta[name="theme-color"]`).setAttribute('content', getComputedStyle(document.body).backgroundColor);
+
 document.body.innerHTML =  `<main>
                                 <div id='Information' class='Island EmptyHidden'></div>
 
@@ -28,6 +30,8 @@ document.body.innerHTML =  `<main>
 // Timetable
 
 const _Timetable = new Timetable(_aTimetable);
+_Timetable.WeekOffset = _Timetable.WeekOffset_Default;
+delete _aTimetable;
 
 _iMaxTitleLength = 100;
 _iMaxNoteLength = 65535;
