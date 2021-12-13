@@ -531,13 +531,14 @@ class Timetable
     {
         for (let loop_oChange of _Records.Changes)
             if (this.WeekPeriod[0] <= loop_oChange.Date && loop_oChange.Date <= this.WeekPeriod[1])
-                Lesson_SetChange(loop_oChange.Date, loop_oChange.Index, { }, true, false, false, false, null, null);
+                if (loop_oChange.Title !== null)
+                    Lesson_SetChange(loop_oChange.Date, loop_oChange.Index, { 'Title': loop_oChange.Title }, true, false, false, false);
 
         for (let loop_oNote of _Records.Notes)
             if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])
                 if (loop_oNote.Title === null)
-                    Day_SetNote(loop_oNote.Date, true, true, false, false, false, null);
+                    Day_SetNote(loop_oNote.Date, true, true, false, false, false);
                 else
-                    Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false, null);
+                    Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false);
     }
 }

@@ -13,6 +13,7 @@ class SuddenLesson_UI
             this.Draw();
             this.Overlay.Link = '/' + location.pathname.split('/')[2] + location.search + `/Add`;
         };
+        this.Overlay.Callback_Close = () => delete window._Sudden_UI;
         this.Overlay.Animation = bAnimation;
         this.Overlay.Open();
     }
@@ -28,7 +29,7 @@ class SuddenLesson_UI
                         <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
                         <span><custom-round-button icon='Done'</custom-round-button></span>
                     </div>
-        
+
                     <div>
                         <custom-textarea placeholder='${['Title', 'Название'][_iLanguage]}' class='Title' maxlength=${_iMaxTitleLength} required></custom-textarea>
                         <div class='Strict Invalid Caution Top'>
@@ -47,7 +48,7 @@ class SuddenLesson_UI
                             <custom-icon icon='Calendar'></custom-icon>
                             <input type=date min='1970-01-01' value='${Time_From1970(this.Date).toISOString().slice(0, 10)}' class='Calendar' required placeholder='${['Date', 'Дата'][_iLanguage]}'>
                         </div>
-                        
+
                         <div>
                             <div></div>
                             <div class='Caution Bottom'>
@@ -71,7 +72,7 @@ class SuddenLesson_UI
                 else
                     this.Overlay.Body.classList.add('Strict');
            });
-            
+
             let SetError = (bValid, bStrict, sError) =>
             {
                 if (bValid)
@@ -81,19 +82,19 @@ class SuddenLesson_UI
                 else
                 {
                     event.target.previousElementSibling.previousElementSibling.classList.add('Invalid');
-    
+
                     if (bStrict === true)
                         event.target.previousElementSibling.previousElementSibling.classList.add('Strict');
                     else
                         event.target.previousElementSibling.previousElementSibling.classList.remove('Strict');
-                
+
                     event.target.previousElementSibling.previousElementSibling.children[1].innerHTML = sError;
                 };
             };
             this.Overlay.GetUIElement('.Title').addEventListener('input', event =>
             {
                 this.Title = event.target.value.trim();
-    
+
                 if (this.Title)
                     event.target.parentElement.parentElement.nextElementSibling.classList.remove('Invalid');
                 else
@@ -102,13 +103,13 @@ class SuddenLesson_UI
             this.Overlay.GetUIElement('.Calendar').addEventListener('input', event =>
             {
                 this.Date = event.target.value;
-    
+
                 this.Overlay.GetUIElement('.Index').dispatchEvent(new Event('input'));
-    
+
                 if (this.Date)
                 {
                     this.Date = new Date(this.Date).to1970();
-    
+
                     SetError(true);
                 }
                 else
@@ -119,12 +120,12 @@ class SuddenLesson_UI
             this.Overlay.GetUIElement('.Index').addEventListener('input', event =>
             {
                 this.Index = event.target.value;
-    
+
                 event.target.setCustomValidity('');
                 if (event.target.checkValidity())
                 {
                     this.Index = parseInt(this.Index);
-    
+
                     if (this.Overlay.GetUIElement('.Calendar').value)
                         if (_Timetable.DateToIndexes(new Date(this.Overlay.GetUIElement('.Calendar').value).to1970(), true).includes(this.Index))
                         {
@@ -132,7 +133,7 @@ class SuddenLesson_UI
                             event.target.setCustomValidity([`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
                             SetError(false, false, [`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
                         };
-    
+
                     if (event.target.checkValidity())
                         SetError(true);
                     else
@@ -146,7 +147,7 @@ class SuddenLesson_UI
 
     Send()
     {
-        Lesson_SetChange(this.Date, this.Index, { 'Title': this.Title }, true, true, true, false, null, null);
+        Lesson_SetChange(this.Date, this.Index, { 'Title': this.Title }, true, true, true, false);
 
         this.Overlay.Close();
     }

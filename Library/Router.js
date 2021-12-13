@@ -57,7 +57,7 @@ class Router
                     break;
 
                 case 'Add':
-                    new SuddenLesson_UI(_iToday, !this.Initial);       // TO DO: _iToday
+                    window._Sudden_UI = new SuddenLesson_UI(_iToday, !this.Initial);       // TO DO: _iToday
                     break;
             };
 

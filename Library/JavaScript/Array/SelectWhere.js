@@ -11,9 +11,9 @@ Array.prototype.selectWhere = function(oObject, bSingle)
                     bSelect = false;
                     break;
                 };
-            
+
             if (bSelect === true)
-                    return this[i];
+                return this[i];
         };
     }
     else
@@ -29,7 +29,7 @@ Array.prototype.selectWhere = function(oObject, bSingle)
                     bSelect = false;
                     break;
                 };
-            
+
             if (bSelect === true)
                 aArray.push(this[i]);
         };

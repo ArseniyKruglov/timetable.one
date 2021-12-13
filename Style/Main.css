@@ -9,4 +9,5 @@
     color: var(--Text);
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.005em;
 }

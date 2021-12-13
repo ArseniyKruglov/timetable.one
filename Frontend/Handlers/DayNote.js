@@ -28,6 +28,15 @@ function Day_SetNote(iDate, sNote, bDraw, bSend, bRecord, bInsert, oInRecords)
 
             _Records.Notes.removeWhere({ 'Date': iDate, 'Title': null }, true);
         };
+
+        if (bSend)
+        {
+            SendRequest('/PHP/Handlers/Day_Note.php',
+            {
+                'Date': iDate,
+                'Note': sNote
+            });
+        };
     };
 
     if (bDraw)
@@ -39,15 +48,6 @@ function Day_SetNote(iDate, sNote, bDraw, bSend, bRecord, bInsert, oInRecords)
                 eDay.parentElement.classList.add('Note');
             else
                 eDay.parentElement.classList.remove('Note');
-    };
-
-    if (bSend)
-    {
-        SendRequest('/PHP/Handlers/Day_Note.php',
-        {
-            'Date': iDate,
-            'Note': sNote
-        });
     };
 
     if (bInsert)

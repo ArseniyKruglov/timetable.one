@@ -33,9 +33,6 @@ const _Timetable = new Timetable(_aTimetable);
 _Timetable.WeekOffset = _Timetable.WeekOffset_Default;
 delete _aTimetable;
 
-_iMaxTitleLength = 100;
-_iMaxNoteLength = 65535;
-
 
 
 // Information

@@ -28,6 +28,16 @@ function Lesson_SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oI
 
             _Records.Notes.removeWhere({ 'Date': iDate, 'Title': sTitle }, true);
         };
+
+        if (bSend)
+        {
+            SendRequest('/PHP/Handlers/Lesson_Note.php',
+            {
+                'Date': iDate,
+                'Title': sTitle,
+                'Note': sNote
+            });
+        };
     };
 
     if (bDraw)
@@ -48,16 +58,6 @@ function Lesson_SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oI
                         loop_eLesson.classList.remove('Note');
                 };
             };
-    };
-
-    if (bSend)
-    {
-        SendRequest('/PHP/Handlers/Lesson_Note.php',
-        {
-            'Date': iDate,
-            'Title': sTitle,
-            'Note': sNote
-        });
     };
 
     if (bInsert)

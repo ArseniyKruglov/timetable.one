@@ -27,7 +27,12 @@
         <meta name='msapplication-TileImage' content='/Style/Icons/ms-icon-144x144.png'>
         <meta name='theme-color' content='#F1F2F3'>
 
-        <? 
+        <?
+        include 'PHP/Timestamp.php';
+        include 'PHP/Constants.php';
+
+
+
         $Time = time();
 
         $Files_JS = [];
@@ -64,11 +69,11 @@
 
     <script>
         _iAccessLevel = <? echo $AccessLevel ?>;
+        _iMaxTitleLength = <? echo $MaxTitleLength ?>;
+        _iMaxNoteLength = <? echo $MaxNoteLength ?>;
 
         _aTimetable = 
         <?
-            include 'PHP/Timestamp.php';
-
             $aTimetables = [];
 
             foreach ($SQL->query("SELECT `TimetableID`, `Begin`, `End`, `AnchorDate`, `Days` FROM `Timetables` WHERE `UserID` = $User[0]")->fetch_all() as &$aTimetable)
@@ -104,7 +109,22 @@
             $aNotes = [];
 
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aChange)
-                array_push($aChanges, ['Date' => To1970($aChange[0]), 'Index' => (int) $aChange[1], 'Title' => $aChange[2], 'Place' => $aChange[3], 'Educator' => $aChange[4]]);
+            {
+                $Change = ['Date' => To1970($aChange[0]), 'Index' => (int) $aChange[1]];
+
+                if ($aChange[2] !== null)
+                    $Change['Title'] = $aChange[2];
+
+                if ($aChange[3] !== null)
+                    $Change['Place'] = $aChange[3];
+
+                if ($aChange[4] !== null)
+                    $Change['Educator'] = $aChange[4];
+
+
+
+                array_push($aChanges, $Change);
+            };
 
             if ($AccessLevel > 0)
             {

@@ -44,33 +44,6 @@ class Lesson_UI
         this.Overlay.Container.className = 'Island Overlay_Rectangular DetailsContainer';
         this.Overlay.Body.className = 'Lesson Details';
 
-        const aAlarms = _Alarms.Get(this.Index, this.Date);
-
-        const aFilelds =
-        [
-            {
-                'Icon': 'Place',
-                'Default': (this.oInTimetable ? this.oInTimetable.Fields.Place : null),
-                'Change': (this.oInRecords_Change ? this.oInRecords_Change.Place : null)
-            },
-            {
-                'Icon': 'Educator',
-                'Default': (this.oInTimetable ? this.oInTimetable.Fields.Educator : null),
-                'Change': (this.oInRecords_Change ? this.oInRecords_Change.Educator : null)
-            }
-        ];
-
-        if (this.oInTimetable && this.oInTimetable.UserFields)
-            for (let loop_aUserField of this.oInTimetable.UserFields)
-                aFilelds.push(
-                {
-                    'Icon': 'Circle',
-                    'Default': loop_aUserField[1],
-                    'Change': null
-                });
-
-
-
         let HTML = `<div class='Header'>
                         <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
                         <span><custom-round-button icon='More'></custom-round-button></span>
@@ -79,30 +52,8 @@ class Lesson_UI
                     <custom-textarea class='Title' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength}>${this.IsCanceled ? '' : this.Title}</custom-textarea>
 
                     <div class='Info'>
-                        <div class='Calendar'>
-                            <custom-icon icon='Calendar'></custom-icon>
-                            <span>${Date_Format(Time_From1970(this.Date))}</span>
-                        </div>
-
-                    ${
-                        aAlarms ? 
-                        `<div class='Alarms'>
-                            <custom-icon icon='Alarm'></custom-icon>
-                            <span>${Time_Format(aAlarms[0])} – ${Time_Format(aAlarms[1])}</span>
-                        </div>`
-                        : ''
-                    }`;
-
-        for (let loop_oField of aFilelds)
-            if (loop_oField.Change || loop_oField.Default)
-                HTML += `<div class='${loop_oField.Change ? (loop_oField.Default ? 'Change' : 'Sudden') : ''}'>
-                            <custom-icon icon='${loop_oField.Icon}'></custom-icon>
-                            <span>
-                                ${loop_oField.Change || loop_oField.Default}
-                            </span>
-                         </div>`
-
-        HTML +=     `</div>
+                        ${this.GetInfoIHTML()}
+                    </div>
 
                     <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength}>${this.Note}</custom-textarea>`;
 
@@ -171,9 +122,64 @@ class Lesson_UI
 
 
 
+    GetInfoIHTML()
+    {
+        const aAlarms = _Alarms.Get(this.Index, this.Date);
+
+        const aFilelds =
+        [
+            {
+                'Icon': 'Place',
+                'Default': (this.oInTimetable ? this.oInTimetable.Fields.Place : null),
+                'Change': (this.oInRecords_Change ? this.oInRecords_Change.Place : null)
+            },
+            {
+                'Icon': 'Educator',
+                'Default': (this.oInTimetable ? this.oInTimetable.Fields.Educator : null),
+                'Change': (this.oInRecords_Change ? this.oInRecords_Change.Educator : null)
+            }
+        ];
+
+        if (this.oInTimetable && this.oInTimetable.UserFields)
+            for (let loop_aUserField of this.oInTimetable.UserFields)
+                aFilelds.push(
+                {
+                    'Icon': 'Circle',
+                    'Default': loop_aUserField[1],
+                    'Change': null
+                });
+
+
+
+        let HTML = `<div class='Calendar'>
+                        <custom-icon icon='Calendar'></custom-icon>
+                        <span>${Date_Format(Time_From1970(this.Date))}</span>
+                    </div>
+
+                ${
+                    aAlarms ? 
+                    `<div class='Alarms'>
+                        <custom-icon icon='Alarm'></custom-icon>
+                        <span>${Time_Format(aAlarms[0])} – ${Time_Format(aAlarms[1])}</span>
+                    </div>`
+                    : ''
+                }`;
+
+        for (let loop_oField of aFilelds)
+            if (loop_oField.Change || loop_oField.Default)
+                HTML += `<div class='${loop_oField.Change ? (loop_oField.Default ? 'Change' : 'Sudden') : ''}'>
+                            <custom-icon icon='${loop_oField.Icon}'></custom-icon>
+                            <span>
+                                ${loop_oField.Change || loop_oField.Default}
+                            </span>
+                         </div>`;
+
+        return HTML;
+    }
+
     set Title(sChange)
     {
-        this.oInRecords_Change = Lesson_SetChange(this.Date, this.Index, { 'Title': sChange.trim() }, true, true, true, false, this.oInRecords_Change, this.OriginalTitle);
+        Lesson_SetChange(this.Date, this.Index, { 'Title': sChange.trim() }, true, true, true, false, this.oInRecords_Change, this.OriginalTitle);
     }
 
 

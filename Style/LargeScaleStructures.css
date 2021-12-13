@@ -20,7 +20,7 @@ body
     {
         body
         {
-            background: linear-gradient(#FFFFFF, 5%, var(--Background00));
+            background: linear-gradient(#FFFFFF, 25%, var(--Background00));
         }
     }
 }
