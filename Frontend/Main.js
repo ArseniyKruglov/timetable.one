@@ -7,7 +7,7 @@ const _iLanguage = Language_Get();
 
 // Body
 
-document.querySelector(`meta[name="theme-color"]`).setAttribute('content', getComputedStyle(document.body).backgroundColor);
+document.head.querySelector(`meta[name="theme-color"]`).setAttribute('content', getComputedStyle(document.body).backgroundColor);
 
 document.body.innerHTML =  `<main>
                                 <div id='Information' class='Island EmptyHidden'></div>

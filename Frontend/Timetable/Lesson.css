@@ -1,0 +1,79 @@
+#Timetable .Lesson
+{
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    width: fit-content;
+    width: -moz-fit-content;
+    gap: 10px;
+    line-height: 100%;
+}
+
+#Timetable .Lesson.Focused
+{
+    border-radius: 5px;
+    padding: 5px;
+    margin: -5px;
+    background-color: HSLA(var(--Accent-Hue), 100%, 30%, 7.5%);
+}
+
+
+
+#Timetable .Lesson > :first-child
+{
+    display: flex;
+    justify-content: center;
+    width: 15px;
+    white-space: nowrap;
+    height: 1em;
+    opacity: var(--Gray70-Opacity);
+}
+
+
+
+#Timetable .Lesson > :nth-child(2)
+{
+    text-align: left;
+    word-break: break-word;
+    font-weight: 500;
+}
+
+
+
+#Timetable .Lesson::after
+{
+    content: '•';
+}
+
+#Timetable .Lesson:not(.Note)::after
+{
+    opacity: 0%;
+}
+
+
+
+
+
+#Timetable .Lesson.Change > :nth-child(2) > :first-child
+{
+    color: var(--Change);
+}
+
+
+
+#Timetable .Lesson.Canceled
+{
+    opacity: 50%;
+}
+
+#Timetable .Lesson.Canceled > :nth-child(2) > *
+{
+    text-decoration: line-through;
+}
+
+
+
+#Timetable .Lesson.Sudden *
+{
+    color: var(--Sudden);
+}

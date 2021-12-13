@@ -15,7 +15,7 @@ if ($User->num_rows === 1)
     else if ($User[3] === $URL)
         $AccessLevel = 0;
 
-    include 'MainSequence.php';
+    include 'Main.php';
 }
 else
 {

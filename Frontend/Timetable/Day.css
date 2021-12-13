@@ -1,0 +1,47 @@
+#Timetable .Day > :first-child
+{
+    text-align: left;
+}
+
+#Timetable .Day > :first-child > :first-child
+{
+    font-size: 24px;
+    font-weight: 700;
+}
+
+
+#Timetable .Day > :first-child > :last-child
+{
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: -2.5px;
+}
+
+
+
+#Timetable .Day:not(.Today):not(.Tomorrow) > :first-child
+{
+    opacity: 65%;
+}
+
+#Timetable .Day.Today > :first-child > *
+{
+    color: var(--Main);
+}
+
+#Timetable .Day.Tomorrow > :first-child > *
+{
+    color: var(--Secondary);
+}
+
+
+
+#Timetable .Day > :first-child > :first-child::after
+{
+    content: ' •';
+}
+
+#Timetable .Day:not(.Note) > :first-child > :first-child::after
+{
+    opacity: 0%;
+}

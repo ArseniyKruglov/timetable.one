@@ -127,10 +127,17 @@
             };
 
             if ($AccessLevel > 0)
-            {
                 foreach ($SQL->query("SELECT `Title`, `Date`, `Note` FROM `Notes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
-                    array_push($aNotes, ['Title' => $aLesson[0], 'Date' => To1970($aLesson[1]), 'Note' => $aLesson[2]]);
-            };
+                {
+                    $Note = ['Date' => To1970($aLesson[1]), 'Note' => $aLesson[2]];
+
+                    if ($aLesson[0] !== null)
+                        $Note['Title'] = $aLesson[0];
+
+
+
+                    array_push($aNotes, $Note);
+                };
 
             echo json_encode(['Notes' => $aNotes, 'Changes' => $aChanges], JSON_UNESCAPED_UNICODE);
         ?>;

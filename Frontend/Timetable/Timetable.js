@@ -167,7 +167,7 @@ class Timetable
             {
                 const aBegin = _Alarms.Get(Math.min(...aLessonIndexes), iDate);
                 const aEnd = _Alarms.Get(Math.max(...aLessonIndexes), iDate);
-                
+
                 return `${aBegin ? Time_Format(aBegin[0]) : '?'} – ${aEnd ? Time_Format(aEnd[1]) : '?'}`;
             }
             else
@@ -212,15 +212,14 @@ class Timetable
                                     <span>${loop_aLesson[0]}</span>
                                     <a ${this.LessonAttributes(iDate, loop_aLesson[0])}>
                                         <span></span>
-                                        <span>${loop_aLesson[1]['Title']}</span>
+                                        <span>${loop_aLesson[1].Title}</span>
                                     </a>
-                                    <span></span>
                                 </div>`;
                 HTML +=   `</div>
                         </div>`;
             };
         };
-    
+
         this.Body.innerHTML = HTML;
     }
 
@@ -250,7 +249,7 @@ class Timetable
         else
         {
             SetGrid(2);
-    
+
             let oOverflow = GetOverflow();
             if (oOverflow.Width)
             {
@@ -259,7 +258,7 @@ class Timetable
             else if (oOverflow.Body_Height)
             {
                 SetGrid(null, 2);
-    
+
                 oOverflow = GetOverflow();
                 if (oOverflow.Width)
                     SetGrid(2);
@@ -277,7 +276,7 @@ class Timetable
         {
             const iBefore_WeekOffset = this.WeekOffset;
             const iBefore_Height = eHeight.clientHeight - 10;
-            
+
             eHeight.style.height = '';
             eHeight.style.transition = '';
 
@@ -427,16 +426,6 @@ class Timetable
         return this.Body.querySelector(`.Lesson [onclick="event.preventDefault(); _Router.Forward('/Lesson?Date=${iDate}&Lesson=${iIndex}');"]`);
     }
 
-    DateToElements(iDate)
-    {
-        const eDay = this.DaySelector(iDate);
-
-        if (eDay)
-            return eDay.parentElement.children[1].children;
-        else
-            return [];
-    }
-
 
 
     // Do
@@ -531,14 +520,15 @@ class Timetable
     {
         for (let loop_oChange of _Records.Changes)
             if (this.WeekPeriod[0] <= loop_oChange.Date && loop_oChange.Date <= this.WeekPeriod[1])
-                if (loop_oChange.Title !== null)
+                if ('Title' in loop_oChange)
                     Lesson_SetChange(loop_oChange.Date, loop_oChange.Index, { 'Title': loop_oChange.Title }, true, false, false, false);
 
-        for (let loop_oNote of _Records.Notes)
-            if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])
-                if (loop_oNote.Title === null)
-                    Day_SetNote(loop_oNote.Date, true, true, false, false, false);
-                else
-                    Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false);
+        if (!this.HeightSearch)
+            for (let loop_oNote of _Records.Notes)
+                if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])
+                    if ('Title' in loop_oNote)
+                        Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false);
+                    else
+                        Day_SetNote(loop_oNote.Date, true, true, false, false, false);
     }
 }
