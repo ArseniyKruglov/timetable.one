@@ -46,18 +46,11 @@ function Lesson_SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oI
 
         if (eDay)
             for (let loop_eLesson of eDay.parentElement.children[1].children)
-            {
-                const loop_sChange = loop_eLesson.children[1].children[0].innerHTML;
-                const loop_sTitle = loop_eLesson.children[1].children[1].innerHTML;
-
-                if ((loop_sChange || loop_sTitle) === sTitle)
-                {
+                if (loop_eLesson.children[1].innerHTML === sTitle)
                     if (sNote)
                         loop_eLesson.classList.add('Note');
                     else
                         loop_eLesson.classList.remove('Note');
-                };
-            };
     };
 
     if (bInsert)

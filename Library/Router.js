@@ -6,7 +6,7 @@ class Router
         this.History = [];
         this.Initial = true;
 
-        document.addEventListener('popstate', () => this.Route());
+        addEventListener('popstate', () => this.Route());
     }
 
     Route()
@@ -14,7 +14,7 @@ class Router
         let aPath = location.pathname + location.search;
         aPath = [aPath, aPath];
 
-        aPath[0] = aPath[0].replace(`/${this.URL}/`, '');
+        aPath[0] = aPath[0].slice(this.URL.length + 2);
 
         aPath[1] = aPath[1].split('/');
         aPath[1] = aPath[1].slice(2);
@@ -43,7 +43,6 @@ class Router
 
                 break;
             };
-
 
         for ( ; i < aNewPath.length; i++)
             switch (aNewPath[i][0])

@@ -8,6 +8,6 @@ function Language_RussianNumberDeclension(i)
 
     if (2 <= i % 10 && i % 10 <= 4)
         return 1;
-        
+
     return 2;
 }

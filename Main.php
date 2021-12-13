@@ -37,6 +37,7 @@
 
         $Files_JS = [];
         $Files_CSS = [];
+        $Main = 'Frontend/Main.js';
 
         function GetFiles($Path)
         {
@@ -44,8 +45,9 @@
                 GetFiles(str_replace((__DIR__ . '/'), '', $Folder) . '/');
 
             global $Files_JS;
+            global $Main;
             foreach (glob("$Path*.js") as &$File_JS)
-                if ($File_JS !== 'Frontend/Main.js')
+                if ($File_JS !== $Main)
                     array_push($Files_JS, $File_JS);
 
             global $Files_CSS;
@@ -151,5 +153,5 @@
         ?>));
     </script>
 
-    <script src='/Frontend/Main.js?<? echo $Time ?>'></script>
+    <script src='<? echo '/' . $Main . '?' . $Time ?>'></script>
 </html>

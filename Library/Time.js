@@ -47,5 +47,5 @@ function Time_Format(tDate)
 
 function Date_ToWeek(iDate)
 {
-    return Math.floor(((new Date(0).to1970() + 3) + iDate) / 7);    
+    return Math.floor(((new Date(0).to1970() + 3) + iDate) / 7);
 }

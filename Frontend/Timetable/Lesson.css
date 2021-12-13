@@ -43,6 +43,8 @@
 #Timetable .Lesson::after
 {
     content: '•';
+    margin-left: -3px;
+    font-weight: 500;
 }
 
 #Timetable .Lesson:not(.Note)::after
@@ -54,7 +56,7 @@
 
 
 
-#Timetable .Lesson.Change > :nth-child(2) > :first-child
+#Timetable .Lesson.Change > :nth-child(2)
 {
     color: var(--Change);
 }
@@ -66,7 +68,7 @@
     opacity: 50%;
 }
 
-#Timetable .Lesson.Canceled > :nth-child(2) > *
+#Timetable .Lesson.Canceled > :nth-child(2)
 {
     text-decoration: line-through;
 }

@@ -4,6 +4,6 @@ function Language_Get()
 
     if (sLanguage.includes('RU') || sLanguage.includes('UA') || sLanguage.includes('BE') || sLanguage.includes('KK'))
         return 1;
-    
+
     return 0;
 }

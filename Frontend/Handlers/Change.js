@@ -14,33 +14,43 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
     let oInRecords_Note;
     if (oChange.hasOwnProperty('Title'))
-        oInRecords_Note = _Records.Notes.selectWhere({'Date': iDate, 'Title': (oChange.Title || sOriginalTitle) }, true) || null;
+        oInRecords_Note = _Records.Notes.selectWhere({ 'Date': iDate, 'Title': (oChange.Title || sOriginalTitle) }, true) || null;
 
 
 
     if (bRecord)
     {
+        function CleanUp(oChange)
+        {
+            for (let loop_sProperty in oChange)
+            {
+                if (loop_sProperty === 'Title')
+                {
+                    if ((sOriginalTitle === null) ? (oChange.Title === '') : (oChange.Title === sOriginalTitle))
+                        delete oChange[loop_sProperty];
+                }
+                else if (oChange[loop_sProperty] === null)
+                {
+                    delete oChange[loop_sProperty];
+                };
+            };
+
+            if (Object.keys(oInRecords_Change).length === 2)
+                return null;
+            else
+                return oChange;
+        }
+
+
         if (oInRecords_Change)
         {
             for (let loop_sProperty in oChange)
                 oInRecords_Change[loop_sProperty] = oChange[loop_sProperty];
+            oInRecords_Change = CleanUp(oInRecords_Change);
 
 
 
-            if (((sOriginalTitle === null) ? (oInRecords_Change.Title === '') : (oInRecords_Change.Title === sOriginalTitle)) && oInRecords_Change.Place === null && oInRecords_Change.Educator === null)
-            {
-                oInRecords_Change = null;
-
-                _Records.Changes.removeWhere({ 'Date': iDate, 'Index': iIndex }, true);
-
-                if (bSend)
-                    SendRequest('/PHP/Handlers/Lesson_Remove.php',
-                    {
-                        'Date': iDate,
-                        'Index': iIndex
-                    });
-            }
-            else
+            if (oInRecords_Change)
             {
                 if (bSend)
                 {
@@ -55,6 +65,17 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
                     SendRequest('/PHP/Handlers/Lesson_Change.php', oSend);
                 };
+            }
+            else
+            {
+                _Records.Changes.removeWhere({ 'Date': iDate, 'Index': iIndex }, true);
+
+                if (bSend)
+                    SendRequest('/PHP/Handlers/Lesson_Remove.php',
+                    {
+                        'Date': iDate,
+                        'Index': iIndex
+                    });
             };
         }
         else
@@ -62,28 +83,18 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
             oInRecords_Change =
             {
                 'Date': iDate,
-                'Index': iIndex,
-                'Title': oChange.Title || null,
-                'Place': oChange.Place || null,
-                'Educator': oChange.Educator || null
+                'Index': iIndex
             };
 
-            _Records.Changes.push(oInRecords_Change);
+            for (let loop_sProperty in oChange)
+                oInRecords_Change[loop_sProperty] = oChange[loop_sProperty];
+            oInRecords_Change = CleanUp(oInRecords_Change);
 
-
-
-            if (bSend)
+            if (oInRecords_Change)
             {
-                const oSend =
-                {
-                    'Date': iDate,
-                    'Index': iIndex
-                };
+                _Records.Changes.push(oInRecords_Change);
 
-                for (let loop_sProperty in oChange)
-                    oSend[loop_sProperty] = oChange[loop_sProperty];
-
-                SendRequest('/PHP/Handlers/Lesson_Change.php', oSend);
+                SendRequest('/PHP/Handlers/Lesson_Change.php', oInRecords_Change);
             };
         };
 
@@ -128,15 +139,11 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
 
             if (window._Sudden_UI)
-            {
-
-            };
-
-
-
-            if (oChange.hasOwnProperty('Place'))
-                _Information.Update(iDate);
+                _Sudden_UI.Overlay.GetUIElement('.Index').dispatchEvent(new Event('input'));
         };
+
+        if (oChange.hasOwnProperty('Title') || oChange.hasOwnProperty('Place'))
+            _Information.Update(iDate);
 
         if (oChange.hasOwnProperty('Place') || oChange.hasOwnProperty('Educator'))
             if (window._Lesson_UI)
@@ -152,7 +159,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
             if (eLesson)
             {
-                if (eLesson.parentElement.classList.contains('Added'))
+                if (eLesson.parentElement.classList.contains('Sudden'))
                 {
                     if (!oInRecords_Change)
                     {
@@ -163,38 +170,44 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     }
                     else
                     {
-                        eLesson.children[1].innerHTML = oChange.Title;
+                        eLesson.innerHTML = oChange.Title;
                     };
                 }
                 else
                 {
-                    if (oInRecords_Change ? (oInRecords_Change.Title  === '') : false)
-                        eLesson.parentElement.classList.add('Canceled');
-                    else
-                        eLesson.parentElement.classList.remove('Canceled');
+                    eLesson.parentElement.classList.remove('Canceled', 'Change');
 
-                    if (oInRecords_Change && 'Title' in oInRecords_Change ? (oInRecords_Change.Title === sOriginalTitle) : true)
-                        eLesson.children[0].innerHTML = '';
+                    if (oInRecords_Change && 'Title' in oInRecords_Change)
+                    {
+                        if (oInRecords_Change.Title === '')
+                        {
+                            eLesson.innerHTML = '';
+                            eLesson.parentElement.classList.add('Canceled');
+                        }
+                        else
+                        {
+                            eLesson.innerHTML = oInRecords_Change.Title;
+                            eLesson.parentElement.classList.add('Change');
+                        };
+                    }
                     else
-                        eLesson.children[0].innerHTML = oInRecords_Change.Title;
+                    {
+                        eLesson.innerHTML = sOriginalTitle;
+                    };
                 };
             }
-            else if (oInRecords_Change && oInRecords_Change.Title !== '' && oInRecords_Change.Title !== null)
+            else if (oInRecords_Change && 'Title' in oInRecords_Change && oInRecords_Change.Title !== '')
             {
                 if (_Timetable.WeekPeriod[0] <= iDate && iDate <= _Timetable.WeekPeriod[1])
                 {
                     const HTML = `<span>${iIndex}</span>
-                                  <a ${_Timetable.LessonAttributes(iDate, iIndex)}>
-                                    <span></span>
-                                    <span>${oInRecords_Change.Title}</span>
-                                  </a>
-                                  <span></span>`;
+                                  <a ${_Timetable.LessonAttributes(iDate, iIndex)}>${oInRecords_Change.Title}</a>`;
 
                     let eDay = _Timetable.DaySelector(iDate);
                     if (eDay)
                     {
                         const eLesson = document.createElement('div');
-                        eLesson.className = 'Lesson Added';
+                        eLesson.className = 'Lesson Sudden';
                         eLesson.innerHTML = HTML;
 
                         let eAfter = null;
@@ -220,7 +233,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                                           </a>
 
                                           <div>
-                                            <div class='Lesson Added'>${HTML}</div>
+                                            <div class='Lesson Sudden'>${HTML}</div>
                                           </div>`;
 
                         let eAfter = null;

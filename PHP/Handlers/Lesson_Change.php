@@ -16,16 +16,20 @@ function Callback($SQL, $POST, $UserID)
     $Place_INSERT = $Place ? ("'" . substr($Place, 0, $GLOBALS['MaxPlaceLength']) . "'") : 'NULL';
     $Educator_INSERT = $Educator ? ("'" . substr($Educator, 0, $GLOBALS['MaxEducatorLength']) . "'") : 'NULL';
 
+    $Title_UPDATE = ($Title === 'null') ? 'NULL' :( "'" . $Title . "'");
+    $Place_UPDATE = ($Place === 'null') ? 'NULL' : ("'" . $Place . "'");
+    $Educator_UPDATE = ($Educator === 'null') ? 'NULL' : ("'" . $Educator . "'");
+
 
 
     $Request = "INSERT INTO `Changes` VALUES ($UserID, '$Date', $Index, $Title_INSERT, $Place_INSERT, $Educator_INSERT)
                     ON DUPLICATE KEY UPDATE";
     if ($Title)
-        $Request .= "`Title` = '$Title'";
+        $Request .= "`Title` = $Title_UPDATE";
     if ($Place)
-        $Request .= "`Place` = '$Place'";
+        $Request .= "`Place` = $Place_UPDATE";
     if ($Educator)
-        $Request .= "`Educator` = '$Educator'";
+        $Request .= "`Educator` = $Educator_UPDATE";
 
     $SQL->query($Request);
 };

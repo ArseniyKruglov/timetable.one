@@ -41,7 +41,7 @@ class Overlay
                                         <div></div>
                                     </div>`;
         this.Element.children[0].addEventListener('click', () => this.Close());
-        
+
         document.body.appendChild(this.Element);
         this.Callback_Open();
 
@@ -112,7 +112,7 @@ class Overlay
         return this.Element.children[1].children[0];
     }
 
-    
+
 
     GetUIElement(sSelector)
     {

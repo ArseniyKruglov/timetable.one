@@ -11,7 +11,7 @@ Array.prototype.removeWhere = function(oObject, bSingle)
                     bRemove = false;
                     break;
                 };
-            
+
             if (bRemove === true)
             {
                 this.splice(i, 1);
@@ -30,7 +30,7 @@ Array.prototype.removeWhere = function(oObject, bSingle)
                     bRemove = false;
                     break;
                 };
-            
+
             if (bRemove === true)
                 this.splice(i, 1);
         };

@@ -7,7 +7,7 @@ class Timetable
         {
             if (this.DateToIndexes(_iToday).length !== 0)
                 return 0;
-                
+
             let iDayOfWeek = new Date().getDayOfWeek();
             let iLastStudyDay;
             for (let i = _iToday - iDayOfWeek + 6; i >= _iToday - iDayOfWeek; i--)
@@ -129,7 +129,7 @@ class Timetable
         else
         {
             const oTimetable = this.Timetable.get(iTimetable);
-            return oTimetable.Lessons[(iDate - oTimetable.AnchorDate % oTimetable.Days.length + oTimetable.Days.length) % oTimetable.Days.length];
+            return oTimetable.Lessons[(Math.abs(iDate - oTimetable.AnchorDate) % oTimetable.Days.length + oTimetable.Days.length) % oTimetable.Days.length];
         }
     }
 
@@ -210,10 +210,7 @@ class Timetable
                 for (let loop_aLesson of mTodayTimetable)
                     HTML +=    `<div class='Lesson'>
                                     <span>${loop_aLesson[0]}</span>
-                                    <a ${this.LessonAttributes(iDate, loop_aLesson[0])}>
-                                        <span></span>
-                                        <span>${loop_aLesson[1].Title}</span>
-                                    </a>
+                                    <a ${this.LessonAttributes(iDate, loop_aLesson[0])}>${loop_aLesson[1].Title}</a>
                                 </div>`;
                 HTML +=   `</div>
                         </div>`;
@@ -228,7 +225,7 @@ class Timetable
         function GetOverflow()
         {
             return {'Width': (eGrid.scrollWidth > eGrid.clientWidth), 'Body_Height': (eGrid.parentElement.scrollHeight > eGrid.parentElement.clientHeight)};
-        };
+        }
 
         function SetGrid(iColumns, iRows)
         {
@@ -236,7 +233,7 @@ class Timetable
                 eGrid.style.gridTemplateColumns = `repeat(${iColumns}, 1fr)`;
             else
                 eGrid.style.gridTemplateColumns = `repeat(${Math.ceil(eGrid.children.length / iRows)}, 1fr)`;
-        };
+        }
 
 
 
@@ -523,12 +520,11 @@ class Timetable
                 if ('Title' in loop_oChange)
                     Lesson_SetChange(loop_oChange.Date, loop_oChange.Index, { 'Title': loop_oChange.Title }, true, false, false, false);
 
-        if (!this.HeightSearch)
-            for (let loop_oNote of _Records.Notes)
-                if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])
-                    if ('Title' in loop_oNote)
-                        Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false);
-                    else
-                        Day_SetNote(loop_oNote.Date, true, true, false, false, false);
+        for (let loop_oNote of _Records.Notes)
+            if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])
+                if ('Title' in loop_oNote)
+                    Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false);
+                else
+                    Day_SetNote(loop_oNote.Date, true, true, false, false, false);
     }
 }
