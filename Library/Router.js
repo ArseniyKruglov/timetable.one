@@ -49,6 +49,8 @@ class Router
             {
                 case 'Lesson':
                     window._Lesson_UI = new Lesson_UI(parseInt(aNewPath[i][1].Date), parseInt(aNewPath[i][1].Lesson), !this.Initial);
+                    if (this.Initial)
+                        _Timetable.WeekOffset = _Timetable.DateToOffset(aNewPath[i][1].Date);
                     break;
 
                 case 'Day':
@@ -56,7 +58,7 @@ class Router
                     break;
 
                 case 'Add':
-                    window._Sudden_UI = new SuddenLesson_UI(_iToday, !this.Initial);       // TO DO: _iToday
+                    window._Sudden_UI = new SuddenLesson_UI(parseInt(aNewPath[i][1].Date), !this.Initial);       // TO DO: _iToday
                     break;
             };
 

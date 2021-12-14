@@ -4,7 +4,7 @@ function Day_SetNote(iDate, sNote, bDraw, bSend, bRecord, bInsert, oInRecords)
     {
         if (sNote)
         {
-            oInRecords = oInRecords || _Records.Notes.selectWhere({ 'Date': iDate, 'Title': null }, true);
+            oInRecords = oInRecords || _Records.Notes.selectWhere({ 'Date': iDate, 'Title': undefined }, true);
 
             if (oInRecords)
             {
@@ -26,7 +26,7 @@ function Day_SetNote(iDate, sNote, bDraw, bSend, bRecord, bInsert, oInRecords)
         {
             oInRecords = null;
 
-            _Records.Notes.removeWhere({ 'Date': iDate, 'Title': null }, true);
+            _Records.Notes.removeWhere({ 'Date': iDate, 'Title': undefined }, true);
         };
 
         if (bSend)

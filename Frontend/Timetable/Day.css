@@ -1,13 +1,18 @@
-#Timetable .Day > :first-child
-{
-    text-align: left;
-}
-
 #Timetable .Day > :first-child > :first-child
 {
-    font-size: 24px;
     font-weight: 700;
 }
+
+#Timetable:not(.NoAlarms) .Day > :first-child > :first-child
+{
+    font-size: 24px;
+}
+
+#Timetable.NoAlarms .Day > :first-child > :first-child
+{
+    font-size: 25.5px;
+}
+
 
 
 #Timetable .Day > :first-child > :last-child

@@ -29,6 +29,10 @@ function Lesson_SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oI
             _Records.Notes.removeWhere({ 'Date': iDate, 'Title': sTitle }, true);
         };
 
+        if (window._Lesson_UI)
+            if (_Lesson_UI.Date === iDate && _Lesson_UI.Title === sTitle)
+                this.oInRecords_Note = oInRecords;
+
         if (bSend)
         {
             SendRequest('/PHP/Handlers/Lesson_Note.php',
@@ -59,6 +63,4 @@ function Lesson_SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oI
             if (_Lesson_UI.Date === iDate && _Lesson_UI.Title === sTitle)
                 _Lesson_UI.Overlay.GetUIElement('.Note').value = sNote;
     };
-
-    return oInRecords;
 }

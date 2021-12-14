@@ -92,7 +92,16 @@ main
     max-width: 300px;
     height: fit-content;
     height: -moz-fit-content;
+}
+
+#Timetable:not(.NoAlarms) .Day
+{
     gap: 5px;
+}
+
+#Timetable.NoAlarms .Day
+{
+    gap: 2px;
 }
 
 #Timetable .Day > :last-child

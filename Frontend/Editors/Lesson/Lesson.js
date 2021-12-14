@@ -44,12 +44,67 @@ class Lesson_UI
         this.Overlay.Container.className = 'Island Overlay_Rectangular DetailsContainer';
         this.Overlay.Body.className = 'Lesson Details';
 
+        this.GetInfoIHTML = () =>
+        {
+            const aAlarms = _Alarms.Get(this.Index, this.Date);
+
+            const aFilelds =
+            [
+                {
+                    'Icon': 'Place',
+                    'Default': (this.oInTimetable ? this.oInTimetable.Fields.Place : null),
+                    'Change': (this.oInRecords_Change ? this.oInRecords_Change.Place : null)
+                },
+                {
+                    'Icon': 'Educator',
+                    'Default': (this.oInTimetable ? this.oInTimetable.Fields.Educator : null),
+                    'Change': (this.oInRecords_Change ? this.oInRecords_Change.Educator : null)
+                }
+            ];
+
+            if (this.oInTimetable && this.oInTimetable.UserFields)
+                for (let loop_aUserField of this.oInTimetable.UserFields)
+                    aFilelds.push(
+                    {
+                        'Icon': 'Circle',
+                        'Default': loop_aUserField[1],
+                        'Change': null
+                    });
+
+
+
+            let HTML = `<div class='Calendar'>
+                            <custom-icon icon='Calendar'></custom-icon>
+                            <span>${Date_Format(Time_From1970(this.Date))}</span>
+                        </div>
+
+                    ${
+                        aAlarms ? 
+                        `<div class='Alarms'>
+                            <custom-icon icon='Alarm'></custom-icon>
+                            <span>${Time_Format(aAlarms[0])} – ${Time_Format(aAlarms[1])}</span>
+                        </div>`
+                        : ''
+                    }`;
+
+            for (let loop_oField of aFilelds)
+                if (loop_oField.Change || loop_oField.Default)
+                    HTML += `<div class='${loop_oField.Change && !this.IsSudden ? (loop_oField.Default ? 'Change' : 'Sudden') : ''}'>
+                                <custom-icon icon='${loop_oField.Icon}'></custom-icon>
+                                <span>
+                                    ${loop_oField.Change || loop_oField.Default}
+                                </span>
+                             </div>`;
+
+            return HTML;
+        }
+
         let HTML = `<div class='Header'>
                         <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
                         <span><custom-round-button icon='More'></custom-round-button></span>
                     </div>
 
-                    <custom-textarea class='Title' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength}>${this.IsCanceled ? '' : this.Title}</custom-textarea>
+                    <custom-textarea class='Title ${this.IsSudden ? 'Sudden' : (this.IsChanged ? 'Change' : '')}' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength}>${this.IsCanceled ? '' : this.Title}</custom-textarea>
 
                     <div class='Info'>
                         ${this.GetInfoIHTML()}
@@ -78,29 +133,30 @@ class Lesson_UI
                 {
                     if (this.IsSudden)
                     {
-                        aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], () => this.Title = '' ]);
+                        aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], () =>
+                        {
+                            Lesson_SetChange(this.Date, this.Index, { 'Title': '' }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                            this.Overlay.Close();
+                        }]);
                     }
                     else if (this.IsChanged)
                     {
                         if (this.IsCanceled)
                             aActions.push(['Restore', ['Undo cancellation', 'Отменить отмену'][_iLanguage], () =>
                             {
-                                this.Overlay.GetUIElement('.Title').value = this.OriginalTitle;
-                                this.Title = this.OriginalTitle;
+                                Lesson_SetChange(this.Date, this.Index, { 'Title': this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             }]);
                         else
                             aActions.push(['Restore', ['Remove replacement', 'Убрать замену'][_iLanguage], () =>
                             {
-                                this.Overlay.GetUIElement('.Title').value = this.OriginalTitle;
-                                this.Title = this.OriginalTitle;
+                                Lesson_SetChange(this.Date, this.Index, { 'Title': this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             }]);
                     }
                     else
                     {
                         aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () =>
                         {
-                            this.Overlay.GetUIElement('.Title').value = '';
-                            this.Title = '';
+                            Lesson_SetChange(this.Date, this.Index, { 'Title': '' }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                         }]);
                     };
                 };
@@ -110,88 +166,14 @@ class Lesson_UI
 
             this.Overlay.GetUIElement('.Title').addEventListener('input', Event =>
             {
-                this.Title = Event.target.value;
+                Lesson_SetChange(this.Date, this.Index, { 'Title': Event.target.value.trim() }, true, true, true, false, this.oInRecords_Change, this.OriginalTitle);
             });
 
             this.Overlay.GetUIElement('.Note').addEventListener('input', Event =>
             {
-                this.Note = Event.target.value;
+                Lesson_SetNote(this.Date, this.Title, Event.target.value.trim(), true, true, true, false, false, this.oInRecords_Note);
            });
         }
-    }
-
-
-
-    GetInfoIHTML()
-    {
-        const aAlarms = _Alarms.Get(this.Index, this.Date);
-
-        const aFilelds =
-        [
-            {
-                'Icon': 'Place',
-                'Default': (this.oInTimetable ? this.oInTimetable.Fields.Place : null),
-                'Change': (this.oInRecords_Change ? this.oInRecords_Change.Place : null)
-            },
-            {
-                'Icon': 'Educator',
-                'Default': (this.oInTimetable ? this.oInTimetable.Fields.Educator : null),
-                'Change': (this.oInRecords_Change ? this.oInRecords_Change.Educator : null)
-            }
-        ];
-
-        if (this.oInTimetable && this.oInTimetable.UserFields)
-            for (let loop_aUserField of this.oInTimetable.UserFields)
-                aFilelds.push(
-                {
-                    'Icon': 'Circle',
-                    'Default': loop_aUserField[1],
-                    'Change': null
-                });
-
-
-
-        let HTML = `<div class='Calendar'>
-                        <custom-icon icon='Calendar'></custom-icon>
-                        <span>${Date_Format(Time_From1970(this.Date))}</span>
-                    </div>
-
-                ${
-                    aAlarms ? 
-                    `<div class='Alarms'>
-                        <custom-icon icon='Alarm'></custom-icon>
-                        <span>${Time_Format(aAlarms[0])} – ${Time_Format(aAlarms[1])}</span>
-                    </div>`
-                    : ''
-                }`;
-
-        for (let loop_oField of aFilelds)
-            if (loop_oField.Change || loop_oField.Default)
-                HTML += `<div class='${loop_oField.Change ? (loop_oField.Default ? 'Change' : 'Sudden') : ''}'>
-                            <custom-icon icon='${loop_oField.Icon}'></custom-icon>
-                            <span>
-                                ${loop_oField.Change || loop_oField.Default}
-                            </span>
-                         </div>`;
-
-        return HTML;
-    }
-
-    set Title(sChange)
-    {
-        Lesson_SetChange(this.Date, this.Index, { 'Title': sChange.trim() }, true, true, true, false, this.oInRecords_Change, this.OriginalTitle);
-    }
-
-
-
-    get Note()
-    {
-        return this.oInRecords_Note ? this.oInRecords_Note.Note : '';
-    }
-
-    set Note(sNote)
-    {
-        this.oInRecords_Note = Lesson_SetNote(this.Date, this.Title, sNote.trim(), true, true, true, false, false, this.oInRecords_Note);
     }
 
 
@@ -199,6 +181,11 @@ class Lesson_UI
     get Title()
     {
         return (this.oInRecords_Change ? this.oInRecords_Change.Title : false) || (this.oInTimetable ? this.oInTimetable.Title : null) || null;
+    }
+
+    get Note()
+    {
+        return this.oInRecords_Note ? this.oInRecords_Note.Note : '';
     }
 
     get OriginalTitle()

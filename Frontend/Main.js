@@ -31,6 +31,8 @@ document.body.innerHTML =  `<main>
 
 const _Timetable = new Timetable(_aTimetable);
 _Timetable.WeekOffset = _Timetable.WeekOffset_Default;
+if (_Alarms.Empty)
+    _Timetable.Body.classList.add('NoAlarms');
 delete _aTimetable;
 
 

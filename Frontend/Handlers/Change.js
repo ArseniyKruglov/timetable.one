@@ -133,6 +133,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                 if (_Lesson_UI.Date === iDate && _Lesson_UI.Index === iIndex)
                 {
                     _Lesson_UI.oInRecords_Note = oInRecords_Note;
+                    _Lesson_UI.Overlay.GetUIElement('.Title').className = `Title ${_Lesson_UI.IsSudden ? 'Sudden' : (_Lesson_UI.IsChanged ? 'Change' : '')}`;
                     _Lesson_UI.Overlay.GetUIElement('.Note').value = _Lesson_UI.Note;
                 };
 
@@ -159,6 +160,8 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
             if (eLesson)
             {
+                eLesson.parentElement.classList.remove('Canceled', 'Change', 'Note');
+
                 if (eLesson.parentElement.classList.contains('Sudden'))
                 {
                     if (!oInRecords_Change)
@@ -175,13 +178,11 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                 }
                 else
                 {
-                    eLesson.parentElement.classList.remove('Canceled', 'Change');
-
                     if (oInRecords_Change && 'Title' in oInRecords_Change)
                     {
                         if (oInRecords_Change.Title === '')
                         {
-                            eLesson.innerHTML = '';
+                            eLesson.innerHTML = sOriginalTitle;
                             eLesson.parentElement.classList.add('Canceled');
                         }
                         else
@@ -195,6 +196,9 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                         eLesson.innerHTML = sOriginalTitle;
                     };
                 };
+
+                if (oInRecords_Note)
+                    eLesson.parentElement.classList.add('Note');    // Нужно?
             }
             else if (oInRecords_Change && 'Title' in oInRecords_Change && oInRecords_Change.Title !== '')
             {
@@ -207,7 +211,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     if (eDay)
                     {
                         const eLesson = document.createElement('div');
-                        eLesson.className = 'Lesson Sudden';
+                        eLesson.className = `Lesson Sudden ${oInRecords_Note ? 'Note' : ''}`;
                         eLesson.innerHTML = HTML;
 
                         let eAfter = null;
@@ -226,14 +230,14 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     else
                     {
                         eDay = document.createElement('div');
-                        eDay.className = `Day ${ (iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '') } ${ oInRecords_Note ? 'Note' : '' }`;
+                        eDay.className = `Day ${ (iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '') } ${ _Records.Notes.selectWhere({ 'Date': iDate, 'Title': undefined }) ? 'Note' : '' }`;
                         eDay.innerHTML = `<a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');">
                                             <div>${Date_Format(Time_From1970(iDate))}</div>
                                             <div class='EmptyHidden'>${_Timetable.DateToAlarmsPeriod(iDate)}</div>
                                           </a>
 
                                           <div>
-                                            <div class='Lesson Sudden'>${HTML}</div>
+                                            <div class='Lesson Sudden ${oInRecords_Note ? 'Note' : ''}'>${HTML}</div>
                                           </div>`;
 
                         let eAfter = null;

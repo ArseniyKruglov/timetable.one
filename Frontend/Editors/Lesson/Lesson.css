@@ -9,6 +9,16 @@
     text-decoration: line-through;
 }
 
+.Details .Title.Change textarea
+{
+    color: var(--Change);
+}
+
+.Details .Title.Sudden textarea
+{
+    color: var(--Sudden);
+}
+
 
 
 .Lesson.Details .Change > span

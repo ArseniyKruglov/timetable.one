@@ -3,7 +3,7 @@ class Day_UI
     constructor(iDate, bAnimation)
     {
         this.Date = iDate;
-        this.oInRecords_Note = _Records.Notes.selectWhere({'Date': this.Date, 'Title': null }, true) || null;
+        this.oInRecords_Note = _Records.Notes.selectWhere({'Date': this.Date, 'Title': undefined }, true) || null;
 
 
 
@@ -61,7 +61,7 @@ class Day_UI
                         [
                             ['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () =>
                             {
-                                _Router.Forward(`/Day?Date=${this.Date}/Add`);
+                                _Router.Forward(`/Day?Date=${this.Date}/Add?Date=${this.Date}`);
                             }]
                         ]
                     );
