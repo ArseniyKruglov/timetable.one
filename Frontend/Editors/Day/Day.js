@@ -3,7 +3,7 @@ class Day_UI
     constructor(iDate, bAnimation)
     {
         this.Date = iDate;
-        this.oInRecords_Note = _Records.Notes.selectWhere({'Date': this.Date, 'Title': undefined }, true) || null;
+        this.oInRecords_Note = _Records.Notes.selectWhere({ 'Date': this.Date, 'Title': undefined }, true) || null;
 
 
 
@@ -31,7 +31,7 @@ class Day_UI
                         ${(_iAccessLevel === 2) ? `<span><custom-round-button icon='More'></custom-round-button></span>`: '' }
                     </div>
 
-                    <div class='Date'>${Date_Format(Time_From1970(this.Date), true)}</div>
+                    <div class='Date'>${Date_Format(IntToDate(this.Date), true)}</div>
 
                 ${
                     !_Alarms.Empty ?

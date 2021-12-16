@@ -63,7 +63,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     for (let loop_sProperty in oChange)
                         oSend[loop_sProperty] = oChange[loop_sProperty];
 
-                    SendRequest('/PHP/Handlers/Lesson_Change.php', oSend);
+                    SendRequest('/PHP/Lesson_Change.php', oSend);
                 };
             }
             else
@@ -71,7 +71,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                 _Records.Changes.removeWhere({ 'Date': iDate, 'Index': iIndex }, true);
 
                 if (bSend)
-                    SendRequest('/PHP/Handlers/Lesson_Remove.php',
+                    SendRequest('/PHP/Lesson_Remove.php',
                     {
                         'Date': iDate,
                         'Index': iIndex
@@ -94,7 +94,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
             {
                 _Records.Changes.push(oInRecords_Change);
 
-                SendRequest('/PHP/Handlers/Lesson_Change.php', oInRecords_Change);
+                SendRequest('/PHP/Lesson_Change.php', oInRecords_Change);
             };
         };
 
@@ -232,7 +232,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                         eDay = document.createElement('div');
                         eDay.className = `Day ${ (iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '') } ${ _Records.Notes.selectWhere({ 'Date': iDate, 'Title': undefined }) ? 'Note' : '' }`;
                         eDay.innerHTML = `<a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');">
-                                            <div>${Date_Format(Time_From1970(iDate))}</div>
+                                            <div>${Date_Format(IntToDate(iDate))}</div>
                                             <div class='EmptyHidden'>${_Timetable.DateToAlarmsPeriod(iDate)}</div>
                                           </a>
 

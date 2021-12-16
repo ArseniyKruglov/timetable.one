@@ -6,7 +6,7 @@ custom-round-button
     --this-Scale: var(--Scale);     /* TO DO */
 
     --Icon-Color: var(--Text);
-    --Hover-Color: var(--Gray70);
+    --Hover-Color: var(--Accent70);
 }
 
 
@@ -74,8 +74,8 @@ custom-round-button > button > span
 
 @keyframes Ripple
 {
-    0%     {opacity: 10%;   transform: scale(50%);  }
-    17.5%  {                transform: scale(100%); }
-    50%    {opacity: 5%;                          }
-    100%   {opacity: 0%;    transform: scale(100%); }
+    0%     { opacity: 10%;   transform: scale(50%);  }
+    17.5%  {                 transform: scale(100%); }
+    50%    { opacity: 5%;                            }
+    100%   { opacity: 0%;    transform: scale(100%); }
 }

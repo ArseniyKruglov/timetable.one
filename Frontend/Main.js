@@ -1,13 +1,11 @@
 // Basic variables
 
-let _iToday = new Date().to1970();
+let _iToday = DateToInt(new Date());
 const _iLanguage = Language_Get();
 
 
 
 // Body
-
-document.head.querySelector(`meta[name="theme-color"]`).setAttribute('content', getComputedStyle(document.body).backgroundColor);
 
 document.body.innerHTML =  `<main>
                                 <div id='Information' class='Island EmptyHidden'></div>

@@ -1,64 +1,53 @@
 *
 {
-    --Accent-Hue: 210;
+    --Accent-Hue: 20;
     --Accent-Saturation: 0%;
-
     --Main: HSL(210, 100%, 56%);
     --Secondary: HSL(348, 83%, 47%);
-
     --Main-Transparent: HSLA(210, 100%, 45%, 7.5%);
     --Secondary-Transparent: HSLA(348, 83%, 47%, 25%);
-
-
-
-    --Gray70-Opacity: 70%;
-    --Gray55-Opacity: 55%;
-    --Gray20-Opacity: 20%;
-    --Gray10-Opacity: 10%;
-    --Gray05-Opacity: 5%;
-    --Gray02-5-Opacity: 2.5%;
-
-    --Border: 1px solid var(--Gray20);
+    --Border: 1px solid var(--Accent20);
     --Shadow: 0 1px 2px 0 RGB(0 0 0 / 17.5%), 0 1px 3px 1px RGB(0 0 0 / 7.5%);
-
-    --Change: HSL(35, 100%, 42.5%);
-    --Sudden: Green;
 }
 
 body
-{  
-    --Gray70: HSL(var(--Accent-Hue), var(--Accent-Saturation), 30%);
-    --Gray55: HSL(var(--Accent-Hue), var(--Accent-Saturation), 45%);
-    --Gray20: HSL(var(--Accent-Hue), var(--Accent-Saturation), 80%);
-    --Gray10: HSL(var(--Accent-Hue), var(--Accent-Saturation), 90%);
-    --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 95%);
-    --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 97.5%);
+{
+    color-scheme: light;
 
-    --Background00: HSL(var(--Accent-Hue), calc(var(--Accent-Saturation) / 2), 95%);
+    --Text: #000000;
+
+    --Background00: HSL(0, 0%, 95%);
     --Background01: #FFFFFF;
     --Background02: #FFFFFF;
 
-    --Text: #000000;
+    --Accent70: HSL(var(--Accent-Hue), var(--Accent-Saturation), 30%);
+    --Accent20: HSL(var(--Accent-Hue), var(--Accent-Saturation), 80%);
+    --Accent05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 95%);
+    --Accent02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 97.5%);
+
+    --Change: HSL(35, 100%, 42.5%);
+    --Sudden: HSL(120, 100%, 25%);
 
     --Caution: Darkred;
 }
 
-@media (prefers-color-scheme: dark) {body
+@media (prefers-color-scheme: dark) { body
 {
-    --Gray70: HSL(var(--Accent-Hue), var(--Accent-Saturation), 70%);
-    --Gray55: HSL(var(--Accent-Hue), var(--Accent-Saturation), 55%);
-    --Gray20: HSL(var(--Accent-Hue), var(--Accent-Saturation), 20%);
-    --Gray10: HSL(var(--Accent-Hue), var(--Accent-Saturation), 10%);
-    --Gray05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 5%);
-    --Gray02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 2.5%);
+    color-scheme: dark;
+
+    --Text: #FFFFFF;
 
     --Background00: HSL(var(--Accent-Hue), 1%, 2.5%);
     --Background01: HSL(var(--Accent-Hue), 1%, 10%);
     --Background02: HSL(var(--Accent-Hue), 1%, 15%);
 
-    --Text: #FFFFFF;
+    --Accent70: HSL(var(--Accent-Hue), var(--Accent-Saturation), 70%);
+    --Accent20: HSL(var(--Accent-Hue), var(--Accent-Saturation), 20%);
+    --Accent05: HSL(var(--Accent-Hue), var(--Accent-Saturation), 5%);
+    --Accent02-5: HSL(var(--Accent-Hue), var(--Accent-Saturation), 2.5%);
+
+    --Change: HSL(35, 100%, 50%);
+    --Sudden: HSL(120, 100%, 35%);
 
     --Caution: Red;
-
-    color-scheme: dark;
 } }

@@ -1,6 +1,6 @@
 <?
-include 'PHP/Database.php';
-    
+include 'Library/PHP/Database.php';
+
 $URL = explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))[1];
 $User = $SQL->query("SELECT * FROM `Users` WHERE (`Link_FullAccess` = '$URL') OR (`Link_ReadOnly` = '$URL') OR (`Link_TimetableOnly` = '$URL')");
 

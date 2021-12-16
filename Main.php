@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 
-<html>
+<html lang='<? include 'Library/PHP/Language.php'; echo Language_Get(); ?>'>
     <head>
         <title>Расписание</title>
 
@@ -23,13 +23,13 @@
         <link rel='icon' type='image/png' sizes='32x32' href='/Style/Icons/favicon-32x32.png'>
         <link rel='icon' type='image/png' sizes='96x96' href='/Style/Icons/favicon-96x96.png'>
         <link rel='icon' type='image/png' sizes='16x16' href='/Style/Icons/favicon-16x16.png'>
-        <meta name='msapplication-TileColor' content='#F1F2F3'>
+        <meta name='msapplication-TileColor' content='#FFFFFF'>
         <meta name='msapplication-TileImage' content='/Style/Icons/ms-icon-144x144.png'>
-        <meta name='theme-color' content='#F1F2F3'>
+        <meta name='theme-color' content='#FFFFFF'>
 
         <?
-        include 'PHP/Timestamp.php';
-        include 'PHP/Constants.php';
+        include 'Library/PHP/Timestamp.php';
+        include 'Library/PHP/Constants.php';
 
 
 
@@ -53,7 +53,7 @@
             global $Files_CSS;
             foreach (glob("$Path*.css") as &$File_CSS)
                 array_push($Files_CSS, $File_CSS);
-        };
+        }
 
         GetFiles('');
 

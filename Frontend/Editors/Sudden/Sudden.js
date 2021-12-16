@@ -46,7 +46,7 @@ class SuddenLesson_UI
                                 <span></span>
                             </div>
                             <custom-icon icon='Calendar'></custom-icon>
-                            <input type=date min='1970-01-01' value='${Time_From1970(this.Date).toISOString().slice(0, 10)}' class='Calendar' required placeholder='${['Date', 'Дата'][_iLanguage]}'>
+                            <input type=date min='1970-01-01' value='${IntToDate(this.Date).toISOString().slice(0, 10)}' class='Calendar' required placeholder='${['Date', 'Дата'][_iLanguage]}'>
                         </div>
 
                         <div>
@@ -99,7 +99,7 @@ class SuddenLesson_UI
                     event.target.parentElement.parentElement.nextElementSibling.classList.remove('Invalid');
                 else
                     event.target.parentElement.parentElement.nextElementSibling.classList.add('Invalid');
-           });
+            });
             this.Overlay.GetUIElement('.Calendar').addEventListener('input', event =>
             {
                 this.Date = event.target.value;
@@ -108,7 +108,7 @@ class SuddenLesson_UI
 
                 if (this.Date)
                 {
-                    this.Date = new Date(this.Date).to1970();
+                    this.Date = DateToInt(new Date(this.Date));
 
                     SetError(true);
                 }
@@ -116,7 +116,7 @@ class SuddenLesson_UI
                 {
                     SetError(false, true, event.target.validationMessage);
                 };
-           });
+            });
             this.Overlay.GetUIElement('.Index').addEventListener('input', event =>
             {
                 this.Index = event.target.value;
@@ -127,7 +127,7 @@ class SuddenLesson_UI
                     this.Index = parseInt(this.Index);
 
                     if (this.Overlay.GetUIElement('.Calendar').value)
-                        if (_Timetable.DateToIndexes(new Date(this.Overlay.GetUIElement('.Calendar').value).to1970(), true).includes(this.Index))
+                        if (_Timetable.DateToIndexes(DateToInt(new Date(this.Overlay.GetUIElement('.Calendar').value)), true).includes(this.Index))
                         {
                             this.Index = false;
                             event.target.setCustomValidity([`There's a lesson for this time.`, 'На это время уже назначено занятие.'][_iLanguage]);
@@ -139,7 +139,7 @@ class SuddenLesson_UI
                     else
                         SetError(false, true, event.target.validationMessage);
                 };
-           });
+            });
         }
     }
 

@@ -13,14 +13,14 @@ custom-textarea textarea
     padding: 10px;
     resize: none;
     border-radius: 5px 5px 0 0;
-    background: var(--Gray02-5);
+    background: var(--Accent02-5);
 }
 
 custom-textarea[readonly] textarea
 {
     cursor: default;
     border-radius: 5px;
-    background: var(--Gray05);
+    background: var(--Accent05);
 }
 
 
@@ -39,16 +39,16 @@ custom-textarea > button
 
 custom-textarea > button:hover
 {
-    background-color: var(--Gray05);
+    background-color: var(--Accent05);
 }
 
 custom-textarea > button > span
 {
-    color: var(--Gray70);
+    color: var(--Accent70);
 }
 
 custom-textarea > button > custom-icon
 {
     --Scale: 18px;
-    --Color: var(--Gray70);
+    --Color: var(--Accent70);
 }

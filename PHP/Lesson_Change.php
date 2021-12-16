@@ -1,7 +1,7 @@
 <?
-include '../Handler.php';
-include '../Constants.php';
-include '../Timestamp.php';
+include '../Library/PHP/Handler.php';
+include '../Library/PHP/Constants.php';
+include '../Library/PHP/Timestamp.php';
 
 function Callback($SQL, $POST, $UserID)
 {
@@ -26,12 +26,21 @@ function Callback($SQL, $POST, $UserID)
     if ($Title !== NULL || $Place !== NULL || $Educator !== NULL)
         $Request .= " ON DUPLICATE KEY UPDATE ";
 
+    $Comma = false;
     if ($Title !== NULL)
+    {
         $Request .= "`Title` = $Title_UPDATE";
+        $Comma = true;
+    };
     if ($Place !== NULL)
-        $Request .= ", `Place` = $Place_UPDATE";
+    {
+        $Request .= ($Comma ? ', ' : '') . "`Place` = $Place_UPDATE";
+        $Comma = true;
+    };
     if ($Educator !== NULL)
-        $Request .= ", `Educator` = $Educator_UPDATE";
+    {
+        $Request .= ($Comma ? ', ' : '') . "`Educator` = $Educator_UPDATE";
+    };
 
     echo $Request;
     $SQL->query($Request);

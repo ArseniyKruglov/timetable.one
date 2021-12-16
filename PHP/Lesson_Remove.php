@@ -1,6 +1,6 @@
 <?
-include '../Handler.php';
-include '../Timestamp.php';
+include '../Library/PHP/Handler.php';
+include '../Library/PHP/Timestamp.php';
 
 function Callback($SQL, $POST, $UserID)
 {

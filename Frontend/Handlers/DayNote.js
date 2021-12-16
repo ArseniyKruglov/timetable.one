@@ -31,7 +31,7 @@ function Day_SetNote(iDate, sNote, bDraw, bSend, bRecord, bInsert, oInRecords)
 
         if (bSend)
         {
-            SendRequest('/PHP/Handlers/Day_Note.php',
+            SendRequest('/PHP/Day_Note.php',
             {
                 'Date': iDate,
                 'Note': sNote

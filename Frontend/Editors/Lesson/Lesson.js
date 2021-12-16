@@ -15,13 +15,13 @@ class Lesson_UI
             if (oInTimetable)
                 this.oInTimetable = oInTimetable;
 
-            this.oInRecords_Change = _Records.Changes.selectWhere({'Date': this.Date, 'Index': this.Index }, true) || null;
+            this.oInRecords_Change = _Records.Changes.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || null;
 
 
 
             if (this.oInTimetable || this.oInRecords_Change)
             {
-                this.oInRecords_Note = _Records.Notes.selectWhere({'Date': this.Date, 'Title': this.Title }, true) || null;
+                this.oInRecords_Note = _Records.Notes.selectWhere({ 'Date': this.Date, 'Title': this.Title }, true) || null;
 
                 this.Draw();
 
@@ -75,7 +75,7 @@ class Lesson_UI
 
             let HTML = `<div class='Calendar'>
                             <custom-icon icon='Calendar'></custom-icon>
-                            <span>${Date_Format(Time_From1970(this.Date))}</span>
+                            <span>${Date_Format(IntToDate(this.Date))}</span>
                         </div>
 
                     ${

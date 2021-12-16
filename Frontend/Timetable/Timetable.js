@@ -202,7 +202,7 @@ class Timetable
             {
                 HTML += `<div class='Day ${(iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '')}'>
                             <a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');">
-                                <div>${Date_Format(Time_From1970(iDate))}</div>
+                                <div>${Date_Format(IntToDate(iDate))}</div>
                                 <div class='EmptyHidden'>${this.DateToAlarmsPeriod(iDate)}</div>
                             </a>
 
@@ -224,7 +224,7 @@ class Timetable
     {
         function GetOverflow()
         {
-            return {'Width': (eGrid.scrollWidth > eGrid.clientWidth), 'Body_Height': (eGrid.parentElement.scrollHeight > eGrid.parentElement.clientHeight)};
+            return { 'Width': (eGrid.scrollWidth > eGrid.clientWidth), 'Body_Height': (eGrid.parentElement.scrollHeight > eGrid.parentElement.clientHeight) };
         }
 
         function SetGrid(iColumns, iRows)
@@ -435,8 +435,8 @@ class Timetable
 
         if (eLesson)
         {
-            eLesson.scrollIntoView({block: 'center', inline: 'center', behavior: 'smooth'});
-            eLesson.focus({preventScroll: true});
+            eLesson.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
+            eLesson.focus({ preventScroll: true });
             eLesson.parentElement.classList.add('Focused');
             setTimeout(() =>
             {
@@ -478,8 +478,8 @@ class Timetable
             this.Week.className = `Island ${(WeekOffset === 0) ? 'Current' : ((WeekOffset === 1) ? 'Next' : '')}`;
 
             const aWeekPeriod = this.WeekPeriod.copy();
-            aWeekPeriod[0] = Time_From1970(aWeekPeriod[0]);
-            aWeekPeriod[1] = Time_From1970(aWeekPeriod[1]);
+            aWeekPeriod[0] = IntToDate(aWeekPeriod[0]);
+            aWeekPeriod[1] = IntToDate(aWeekPeriod[1]);
 
             const iCurrentYear = new Date().getFullYear();
             if (aWeekPeriod[0].getFullYear() === iCurrentYear && aWeekPeriod[1].getFullYear() === iCurrentYear)

@@ -23,10 +23,10 @@
 
 .DropDown > button:hover
 {
-    background-color: var(--Gray05);
+    background-color: var(--Accent05);
 }
 
 .DropDown > button > custom-icon
 {
-    --Color: var(--Gray70)
+    --Color: var(--Accent70)
 }

@@ -133,7 +133,7 @@ main
 {
     --Scale: 20px;
     --Radius: 42px;
-    --Hover-Color: var(--Gray70);
+    --Hover-Color: var(--Accent70);
 }
 
 #Week > :first-child custom-icon
