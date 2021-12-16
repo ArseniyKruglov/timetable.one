@@ -62,15 +62,32 @@ class Lesson_UI
                 }
             ];
 
-            if (this.oInTimetable && this.oInTimetable.UserFields)
-                for (let loop_aUserField of this.oInTimetable.UserFields)
+            if (this.oInTimetable && this.oInTimetable.Fields.UserFields)
+                for (let loop_aField of this.oInTimetable.Fields.UserFields)
                     aFilelds.push(
                     {
+                        'FieldID': loop_aField[0],
                         'Icon': 'Circle',
-                        'Default': loop_aUserField[1],
+                        'Default': loop_aField[1],
                         'Change': null
                     });
 
+            if (this.oInRecords_Change && 'UserFields' in this.oInRecords_Change)
+                for (let loop_aField of this.oInRecords_Change.UserFields)
+                {
+                    const oField = aFilelds.selectWhere({ 'FieldID': loop_aField[0] }, true);
+
+                    if (oField)
+                        oField.Change = loop_aField[1];
+                    else
+                        aFilelds.push(
+                        {
+                            'FieldID': loop_aField[0],
+                            'Icon': 'Circle',
+                            'Default': null,
+                            'Change': loop_aField[1]
+                        });
+                };
 
 
             let HTML = `<div class='Calendar'>
@@ -195,7 +212,7 @@ class Lesson_UI
 
     get IsChanged()
     {
-        return Boolean(this.oInRecords_Change ? (this.oInRecords_Change.Title !== null) : false);
+        return Boolean(this.oInRecords_Change ? ('Title' in this.oInRecords_Change) : false);
     }
 
     get IsCanceled()

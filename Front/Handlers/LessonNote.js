@@ -35,7 +35,7 @@ function Lesson_SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oI
 
         if (bSend)
         {
-            SendRequest('/PHP/Lesson_Note.php',
+            SendRequest('/Back/Lesson_Note.php',
             {
                 'Date': iDate,
                 'Title': sTitle,

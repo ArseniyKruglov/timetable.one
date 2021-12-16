@@ -10,21 +10,6 @@
 
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Google+Sans:400,500,700'>
 
-        <link rel='apple-touch-icon' sizes='57x57' href='/Style/Icons/apple-icon-57x57.png'>
-        <link rel='apple-touch-icon' sizes='60x60' href='/Style/Icons/apple-icon-60x60.png'>
-        <link rel='apple-touch-icon' sizes='72x72' href='/Style/Icons/apple-icon-72x72.png'>
-        <link rel='apple-touch-icon' sizes='76x76' href='/Style/Icons/apple-icon-76x76.png'>
-        <link rel='apple-touch-icon' sizes='114x114' href='/Style/Icons/apple-icon-114x114.png'>
-        <link rel='apple-touch-icon' sizes='120x120' href='/Style/Icons/apple-icon-120x120.png'>
-        <link rel='apple-touch-icon' sizes='144x144' href='/Style/Icons/apple-icon-144x144.png'>
-        <link rel='apple-touch-icon' sizes='152x152' href='/Style/Icons/apple-icon-152x152.png'>
-        <link rel='apple-touch-icon' sizes='180x180' href='/Style/Icons/apple-icon-180x180.png'>
-        <link rel='icon' type='image/png' sizes='192x192'  href='/Style/Icons/android-icon-192x192.png'>
-        <link rel='icon' type='image/png' sizes='32x32' href='/Style/Icons/favicon-32x32.png'>
-        <link rel='icon' type='image/png' sizes='96x96' href='/Style/Icons/favicon-96x96.png'>
-        <link rel='icon' type='image/png' sizes='16x16' href='/Style/Icons/favicon-16x16.png'>
-        <meta name='msapplication-TileColor' content='#FFFFFF'>
-        <meta name='msapplication-TileImage' content='/Style/Icons/ms-icon-144x144.png'>
         <meta name='theme-color' content='#FFFFFF'>
 
         <?
@@ -37,7 +22,7 @@
 
         $Files_JS = [];
         $Files_CSS = [];
-        $Main = 'Frontend/Main.js';
+        $Main = 'Front/Main.js';
 
         function GetFiles($Path)
         {
@@ -88,9 +73,9 @@
                         $UserField[0] = (int) $UserField[0];
 
                     array_push($aLessons[(int) $aLesson[0]], [(int) $aLesson[1], ['Title' => $aLesson[2], 'Fields' => [ 'Place' => $aLesson[3], 'Educator' => $aLesson[4], 'UserFields' => $UserFields], 'UserFieldsAI' => (int) $aLesson[5]]]);
-                }
+                };
 
-                array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : To1970($aTimetable[1]), 'End' => $aTimetable[2] === NULL ? NULL : To1970($aTimetable[2]), 'AnchorDate' => To1970($aTimetable[3]), 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
+                array_push($aTimetables, [(int) $aTimetable[0], ['Begin' => $aTimetable[1] === NULL ? NULL : DateToInt($aTimetable[1]), 'End' => $aTimetable[2] === NULL ? NULL : DateToInt($aTimetable[2]), 'AnchorDate' => DateToInt($aTimetable[3]), 'Days' => $aTimetable[4], 'Lessons' => $aLessons]]);
             };
 
             echo json_encode($aTimetables, JSON_UNESCAPED_UNICODE);
@@ -112,7 +97,7 @@
 
             foreach ($SQL->query("SELECT `Date`, `Index`, `Title`, `Place`, `Educator` FROM `Changes` WHERE `UserID` = $User[0]")->fetch_all() as &$aChange)
             {
-                $Change = ['Date' => To1970($aChange[0]), 'Index' => (int) $aChange[1]];
+                $Change = ['Date' => DateToInt($aChange[0]), 'Index' => (int) $aChange[1]];
 
                 if ($aChange[2] !== null)
                     $Change['Title'] = $aChange[2];
@@ -128,10 +113,38 @@
                 array_push($aChanges, $Change);
             };
 
+            foreach ($SQL->query("SELECT `Date`, `Index`, `FieldID`, `Text` FROM `Changes_Fields` WHERE (`UserID` = $User[0])")->fetch_all() as &$Field)
+            {
+                $Field[0] = DateToInt($Field[0]);
+                $Field[1] = (int) $Field[1];
+                $Field[2] = (int) $Field[2];
+
+
+
+                $Found = false;
+
+                foreach ($aChanges as &$Change)
+                    if ($Change['Date'] === $Field[0] && $Change['Index'] === $Field[1])
+                    {
+                        if (!$Change['UserFields'])
+                            $Change['UserFields'] = [$Field];
+                        array_push($Change['UserFields'], [$Field[2], $Field[3]]);
+
+                        $Found = true;
+                        break;
+                    };
+
+                if (!$Found)
+                    array_push($aChanges, ['Date' => $Field[0], 'Index' => $Field[1], 'UserFields' => [[$Field[2], $Field[3]]]]);
+            };
+
+
+
+
             if ($AccessLevel > 0)
                 foreach ($SQL->query("SELECT `Title`, `Date`, `Note` FROM `Notes` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aLesson)
                 {
-                    $Note = ['Date' => To1970($aLesson[1]), 'Note' => $aLesson[2]];
+                    $Note = ['Date' => DateToInt($aLesson[1]), 'Note' => $aLesson[2]];
 
                     if ($aLesson[0] !== null)
                         $Note['Title'] = $aLesson[0];
@@ -143,6 +156,10 @@
 
             echo json_encode(['Notes' => $aNotes, 'Changes' => $aChanges], JSON_UNESCAPED_UNICODE);
         ?>;
+        for (let loop_oChange of _Records.Changes)
+            if (loop_oChange.UserFields)
+                loop_oChange.UserFields = new Map(loop_oChange.UserFields);
+
 
         const _Alarms = new Alarms(new Map(
         <?

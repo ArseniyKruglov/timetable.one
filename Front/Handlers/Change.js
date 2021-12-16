@@ -63,7 +63,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     for (let loop_sProperty in oChange)
                         oSend[loop_sProperty] = oChange[loop_sProperty];
 
-                    SendRequest('/PHP/Lesson_Change.php', oSend);
+                    SendRequest('/Back/Lesson_Change.php', oSend);
                 };
             }
             else
@@ -71,7 +71,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                 _Records.Changes.removeWhere({ 'Date': iDate, 'Index': iIndex }, true);
 
                 if (bSend)
-                    SendRequest('/PHP/Lesson_Remove.php',
+                    SendRequest('/Back/Lesson_Remove.php',
                     {
                         'Date': iDate,
                         'Index': iIndex
@@ -94,7 +94,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
             {
                 _Records.Changes.push(oInRecords_Change);
 
-                SendRequest('/PHP/Lesson_Change.php', oInRecords_Change);
+                SendRequest('/Back/Lesson_Change.php', oInRecords_Change);
             };
         };
 

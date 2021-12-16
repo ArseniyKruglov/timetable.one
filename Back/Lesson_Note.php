@@ -5,7 +5,7 @@ include '../Library/PHP/Timestamp.php';
 
 function Callback($SQL, $POST, $UserID)
 {
-    $Date = From1970((int) $POST['Date']);
+    $Date = IntToDate((int) $POST['Date']);
     $Title = $POST['Title'];
     $Note = substr($POST['Note'], 0, $GLOBALS['MaxNoteLength']);
 

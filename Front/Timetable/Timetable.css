@@ -69,7 +69,7 @@ main
 
 #Timetable:empty
 {
-    background-image: URL('/Style/Tumbleweed.gif');
+    background-image: URL('/Front/Style/Tumbleweed.gif');
     background-size: cover;
     min-width: 250px;
     height: 345px;
