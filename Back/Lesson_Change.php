@@ -42,8 +42,11 @@ function Callback($SQL, $POST, $UserID)
         $Request .= ($Comma ? ', ' : '') . "`Educator` = $Educator_UPDATE";
     };
 
+    $Request .= ";
+                 DELETE FROM `Changes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index) AND (`Title` IS NULL) AND (`Place` IS NULL) AND (`Educator` IS NULL);";
+
     echo $Request;
-    $SQL->query($Request);
+    $SQL->multi_query($Request);
 };
 
 Handler('Callback');

@@ -6,7 +6,7 @@
 
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-        <link rel='manifest' href='/manifest.php?URL=<? echo $URL ?>'>
+        <link rel='manifest' href='/manifest.php'>
 
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Google+Sans:400,500,700'>
 
@@ -43,7 +43,7 @@
         GetFiles('');
 
         foreach ($Files_CSS as &$File_CSS)
-            echo "<link rel='stylesheet' href='/$File_CSS?$Time'>\r\n";
+            echo "<link rel='stylesheet' href='/$File_CSS?$Time'>";
         ?>
     </head>
 
@@ -51,15 +51,15 @@
 
     <?
     foreach ($Files_JS as &$File_JS)
-        echo "<script src='/$File_JS?$Time'></script>\r\n";
+        echo "<script src='/$File_JS?$Time'></script>";
     ?>
 
     <script>
-        _iAccessLevel = <? echo $AccessLevel ?>;
-        _iMaxTitleLength = <? echo $MaxTitleLength ?>;
-        _iMaxNoteLength = <? echo $MaxNoteLength ?>;
+        const _iAccessLevel = <? echo $AccessLevel ?>;
+        const _iMaxTitleLength = <? echo $MaxTitleLength ?>;
+        const _iMaxNoteLength = <? echo $MaxNoteLength ?>;
 
-        _aTimetable = 
+        _Timetable = new Timetable(
         <?
             $aTimetables = [];
 
@@ -79,16 +79,7 @@
             };
 
             echo json_encode($aTimetables, JSON_UNESCAPED_UNICODE);
-        ?>;
-        for (let loop_aTimetable of _aTimetable)
-        {
-            for (let loop_aDay of loop_aTimetable[1].Lessons)
-                for (let loop_aLesson of loop_aDay)
-                    loop_aLesson[1].Fields.UserFields = new Map(loop_aLesson[1].Fields.UserFields);
-
-            loop_aTimetable[1].Lessons = loop_aTimetable[1].Lessons.map(loop_aDay => new Map(loop_aDay));
-        };
-        _aTimetable = new Map(_aTimetable);
+        ?>);
 
         _Records = 
         <?
@@ -127,7 +118,7 @@
                     if ($Change['Date'] === $Field[0] && $Change['Index'] === $Field[1])
                     {
                         if (!$Change['UserFields'])
-                            $Change['UserFields'] = [$Field];
+                            $Change['UserFields'] = [];
                         array_push($Change['UserFields'], [$Field[2], $Field[3]]);
 
                         $Found = true;

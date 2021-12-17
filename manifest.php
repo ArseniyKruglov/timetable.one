@@ -6,5 +6,5 @@
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
-  "start_url": "/<? echo $_GET['URL'] ?>"
+  "start_url": "/<? echo explode('/', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH))[1] ?>"
 }

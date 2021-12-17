@@ -1,11 +1,7 @@
-// Basic variables
-
 let _iToday = DateToInt(new Date());
-const _iLanguage = Language_Get();
+let _iLanguage = Language_Get();
 
 
-
-// Body
 
 document.body.innerHTML =  `<main>
                                 <div id='Information' class='Island EmptyHidden'></div>
@@ -25,30 +21,18 @@ document.body.innerHTML =  `<main>
 
 
 
-// Timetable
-
-const _Timetable = new Timetable(_aTimetable);
-_Timetable.WeekOffset = _Timetable.WeekOffset_Default;
-if (_Alarms.Empty)
-    _Timetable.Body.classList.add('NoAlarms');
-delete _aTimetable;
+_Timetable.Init();
 
 
-
-// Information
 
 const _Information = new Information();
 
 
 
-// URL
-
 const _Router = new Router();
-_Router.Route();
+_Router.Init();
 
 
-
-// Midnight
 
 {
     const Midnight = () =>

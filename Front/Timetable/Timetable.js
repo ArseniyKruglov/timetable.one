@@ -2,48 +2,31 @@ class Timetable
 {
     constructor(aTimetable)
     {
-        /*
-        function GetDefaultWeekOffset()
+        for (let loop_aTimetable of aTimetable)
         {
-            if (this.DateToIndexes(_iToday).length !== 0)
-                return 0;
+            for (let loop_aDay of loop_aTimetable[1].Lessons)
+                for (let loop_aLesson of loop_aDay)
+                    loop_aLesson[1].Fields.UserFields = new Map(loop_aLesson[1].Fields.UserFields);
 
-            let iDayOfWeek = new Date().getDayOfWeek();
-            let iLastStudyDay;
-            for (let i = _iToday - iDayOfWeek + 6; i >= _iToday - iDayOfWeek; i--)
-                if (this.DateToIndexes(i).length !== 0)
-                {
-                    iLastStudyDay = i;
-                    break;
-                };
-
-            if (iLastStudyDay !== undefined)
-            {
-                if (iLastStudyDay < _iToday)
-                    return 1;
-                else    
-                    return 0;
-            }
-            else
-            {
-                for (let i = _iToday - iDayOfWeek + 6 + 7; i >= _iToday - iDayOfWeek + 7; i--)
-                    if (this.DateToIndexes(i).length !== 0)
-                        return 1;
-
-                return 0;
-            };
+            loop_aTimetable[1].Lessons = loop_aTimetable[1].Lessons.map(loop_aDay => new Map(loop_aDay));
         };
-        */
 
-        this.Timetable = aTimetable;
+        this.Timetable = new Map(aTimetable);
+        this.Heights = new Map();
+
+
+
+
+    }
+
+    Init()
+    {
+        this.Initial = true;
+
+
 
         this.Body = document.getElementById('Timetable');
         this.Week = document.getElementById('Week');
-        this.Heights = new Map();
-
-        this.Initial = true;
-
-        this.WeekOffset_Default = 0;
 
         {
             const Scale = () =>
@@ -99,6 +82,48 @@ class Timetable
                     this.Week.children[2].click();
             });
         }
+
+        const GetDefaultWeekOffset = () =>
+        {
+            if (this.DateToIndexes(_iToday).length !== 0)
+                return 0;
+
+            let iDayOfWeek = new Date().getDayOfWeek();
+            let iLastStudyDay;
+            for (let i = _iToday - iDayOfWeek + 6; i >= _iToday - iDayOfWeek; i--)
+                if (this.DateToIndexes(i).length !== 0)
+                {
+                    iLastStudyDay = i;
+                    break;
+                };
+
+            if (iLastStudyDay !== undefined)
+            {
+                if (iLastStudyDay < _iToday)
+                    return 1;
+                else
+                    return 0;
+            }
+            else
+            {
+                for (let i = _iToday - iDayOfWeek + 6 + 7; i >= _iToday - iDayOfWeek + 7; i--)
+                    if (this.DateToIndexes(i).length !== 0)
+                        return 1;
+
+                return 0;
+            };
+        };
+
+        this.WeekOffset_Default = GetDefaultWeekOffset();
+
+        _Timetable.WeekOffset = _Timetable.WeekOffset_Default;
+
+        if (_Alarms.Empty)
+            _Timetable.Body.classList.add('NoAlarms');
+
+
+
+        this.Initial = false;
     }
 
 
@@ -317,96 +342,7 @@ class Timetable
 
     Body_Scroll(bSmooth)
     {
-        if (this.WeekOffset === 0)
-        {
-            if (document.body.clientWidth >= 600)
-            {
-                const iWeekBeginDate = this.OffsetToPeriod(0)[0];
-                for (let i = new Date().getDayOfWeek(); i < 7; i++)
-                {
-                    const eDay = this.DaySelector(i + iWeekBeginDate);
-                    if (eDay)
-                    {
-                        eDay.scrollIntoView({ inline: 'center', behavior: (bSmooth ? 'smooth' : 'auto') });
-                        break;
-                    };
-                };
-            }
-            else
-            {
-                const eToday = this.DaySelector(_iToday);
-                const eTomorrow = this.DaySelector(_iToday + 1);
-                const iTimetableHeight = this.Body.parentElement.clientHeight;
 
-
-
-                if (eToday === this.Body.firstElementChild)
-                {
-                    this.Body.parentElement.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
-                }
-                else if (eToday === this.Body.lastElementChild)
-                {
-                    this.Body.parentElement.scrollTo({ top: this.Body.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
-                }
-                else
-                {
-                    if (eToday)
-                    {
-                        if (eTomorrow)
-                        {
-                            if (eToday.clientHeight + eTomorrow.clientHeight + 50 <= iTimetableHeight)
-                                eTomorrow.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
-                            else
-                                eToday.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
-                        }
-                        else
-                        {
-                            if (eToday.clientHeight + 50 <= iTimetableHeight)
-                                eToday.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
-                            else
-                                eToday.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
-                        };
-                    }
-                    else if (eTomorrow)
-                    {
-                        if (eTomorrow.clientHeight + 50 <= iTimetableHeight)
-                            eTomorrow.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
-                        else
-                            eTomorrow.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
-                    }
-                    else
-                    {
-                        const iWeekBeginDate = this.OffsetToPeriod(0)[0];
-                        let bBreak = false;
-                        for (let i = new Date().getDayOfWeek() + 2; i < 7; i++)
-                        {
-                            const eDay = this.DaySelector(i + iWeekBeginDate);
-                            if (eDay)
-                            {
-                                if (eDay.clientHeight + 50 <= iTimetableHeight)
-                                    eDay.scrollIntoView({ block: 'end', behavior: (bSmooth ? 'smooth' : 'auto') });
-                                else
-                                    eDay.scrollIntoView({ behavior: (bSmooth ? 'smooth' : 'auto') });
-
-                                bBreak = true;
-                                break;
-                            };
-                        };
-
-                        if (bBreak === false)
-                            this.Body.parentElement.scrollTo({ top: this.Body.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
-                    };
-                };
-            };
-        }
-        else if (this.WeekOffset > 0)
-        {
-            this.Body.parentElement.scrollTo({ top: 0, behavior: (bSmooth ? 'smooth' : 'auto') });
-        }
-        else if (this.WeekOffset < 0)
-        {
-            this.Body.parentElement.scrollTo({ top: this.Body.scrollHeight, behavior: (bSmooth ? 'smooth' : 'auto') });
-        };
     }
 
 
@@ -487,10 +423,6 @@ class Timetable
             else
                 this.Week.children[1].innerHTML = `${Date_Format_Short(aWeekPeriod[0], true)} – ${Date_Format_Short(aWeekPeriod[1], true)}`;
         };
-
-
-
-        this.Initial = false;
     }
 
     get WeekOffset()

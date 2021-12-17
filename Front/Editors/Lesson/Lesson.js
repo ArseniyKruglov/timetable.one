@@ -152,7 +152,7 @@ class Lesson_UI
                     {
                         aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], () =>
                         {
-                            Lesson_SetChange(this.Date, this.Index, { 'Title': '' }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                            Lesson_SetChange(this.Date, this.Index, { 'Title': null, 'Place': null, 'Educator': null, 'UserFields': new Map() }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             this.Overlay.Close();
                         }]);
                     }

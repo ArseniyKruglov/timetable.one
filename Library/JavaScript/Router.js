@@ -4,9 +4,15 @@ class Router
     {
         this.URL = location.pathname.split('/')[1];
         this.History = [];
-        this.Initial = true;
 
         addEventListener('popstate', () => this.Route());
+    }
+
+    Init()
+    {
+        this.Initial = true;
+        this.Route();
+        this.Initial = false;
     }
 
     Route()
@@ -58,7 +64,7 @@ class Router
                     break;
 
                 case 'Add':
-                    window._Sudden_UI = new SuddenLesson_UI(parseInt(aNewPath[i][1].Date), !this.Initial);       // TO DO: _iToday
+                    window._Sudden_UI = new SuddenLesson_UI(parseInt(aNewPath[i][1].Date), !this.Initial);       // TO DO
                     break;
             };
 

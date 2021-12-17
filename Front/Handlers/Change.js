@@ -26,8 +26,13 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
             {
                 if (loop_sProperty === 'Title')
                 {
-                    if ((sOriginalTitle === null) ? (oChange.Title === '') : (oChange.Title === sOriginalTitle))
+                    if ((sOriginalTitle === null) ? (!oChange.Title) : (oChange.Title === sOriginalTitle))
                         delete oChange[loop_sProperty];
+                }
+                else if (loop_sProperty === 'UserFields')
+                {
+                    if (oChange.UserFields.size === 0)
+                        delete oChange.UserFields;
                 }
                 else if (oChange[loop_sProperty] === null)
                 {
@@ -42,41 +47,35 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
         }
 
 
+
         if (oInRecords_Change)
         {
             for (let loop_sProperty in oChange)
-                oInRecords_Change[loop_sProperty] = oChange[loop_sProperty];
+                if (loop_sProperty === 'UserFields')
+                {
+                    for (let loop_aField of oChange.UserFields)
+                        if (loop_aField[1] === null)
+                        {
+                            if ('UserFields' in oInRecords_Change)
+                                oInRecords_Change.UserFields.delete(loop_aField[0])
+                        }
+                        else
+                        {
+                            if (!'UserFields' in oInRecords_Change)
+                                oInRecords_Change.UserFields = new Map();
+
+                            oInRecords_Change.UserFields.set(loop_aField[0], loop_aField[1]);
+                        };
+                }
+                else
+                {
+                    oInRecords_Change[loop_sProperty] = oChange[loop_sProperty];
+                };
+
             oInRecords_Change = CleanUp(oInRecords_Change);
 
-
-
-            if (oInRecords_Change)
-            {
-                if (bSend)
-                {
-                    const oSend =
-                    {
-                        'Date': iDate,
-                        'Index': iIndex
-                    };
-
-                    for (let loop_sProperty in oChange)
-                        oSend[loop_sProperty] = oChange[loop_sProperty];
-
-                    SendRequest('/Back/Lesson_Change.php', oSend);
-                };
-            }
-            else
-            {
+            if (!oInRecords_Change)
                 _Records.Changes.removeWhere({ 'Date': iDate, 'Index': iIndex }, true);
-
-                if (bSend)
-                    SendRequest('/Back/Lesson_Remove.php',
-                    {
-                        'Date': iDate,
-                        'Index': iIndex
-                    });
-            };
         }
         else
         {
@@ -88,14 +87,30 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
             for (let loop_sProperty in oChange)
                 oInRecords_Change[loop_sProperty] = oChange[loop_sProperty];
+
             oInRecords_Change = CleanUp(oInRecords_Change);
 
             if (oInRecords_Change)
-            {
                 _Records.Changes.push(oInRecords_Change);
+        };
 
-                SendRequest('/Back/Lesson_Change.php', oInRecords_Change);
+        if (bSend)
+        {
+            const oSend =
+            {
+                'Date': iDate,
+                'Index': iIndex,
+                'OriginalTitle': sOriginalTitle
             };
+
+            for (let loop_sProperty in oChange)
+                if (loop_sProperty === 'UserFields')
+                    for (let loop_aField of oChange['UserFields'])
+                        oSend[`UserFields[${loop_aField[0]}]`] = loop_aField[1];
+                else
+                    oSend[loop_sProperty] = oChange[loop_sProperty];
+
+            SendRequest('/Back/Lesson_Change.php', oSend);
         };
 
         if (window._Lesson_UI)
@@ -146,7 +161,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
         if (oChange.hasOwnProperty('Title') || oChange.hasOwnProperty('Place'))
             _Information.Update(iDate);
 
-        if (oChange.hasOwnProperty('Place') || oChange.hasOwnProperty('Educator'))
+        if (oChange.hasOwnProperty('Place') || oChange.hasOwnProperty('Educator') || oChange.hasOwnProperty('UserFields'))
             if (window._Lesson_UI)
                 if (_Lesson_UI.Date === iDate && _Lesson_UI.Index === iIndex)
                     _Lesson_UI.Overlay.GetUIElement('.Info').innerHTML = _Lesson_UI.GetInfoIHTML();
