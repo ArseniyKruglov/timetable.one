@@ -13,10 +13,6 @@ class Timetable
 
         this.Timetable = new Map(aTimetable);
         this.Heights = new Map();
-
-
-
-
     }
 
     Init()
@@ -83,7 +79,7 @@ class Timetable
             });
         }
 
-        const GetDefaultWeekOffset = () =>
+        this.WeekOffset_Default = (() =>
         {
             if (this.DateToIndexes(_iToday).length !== 0)
                 return 0;
@@ -112,9 +108,7 @@ class Timetable
 
                 return 0;
             };
-        };
-
-        this.WeekOffset_Default = GetDefaultWeekOffset();
+        })();
 
         _Timetable.WeekOffset = _Timetable.WeekOffset_Default;
 

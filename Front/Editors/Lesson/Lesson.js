@@ -64,8 +64,8 @@ class Lesson_UI
 
             if (this.oInTimetable && this.oInTimetable.Fields.UserFields)
                 for (let loop_aField of this.oInTimetable.Fields.UserFields)
-                    aFilelds.push(
-                    {
+                    aFilelds.push
+                    ({
                         'FieldID': loop_aField[0],
                         'Icon': 'Circle',
                         'Default': loop_aField[1],
@@ -80,8 +80,8 @@ class Lesson_UI
                     if (oField)
                         oField.Change = loop_aField[1];
                     else
-                        aFilelds.push(
-                        {
+                        aFilelds.push
+                        ({
                             'FieldID': loop_aField[0],
                             'Icon': 'Circle',
                             'Default': null,
@@ -105,7 +105,7 @@ class Lesson_UI
                     }`;
 
             for (let loop_oField of aFilelds)
-                if (loop_oField.Change || loop_oField.Default)
+                if (loop_oField.Change !== '' && (loop_oField.Change || loop_oField.Default))
                     HTML += `<div class='${loop_oField.Change && !this.IsSudden ? (loop_oField.Default ? 'Change' : 'Sudden') : ''}'>
                                 <custom-icon icon='${loop_oField.Icon}'></custom-icon>
                                 <span>
@@ -152,7 +152,7 @@ class Lesson_UI
                     {
                         aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], () =>
                         {
-                            Lesson_SetChange(this.Date, this.Index, { 'Title': null, 'Place': null, 'Educator': null, 'UserFields': new Map() }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                            Lesson_SetChange(this.Date, this.Index, { 'Title': null, 'Place': null, 'Educator': null, 'UserFields': null }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             this.Overlay.Close();
                         }]);
                     }

@@ -66,7 +66,7 @@ class Day_UI
                         ]
                     );
                });
-            this.Overlay.GetUIElement('.Note').addEventListener('input', (Event) => this.Note = Event.target.value);
+            this.Overlay.GetUIElement('.Note').addEventListener('input', Event => Day_SetNote(this.Date, Event.target.value.trim(), true, true, true, false, this.oInRecords_Note));
         }
     }
 
@@ -75,10 +75,5 @@ class Day_UI
     get Note()
     {
         return this.oInRecords_Note ? this.oInRecords_Note.Note : '';
-    }
-
-    set Note(sNote)
-    {
-        this.oInRecords_Note = Day_SetNote(this.Date, sNote.trim(), true, true, true, false, this.oInRecords_Note);
     }
 }

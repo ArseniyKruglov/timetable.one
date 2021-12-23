@@ -1,10 +1,11 @@
 <?
 include '../Library/PHP/Handler.php';
-include '../Library/PHP/Constants.php';
 include '../Library/PHP/Timestamp.php';
 
 function Callback($SQL, $POST, $UserID)
 {
+    include '../Library/PHP/Constants.php';
+
     $Date = IntToDate((int) $POST['Date']);
     $Index = $POST['Index'];
 
@@ -12,40 +13,61 @@ function Callback($SQL, $POST, $UserID)
     $Place = $POST['Place'];
     $Educator = $POST['Educator'];
 
-    $Title_INSERT = $Title === NULL ? 'NULL' : ("'" . substr($Title, 0, $GLOBALS['MaxTitleLength']) . "'");
-    $Place_INSERT = $Place === NULL ? 'NULL' : ("'" . substr($Place, 0, $GLOBALS['MaxPlaceLength']) . "'");
-    $Educator_INSERT = $Educator === NULL ? 'NULL' : ("'" . substr($Educator, 0, $GLOBALS['MaxEducatorLength']) . "'");
-
-    $Title_UPDATE = ($Title === 'null') ? 'NULL' :( "'" . $Title . "'");
-    $Place_UPDATE = ($Place === 'null') ? 'NULL' : ("'" . $Place . "'");
-    $Educator_UPDATE = ($Educator === 'null') ? 'NULL' : ("'" . $Educator . "'");
 
 
-
-    $Request = "INSERT INTO `Changes` VALUES ($UserID, '$Date', $Index, $Title_INSERT, $Place_INSERT, $Educator_INSERT)";
-    if ($Title !== NULL || $Place !== NULL || $Educator !== NULL)
-        $Request .= " ON DUPLICATE KEY UPDATE ";
-
-    $Comma = false;
-    if ($Title !== NULL)
+    if (isset($Title) || isset($Place) || isset($Educator))
     {
-        $Request .= "`Title` = $Title_UPDATE";
-        $Comma = true;
-    };
-    if ($Place !== NULL)
-    {
-        $Request .= ($Comma ? ', ' : '') . "`Place` = $Place_UPDATE";
-        $Comma = true;
-    };
-    if ($Educator !== NULL)
-    {
-        $Request .= ($Comma ? ', ' : '') . "`Educator` = $Educator_UPDATE";
+        $Title_UPDATE = ($Title === NULL || $Title === 'null' || $POST['OriginalTitle'] === $Title) ? 'NULL' :( "'" . substr($Title, 0, $MaxTitleLength) . "'");
+        $Place_UPDATE = ($Place === NULL || $Place === 'null') ? 'NULL' :( "'" . substr($Place, 0, $MaxPlaceLength) . "'");
+        $Educator_UPDATE = ($Educator === NULL || $Educator === 'null') ? 'NULL' :( "'" . substr($Educator, 0, $MaxEducatorLength) . "'");
+
+
+
+        $Request = "INSERT INTO `Changes` VALUES ($UserID, '$Date', $Index, $Title_UPDATE, $Place_UPDATE, $Educator_UPDATE)
+                        ON DUPLICATE KEY UPDATE ";
+    
+        $Comma = false;
+
+        if (isset($Title))
+        {
+            $Request .= "`Title` = $Title_UPDATE";
+            $Comma = true;
+        };
+        if (isset($Place))
+        {
+            $Request .= ($Comma ? ', ' : '') . "`Place` = $Place_UPDATE";
+            $Comma = true;
+        };
+        if (isset($Educator))
+        {
+            $Request .= ($Comma ? ', ' : '') . "`Educator` = $Educator_UPDATE";
+        };
+    
+        $Request .= ";
+                     DELETE FROM `Changes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index) AND (`Title` IS NULL) AND (`Place` IS NULL) AND (`Educator` IS NULL);";
     };
 
-    $Request .= ";
-                 DELETE FROM `Changes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index) AND (`Title` IS NULL) AND (`Place` IS NULL) AND (`Educator` IS NULL);";
+    if (isset($POST['UserFields']))
+    {
+        if ($POST['UserFields'] === 'null')
+        {
+            $Request .= "DELETE FROM `Changes_Fields` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index)";
+        }
+        else
+        {
+            foreach (array_keys($POST['UserFields']) as &$FieldID)
+            {
+                $Text = $POST['UserFields'][$FieldID];
+        
+                if ($Text === 'null')
+                    $Request .= "DELETE FROM `Changes_Fields` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index) AND (`FieldID` = $FieldID)";
+                else
+                    $Request .= "INSERT INTO `Changes_Fields` VALUES ($UserID, '$Date', $Index, $FieldID, '$Text')
+                                    ON DUPLICATE KEY UPDATE `Text` = '$Text'";
+            };
+        };
+    };
 
-    echo $Request;
     $SQL->multi_query($Request);
 };
 

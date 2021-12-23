@@ -4,8 +4,8 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
     if (sOriginalTitle === undefined)
     {
-        const mDayTimetable = _Timetable.DateToTimetable(this.Date);
-        const oInTimetable = mDayTimetable.get(this.Index)
+        const mDayTimetable = _Timetable.DateToTimetable(iDate);
+        const oInTimetable = mDayTimetable.get(iIndex)
         if (oInTimetable)
             sOriginalTitle = oInTimetable.Title;
         else
@@ -22,23 +22,12 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
     {
         function CleanUp(oChange)
         {
+            if (('Title' in oChange) && ((sOriginalTitle === null) ? (!oChange.Title) : (oChange.Title === sOriginalTitle)))
+                delete oChange.Title;
+
             for (let loop_sProperty in oChange)
-            {
-                if (loop_sProperty === 'Title')
-                {
-                    if ((sOriginalTitle === null) ? (!oChange.Title) : (oChange.Title === sOriginalTitle))
-                        delete oChange[loop_sProperty];
-                }
-                else if (loop_sProperty === 'UserFields')
-                {
-                    if (oChange.UserFields.size === 0)
-                        delete oChange.UserFields;
-                }
-                else if (oChange[loop_sProperty] === null)
-                {
+                if (oChange[loop_sProperty] === null)
                     delete oChange[loop_sProperty];
-                };
-            };
 
             if (Object.keys(oInRecords_Change).length === 2)
                 return null;
@@ -53,19 +42,22 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
             for (let loop_sProperty in oChange)
                 if (loop_sProperty === 'UserFields')
                 {
-                    for (let loop_aField of oChange.UserFields)
-                        if (loop_aField[1] === null)
-                        {
-                            if ('UserFields' in oInRecords_Change)
-                                oInRecords_Change.UserFields.delete(loop_aField[0])
-                        }
-                        else
-                        {
-                            if (!'UserFields' in oInRecords_Change)
-                                oInRecords_Change.UserFields = new Map();
+                    if (oChange.UserFields === null)
+                        delete oInRecords_Change.UserFields;
+                    else
+                        for (let loop_aField of oChange.UserFields)
+                            if (loop_aField[1] === null)
+                            {
+                                if ('UserFields' in oInRecords_Change)
+                                    oInRecords_Change.UserFields.delete(loop_aField[0])
+                            }
+                            else
+                            {
+                                if (!('UserFields' in oInRecords_Change))
+                                    oInRecords_Change.UserFields = new Map();
 
-                            oInRecords_Change.UserFields.set(loop_aField[0], loop_aField[1]);
-                        };
+                                oInRecords_Change.UserFields.set(loop_aField[0], loop_aField[1]);
+                            };
                 }
                 else
                 {
@@ -278,6 +270,6 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
         if (oChange.hasOwnProperty('Title'))
             if (window._Lesson_UI)
                 if (_Lesson_UI.Date === iDate && _Lesson_UI.Index === iIndex)
-                    _Lesson_UI.Overlay.GetUIElement('.Title').value = oChange.Title;
+                    _Lesson_UI.Overlay.GetUIElement('.Title').value = _Lesson_UI.IsCanceled ? '' : _Lesson_UI.Title;
     };
 }

@@ -41,14 +41,6 @@
     animation: Overlay_Background var(--Background02-AppearanceSpeed);
 }
 
-@media (prefers-reduced-motion: reduce)
-{
-    .Overlay.Animation > :first-child
-    {
-        animation: none;
-    }
-}
-
 @keyframes Overlay_Background
 {
     0%   {opacity: 0% }
