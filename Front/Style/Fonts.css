@@ -1,27 +1,4 @@
 *
 {
-    font-family: 'Google Sans', 'TT Norms', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-
-
-@font-face 
-{
-    font-family: 'TT Norms';
-    font-weight: 400;
-    src: url(Fonts/TTNorms-Regular.ttf);
-}
-
-@font-face
-{
-    font-family: 'TT Norms';
-    font-weight: 500;
-    src: url(Fonts/TTNorms-Medium.ttf);
-}
-
-@font-face
-{
-    font-family: 'TT Norms';
-    font-weight: 700;
-    src: url(Fonts/TTNorms-Bold.ttf);
+    font-family: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }

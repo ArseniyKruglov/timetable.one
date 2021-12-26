@@ -66,6 +66,11 @@ class Timetable
                     };
             });
 
+            this.Body.addEventListener('scroll', () =>
+            {
+                this.Scrolled = true;
+            });
+
             addEventListener('swiped-right', () =>
             {
                 if ((_Timetable.Body.scrollWidth === _Timetable.Body.clientWidth) && !Overlays_Opened())
@@ -336,7 +341,91 @@ class Timetable
 
     Body_Scroll(bSmooth)
     {
+        const bOnlyColumn = (this.Body.style.gridTemplateColumns === `repeat(1, 1fr)`);
+        const bOnlyRow = (this.Body.style.gridTemplateColumns === `repeat(${this.Body.children.length}, 1fr)`);
 
+        const ScrollToBottom = () =>
+        {
+            this.Body.scrollTo(this.Body.scrollWidth, this.Body.scrollHeight);
+            this.Body.parentElement.scrollTo(this.Body.parentElement.scrollWidth, (bOnlyRow ? 0 : this.Body.parentElement.scrollHeight));
+        }
+
+
+
+        if (this.WeekOffset === 0)
+        {
+            const eToday = this.DaySelector(_iToday);
+            const eTomorrow = this.DaySelector(_iToday + 1);
+            const iAvalableHeight = this.Body.parentElement.clientHeight - 60;
+
+            const ScrollToToday = () =>
+            {
+                if (bOnlyColumn)
+                {
+                    if (eTomorrow)
+                        if (eToday.parentElement.clientHeight + eTomorrow.parentElement.clientHeight + 60 <= iAvalableHeight)
+                        {
+                            eTomorrow.parentElement.scrollIntoView
+                            ({
+                                block: 'end',
+                                inline: 'center',
+                                behavior: (bSmooth ? 'smooth' : 'auto')
+                            });
+
+                            return;
+                        };
+
+                    eToday.parentElement.scrollIntoView
+                    ({
+                        block: 'start',
+                        inline: 'center',
+                        behavior: (bSmooth ? 'smooth' : 'auto')
+                    });
+                }
+                else
+                {
+                    eToday.parentElement.scrollIntoView
+                    ({
+                        block: 'start',
+                        inline: 'center',
+                        behavior: (bSmooth ? 'smooth' : 'auto')
+                    });
+                };
+            };
+
+
+
+            if (eTomorrow)
+                if (eTomorrow.parentElement === this.Body.lastElementChild)
+                    if ((eToday ? (eToday.parentElement.clientHeight + 60) : 0) + eTomorrow.parentElement.clientHeight <= iAvalableHeight)
+                    {
+                        ScrollToBottom();
+                        return;
+                    };
+
+            if (eToday)
+                if (eToday.parentElement === this.Body.lastElementChild)    // Если сегодня последний день недели
+                {
+                    if (eToday.parentElement.clientHeight <= iAvalableHeight)   // Помещается полностью – прокрутка до конца расписания
+                        ScrollToBottom();
+                    else                                                        // Помещается частично – прокрутка до верха сегодня
+                        eToday.parentElement.scrollIntoView
+                        ({
+                            block: 'start',
+                            inline: 'center',
+                            behavior: (bSmooth ? 'smooth' : 'auto')
+                        });
+
+                    return;
+                };
+
+            if (eToday)
+                ScrollToToday();
+        }
+        else if (this.WeekOffset < 0)   // В прошлом – прокрутка до конца расписания
+        {
+            ScrollToBottom();
+        };
     }
 
 
@@ -365,8 +454,8 @@ class Timetable
 
         if (eLesson)
         {
-            eLesson.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
             eLesson.focus({ preventScroll: true });
+            eLesson.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
             eLesson.parentElement.classList.add('Focused');
             setTimeout(() =>
             {

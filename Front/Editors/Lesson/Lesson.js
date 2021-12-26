@@ -29,7 +29,8 @@ class Lesson_UI
             }
             else
             {
-                alert(['Not found', 'Не найдено'][_iLanguage]);
+                alert(['Lesson not found', 'Занятие не найдено'][_iLanguage]);
+                this.Overlay.Close();
             };
         };
         this.Overlay.Callback_Close = () => delete window._Lesson_UI;
