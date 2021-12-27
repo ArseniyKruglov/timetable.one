@@ -137,7 +137,7 @@ class SuddenLesson_UI
                     if (event.target.checkValidity())
                         SetError(true);
                     else
-                        SetError(false, true, event.target.validationMessage);
+                        SetError(false, false, event.target.validationMessage);
                 };
             });
         }

@@ -143,8 +143,8 @@ class Lesson_UI
 
                 aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], () =>
                 {
-                    _Timetable.FocusLesson(this.Date, this.Index);
                     this.Overlay.Close();
+                    _Timetable.FocusLesson(this.Date, this.Index);
                 }]);
 
                 if (_iAccessLevel === 2)

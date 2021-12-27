@@ -97,8 +97,11 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
             for (let loop_sProperty in oChange)
                 if (loop_sProperty === 'UserFields')
-                    for (let loop_aField of oChange['UserFields'])
-                        oSend[`UserFields[${loop_aField[0]}]`] = loop_aField[1];
+                    if (oChange.UserFields === null)
+                        oSend.UserFields = null;
+                    else
+                        for (let loop_aField of oChange.UserFields)
+                            oSend[`UserFields[${loop_aField[0]}]`] = loop_aField[1];
                 else
                     oSend[loop_sProperty] = oChange[loop_sProperty];
 

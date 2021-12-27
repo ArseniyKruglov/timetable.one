@@ -61,6 +61,8 @@ class Router
 
                 case 'Day':
                     window._Day_UI = new Day_UI(parseInt(aNewPath[i][1].Date), !this.Initial);
+                    if (this.Initial)
+                        _Timetable.WeekOffset = _Timetable.DateToOffset(aNewPath[i][1].Date);
                     break;
 
                 case 'Add':
