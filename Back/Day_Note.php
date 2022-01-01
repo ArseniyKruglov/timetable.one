@@ -7,7 +7,7 @@ function Callback($SQL, $POST, $UserID)
     include '../Library/PHP/Constants.php';
 
     $Date = IntToDate((int) $POST['Date']);
-    $Note = substr($POST['Note'], 0, $MaxNoteLength);
+    $Note = substr($POST['Note'], 0, $Constants['MaxNoteLength']);
 
     $SQL->query("DELETE FROM `Notes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Title` IS NULL)");
     if ($Note !== '')

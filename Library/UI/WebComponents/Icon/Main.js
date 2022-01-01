@@ -27,7 +27,7 @@ class Icon extends HTMLElement
 
     connectedCallback()
     {
-        this.innerHTML = `<svg viewBox='0 0 24 24'><${this.Icons[(this.getAttribute('icon') || 'Circle')]}></svg>`;
+        this.innerHTML = `<svg viewBox='0 0 24 24'><${this.Icons[(this.getAttribute('icon'))] || this.Icons.Circle}></svg>`;
     }
 }
 

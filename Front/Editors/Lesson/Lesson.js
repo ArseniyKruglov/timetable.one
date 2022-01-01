@@ -117,81 +117,115 @@ class Lesson_UI
             return HTML;
         }
 
+        this.GetAttachmentsIHTML = () =>
+        {
+            if (this.oInRecords_Note)
+                if ('Attachments' in this.oInRecords_Note)
+                {
+                    let HTML = '';
+
+                    for (let loop_oAttachment of this.oInRecords_Note.Attachments)
+                        HTML += `<div>
+                                    <a href='https://527010.selcdn.ru/timetable.one Dev/${loop_oAttachment.Folder}/${loop_oAttachment.Filename}' target='_blank'>
+                                        <span>${loop_oAttachment.Filename}</span>
+                                    </a>
+                                    ${_iAccessLevel === 2 ? `<custom-round-button icon='RemoveForever'></custom-round-button>` : ''}
+                                 </div>`;
+
+                    return HTML;
+                };
+
+            return '';
+        }
+
         let HTML = `<div class='Header'>
-                        <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
+                        <span><custom-round-button icon='Arrow Back' onclick='_Lesson_UI.Overlay.Close()'></custom-round-button></span>
                         <span><custom-round-button icon='More'></custom-round-button></span>
                     </div>
 
-                    <custom-textarea class='Title ${this.IsSudden ? 'Sudden' : (this.IsChanged ? 'Change' : '')}' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength}>${this.IsCanceled ? '' : this.Title}</custom-textarea>
+                    <custom-textarea class='Title ${this.IsSudden ? 'Sudden' : (this.IsChanged ? 'Change' : '')}' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength} oninput='Lesson_SetChange(_Lesson_UI.Date, _Lesson_UI.Index, { "Title": this.value.trim() }, true, true, true, false, _Lesson_UI.oInRecords_Change, _Lesson_UI.OriginalTitle)'>${this.IsCanceled ? '' : this.Title}</custom-textarea>
 
                     <div class='Info'>
                         ${this.GetInfoIHTML()}
                     </div>
 
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength}>${this.Note}</custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength} oninput='SetNote(_Lesson_UI.Date, _Lesson_UI.Title, this.value.trim(), true, true, true, false, false, _Lesson_UI.oInRecords_Note);'>${this.Note}</custom-textarea>
+
+                    <div class='Attachments EmptyHidden'>${this.GetAttachmentsIHTML()}</div>`;
 
         this.Overlay.Body.innerHTML = HTML;
 
 
 
+        this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', Event =>
         {
-            this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => this.Overlay.Close() );
+            let aActions = [];
 
-            this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', Event =>
-            {
-                let aActions = [];
-
-                aActions.push(['Timetable', ['Show in timetable', 'Показать в расписании'][_iLanguage], () =>
+            aActions.push
+            ([
+                'Timetable',
+                ['Show in timetable', 'Показать в расписании'][_iLanguage],
+                () =>
                 {
                     this.Overlay.Close();
                     _Timetable.FocusLesson(this.Date, this.Index);
-                }]);
+                }
+            ]);
 
-                if (_iAccessLevel === 2)
+            if (_iAccessLevel === 2)
+            {
+                if (this.IsSudden)
                 {
-                    if (this.IsSudden)
-                    {
-                        aActions.push(['RemoveForever', ['Remove lesson', 'Удалить занятие'][_iLanguage], () =>
+                    aActions.push
+                    ([
+                        'RemoveForever',
+                        ['Remove lesson', 'Удалить занятие'][_iLanguage],
+                        () =>
                         {
                             Lesson_SetChange(this.Date, this.Index, { 'Title': null, 'Place': null, 'Educator': null, 'UserFields': null }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             this.Overlay.Close();
-                        }]);
-                    }
-                    else if (this.IsChanged)
-                    {
-                        if (this.IsCanceled)
-                            aActions.push(['Restore', ['Undo cancellation', 'Отменить отмену'][_iLanguage], () =>
+                        }
+                    ]);
+                }
+                else if (this.IsChanged)
+                {
+                    if (this.IsCanceled)
+                        aActions.push
+                        ([
+                            'Restore',
+                            ['Undo cancellation', 'Отменить отмену'][_iLanguage],
+                                () =>
                             {
                                 Lesson_SetChange(this.Date, this.Index, { 'Title': this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
-                            }]);
-                        else
-                            aActions.push(['Restore', ['Remove replacement', 'Убрать замену'][_iLanguage], () =>
-                            {
-                                Lesson_SetChange(this.Date, this.Index, { 'Title': this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
-                            }]);
-                    }
+                            }
+                        ]);
                     else
-                    {
-                        aActions.push(['Clear', ['Cancel lesson', 'Отменить занятие'][_iLanguage], () =>
+                        aActions.push
+                        ([
+                            'Restore',
+                            ['Remove replacement', 'Убрать замену'][_iLanguage],
+                            () =>
+                            {
+                                Lesson_SetChange(this.Date, this.Index, { 'Title': this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                            }
+                        ]);
+                }
+                else
+                {
+                    aActions.push
+                    ([
+                        'Clear',
+                        ['Cancel lesson', 'Отменить занятие'][_iLanguage],
+                        () =>
                         {
                             Lesson_SetChange(this.Date, this.Index, { 'Title': '' }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
-                        }]);
-                    };
+                        }
+                    ]);
                 };
+            };
 
-                DropDown(Event.target, aActions);
-            });
-
-            this.Overlay.GetUIElement('.Title').addEventListener('input', Event =>
-            {
-                Lesson_SetChange(this.Date, this.Index, { 'Title': Event.target.value.trim() }, true, true, true, false, this.oInRecords_Change, this.OriginalTitle);
-            });
-
-            this.Overlay.GetUIElement('.Note').addEventListener('input', Event =>
-            {
-                Lesson_SetNote(this.Date, this.Title, Event.target.value.trim(), true, true, true, false, false, this.oInRecords_Note);
-           });
-        }
+            DropDown(Event.target, aActions);
+        });
     }
 
 
@@ -203,7 +237,11 @@ class Lesson_UI
 
     get Note()
     {
-        return this.oInRecords_Note ? this.oInRecords_Note.Note : '';
+        if (this.oInRecords_Note)
+            if ('Note' in this.oInRecords_Note)
+                return this.oInRecords_Note.Note;
+
+        return '';
     }
 
     get OriginalTitle()

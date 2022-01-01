@@ -240,7 +240,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     else
                     {
                         eDay = document.createElement('div');
-                        eDay.className = `Day ${ (iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '') } ${ _Records.Notes.selectWhere({ 'Date': iDate, 'Title': undefined }) ? 'Note' : '' }`;
+                        eDay.className = `Day ${ (iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '') } ${ _Records.Notes.selectWhere({ 'Date': iDate, 'Title': undefined }, true) ? 'Note' : '' }`;
                         eDay.innerHTML = `<a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');">
                                             <div>${Date_Format(IntToDate(iDate))}</div>
                                             <div class='EmptyHidden'>${_Timetable.DateToAlarmsPeriod(iDate)}</div>

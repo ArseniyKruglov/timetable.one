@@ -36,21 +36,6 @@ class Timetable
             addEventListener('resize', Scale);
             document.fonts.ready.then(Scale);
 
-            this.Week.children[0].addEventListener('click', () =>
-            {
-                this.WeekOffset--;
-            });
-
-            this.Week.children[1].addEventListener('click', () =>
-            {
-                this.WeekOffset = this.WeekOffset_Default;
-            });
-
-            this.Week.children[2].addEventListener('click', () =>
-            {
-                this.WeekOffset++;
-            });
-
             addEventListener('keydown', Event =>
             {
                 if (!Overlays_Opened())
@@ -64,11 +49,6 @@ class Timetable
                             this.Week.children[2].click();
                             break;
                     };
-            });
-
-            this.Body.addEventListener('scroll', () =>
-            {
-                this.Scrolled = true;
             });
 
             addEventListener('swiped-right', () =>
@@ -537,9 +517,6 @@ class Timetable
 
         for (let loop_oNote of _Records.Notes)
             if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])
-                if ('Title' in loop_oNote)
-                    Lesson_SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false);
-                else
-                    Day_SetNote(loop_oNote.Date, true, true, false, false, false);
+                SetNote(loop_oNote.Date, loop_oNote.Title, true, true, false, false, false);
     }
 }

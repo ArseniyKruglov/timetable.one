@@ -27,7 +27,7 @@ class Day_UI
         this.Overlay.Body.className = 'Details';
 
         let HTML = `<div class='Header'>
-                        <span><custom-round-button icon='Arrow Back'></custom-round-button></span>
+                        <span><custom-round-button icon='Arrow Back' onclick='_Day_UI.Overlay.Close()'></custom-round-button></span>
                         ${(_iAccessLevel === 2) ? `<span><custom-round-button icon='More'></custom-round-button></span>`: '' }
                     </div>
 
@@ -44,36 +44,45 @@ class Day_UI
                     : ''
                 }
 
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength}>${this.Note}</custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength} oninput='SetNote(_Day_UI.Date, undefined, this.value.trim(), true, true, true, false, _Day_UI.oInRecords_Note)'>${this.Note}</custom-textarea>`;
 
         this.Overlay.Body.innerHTML = HTML;
 
 
 
-        {
-            this.Overlay.GetUIElement('.Header').children[0].addEventListener('click', () => this.Overlay.Close());
-            if (_iAccessLevel === 2)
-                this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
-                {
-                    DropDown
-                    (
-                        Event.target,
+        if (_iAccessLevel === 2)
+            this.Overlay.GetUIElement('.Header').children[1].addEventListener('click', (Event) =>
+            {
+                DropDown
+                (
+                    Event.target,
+                    [
                         [
-                            ['Queue', ['Add lesson', 'Добавить занятие'][_iLanguage], () =>
+                            'Queue',
+                            ['Add lesson', 'Добавить занятие'][_iLanguage],
+                            () =>
                             {
                                 _Router.Forward(`/Day?Date=${this.Date}/Add?Date=${this.Date}`);
-                            }]
+                            }
+                        ],
+                        [
+                            'Attach',
+                            ['Attach file', 'Приложить файл'][_iLanguage],
+                            () => {}
                         ]
-                    );
-               });
-            this.Overlay.GetUIElement('.Note').addEventListener('input', Event => Day_SetNote(this.Date, Event.target.value.trim(), true, true, true, false, this.oInRecords_Note));
-        }
+                    ]
+                );
+            });
     }
 
 
 
     get Note()
     {
-        return this.oInRecords_Note ? this.oInRecords_Note.Note : '';
+        if (this.oInRecords_Note)
+            if ('Note' in this.oInRecords_Note)
+                return this.oInRecords_Note.Note;
+
+        return '';
     }
 }

@@ -51,3 +51,57 @@
 {
     word-break: break-word;
 }
+
+
+
+.Details .Attachments
+{
+    display: grid;
+    border-radius: 5px;
+    border: var(--Border);
+}
+
+.Details .Attachments > *
+{
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.Details .Attachments > :not(:last-child)
+{
+    border-bottom: var(--Border);
+}
+
+
+
+.Details .Attachments > * > custom-round-button
+{
+    margin: 12px;
+    aspect-ratio: 1;
+    --Icon-Color: var(--Accent70);
+    --Hover-Color: var(--Caution);
+}
+
+.Details .Attachments > * > a
+{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 12px 14px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.Details .Attachments > * > a > span
+{
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.Details .Attachments > * > a:hover
+{
+    background-color: var(--Accent02-5);
+}
