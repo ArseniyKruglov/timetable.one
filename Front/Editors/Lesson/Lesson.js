@@ -143,13 +143,13 @@ class Lesson_UI
                         <span><custom-round-button icon='More'></custom-round-button></span>
                     </div>
 
-                    <custom-textarea class='Title ${this.IsSudden ? 'Sudden' : (this.IsChanged ? 'Change' : '')}' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength} oninput='Lesson_SetChange(_Lesson_UI.Date, _Lesson_UI.Index, { "Title": this.value.trim() }, true, true, true, false, _Lesson_UI.oInRecords_Change, _Lesson_UI.OriginalTitle)'>${this.IsCanceled ? '' : this.Title}</custom-textarea>
+                    <custom-textarea class='Title ${this.IsSudden ? 'Sudden' : (this.IsChanged ? 'Change' : '')}' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength} oninput='Lesson_SetChange(${this.Date}, ${this.Index}, { "Title": this.value.trim() }, true, true, true, false, _Lesson_UI.oInRecords_Change, _Lesson_UI.OriginalTitle)'>${this.IsCanceled ? '' : this.Title}</custom-textarea>
 
                     <div class='Info'>
                         ${this.GetInfoIHTML()}
                     </div>
 
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength} oninput='SetNote(_Lesson_UI.Date, _Lesson_UI.Title, this.value.trim(), true, true, true, false, false, _Lesson_UI.oInRecords_Note);'>${this.Note}</custom-textarea>
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength} oninput='SetNote(${this.Date}, "${this.Title}", this.value.trim(), true, true, true, false, false, _Lesson_UI.oInRecords_Note);'>${this.Note}</custom-textarea>
 
                     <div class='Attachments EmptyHidden'>${this.GetAttachmentsIHTML()}</div>`;
 
@@ -174,6 +174,23 @@ class Lesson_UI
 
             if (_iAccessLevel === 2)
             {
+                aActions.push
+                ([
+                    'Attach',
+                    ['Attach files', 'Приложить файлы'][_iLanguage],
+                    () =>
+                    {
+                        const eInput = document.createElement('input');
+                        eInput.setAttribute('type', 'file');
+                        eInput.setAttribute('multiple', '');
+                        eInput.click();
+                        eInput.addEventListener('change', (Event) =>
+                        {
+                            UploadAttachments(this.Date, this.Title, Event.target.files, this.oInRecords_Note);
+                        });
+                    }
+                ]);
+
                 if (this.IsSudden)
                 {
                     aActions.push

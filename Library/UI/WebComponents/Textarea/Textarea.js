@@ -5,7 +5,10 @@ class Textarea extends HTMLElement
         let sAttributes = '';
         for (let loop_sAttribute of this.attributes)
             if (loop_sAttribute.nodeName !== 'class')
+            {
                 sAttributes += `${loop_sAttribute.nodeName}='${loop_sAttribute.nodeValue}' `;
+                this.removeAttribute(loop_sAttribute.nodeName);
+            };
 
         this.innerHTML =   `<div class='Underline'>
                                 <textarea ${sAttributes}>${this.innerHTML}</textarea>

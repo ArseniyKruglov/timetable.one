@@ -17,7 +17,7 @@ function SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oInRecord
             {
                 oInRecords = null;
 
-                _Records.Notes.removeWhere({ 'Date': iDate, 'Title': sTitle }, true);
+                _Records.Notes.removeWhere({ 'Date': iDate, 'Title': sTitle }, true);       // TO DO: удаление через .indexOf
             };
         }
         else
@@ -42,21 +42,40 @@ function SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oInRecord
             };
         };
 
+        if (sTitle)
+        {
+            if (window._Lesson_UI)
+                if (_Lesson_UI.Date === iDate && _Lesson_UI.Title === sTitle)
+                    _Lesson_UI.oInRecords_Note = oInRecords;
+        }
+        else
+        {
+            if (window._Day_UI)
+                if (_Day_UI.Date === iDate)
+                    _Day_UI.oInRecords_Note = oInRecords;
+        };
+
         if (bSend)
         {
             if (sTitle)
-                SendRequest('/Back/Lesson_Note.php',
-                {
-                    'Date': iDate,
-                    'Title': sTitle,
-                    'Note': sNote
-                });
+                SendRequest
+                (
+                    '/Back/Lesson_Note.php',
+                    {
+                        'Date': iDate,
+                        'Title': sTitle,
+                        'Note': sNote
+                    }
+                );
             else
-                SendRequest('/Back/Day_Note.php',
-                {
-                    'Date': iDate,
-                    'Note': sNote
-                });
+                SendRequest
+                (
+                    '/Back/Day_Note.php',
+                    {
+                        'Date': iDate,
+                        'Note': sNote
+                    }
+                );
         };
     };
 
@@ -99,6 +118,4 @@ function SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oInRecord
                     _Day_UI.Overlay.GetUIElement('.Note').value = _Day_UI.Note;
         };
     };
-
-    return oInRecords;
 }

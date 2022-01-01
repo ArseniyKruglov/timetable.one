@@ -428,17 +428,21 @@ class Timetable
 
     FocusLesson(iDate, iIndex)
     {
-        this.WeekOffset = this.DateToOffset(iDate);
+        const iNewWeekOffset = this.DateToOffset(iDate);
+        if (this.WeekOffset !== iNewWeekOffset)
+            this.WeekOffset = iNewWeekOffset;
 
         const eLesson = this.LessonSelector(iDate, iIndex);
 
         if (eLesson)
         {
             eLesson.focus({ preventScroll: true });
-            eLesson.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
-            eLesson.parentElement.classList.add('Focused');
+
             setTimeout(() =>
             {
+                eLesson.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
+                eLesson.parentElement.classList.add('Focused');
+
                 addEventListener('click', () =>
                 {
                     eLesson.parentElement.classList.remove('Focused');

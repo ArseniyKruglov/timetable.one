@@ -44,7 +44,7 @@ class Day_UI
                     : ''
                 }
 
-                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength} oninput='SetNote(_Day_UI.Date, undefined, this.value.trim(), true, true, true, false, _Day_UI.oInRecords_Note)'>${this.Note}</custom-textarea>`;
+                    <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength} oninput='SetNote(${this.Date}, undefined, this.value.trim(), true, true, true, false, _Day_UI.oInRecords_Note)'>${this.Note}</custom-textarea>`;
 
         this.Overlay.Body.innerHTML = HTML;
 
@@ -67,8 +67,18 @@ class Day_UI
                         ],
                         [
                             'Attach',
-                            ['Attach file', 'Приложить файл'][_iLanguage],
-                            () => {}
+                            ['Attach files', 'Приложить файлы'][_iLanguage],
+                            () =>
+                            {
+                                const eInput = document.createElement('input');
+                                eInput.setAttribute('type', 'file');
+                                eInput.setAttribute('multiple', '');
+                                eInput.click();
+                                eInput.addEventListener('change', (Event) =>
+                                {
+                                    UploadAttachments(this.Date, this.Title, Event.target.files, this.oInRecords_Note);
+                                });
+                            }
                         ]
                     ]
                 );

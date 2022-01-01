@@ -145,6 +145,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     _Lesson_UI.oInRecords_Note = oInRecords_Note;
                     _Lesson_UI.Overlay.GetUIElement('.Title').className = `Title ${_Lesson_UI.IsSudden ? 'Sudden' : (_Lesson_UI.IsChanged ? 'Change' : '')}`;
                     _Lesson_UI.Overlay.GetUIElement('.Note').value = _Lesson_UI.Note;
+                    _Lesson_UI.Overlay.GetUIElement('.Attachments').innerHTML = _Lesson_UI.GetAttachmentsIHTML();
                 };
 
 
