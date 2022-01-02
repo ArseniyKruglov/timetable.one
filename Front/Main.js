@@ -16,8 +16,8 @@ function Main()
 
                                     <div id='Week' class='Island'>
                                         <custom-round-button icon='Chevron Left' onclick='_Timetable.WeekOffset--'></custom-round-button>
-                                        <button id='Week_Period' onclick='_Timetable.WeekOffset--'></button>
-                                        <custom-round-button icon='Chevron Right' onclick='_Timetable.WeekOffset = _Timetable.WeekOffset_Default'></custom-round-button>
+                                        <button id='Week_Period' onclick='_Timetable.WeekOffset = _Timetable.WeekOffset_Default'></button>
+                                        <custom-round-button icon='Chevron Right' onclick='_Timetable.WeekOffset++'></custom-round-button>
                                     </div>
                                 </main>`;
 

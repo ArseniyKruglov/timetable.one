@@ -1,3 +1,5 @@
+<? ini_set('display_errors', 0); ?>
+
 <!DOCTYPE HTML>
 
 <html lang='<? include 'Library/PHP/Language.php'; echo Language_Get(); ?>'>
@@ -48,7 +50,9 @@
         foreach ($Files_JS as &$File_JS)
             echo "<script src='/$File_JS?$Time'></script>";
         ?>
+    </head>
 
+    <body>
         <script>
             const _iAccessLevel = <? echo $AccessLevel ?>;
 
@@ -191,9 +195,6 @@
                 echo json_encode($aAlarms, JSON_UNESCAPED_UNICODE);
             ?>));
         </script>
-    </head>
-
-    <body></body>
-
-    <script>Main()</script>
+        <script>Main()</script>
+    </body>
 </html>

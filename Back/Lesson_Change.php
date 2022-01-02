@@ -2,22 +2,22 @@
 include '../Library/PHP/Handler.php';
 include '../Library/PHP/Timestamp.php';
 
-function Callback($SQL, $POST, $UserID)
+function Callback($SQL, $UserID)
 {
     include '../Library/PHP/Constants.php';
 
-    $Date = IntToDate((int) $POST['Date']);
-    $Index = $POST['Index'];
+    $Date = IntToDate((int) $GLOBALS['_POST']['Date']);
+    $Index = $GLOBALS['_POST']['Index'];
 
-    $Title = $POST['Title'];
-    $Place = $POST['Place'];
-    $Educator = $POST['Educator'];
+    $Title = $GLOBALS['_POST']['Title'];
+    $Place = $GLOBALS['_POST']['Place'];
+    $Educator = $GLOBALS['_POST']['Educator'];
 
 
 
     if (isset($Title) || isset($Place) || isset($Educator))
     {
-        $Title_UPDATE = ($Title === NULL || $Title === 'null' || $POST['OriginalTitle'] === $Title) ? 'NULL' :( "'" . substr($Title, 0, $Constants['MaxTitleLength']) . "'");
+        $Title_UPDATE = ($Title === NULL || $Title === 'null' || $GLOBALS['_POST']['OriginalTitle'] === $Title) ? 'NULL' :( "'" . substr($Title, 0, $Constants['MaxTitleLength']) . "'");
         $Place_UPDATE = ($Place === NULL || $Place === 'null') ? 'NULL' :( "'" . substr($Place, 0, $Constants['MaxPlaceLength']) . "'");
         $Educator_UPDATE = ($Educator === NULL || $Educator === 'null') ? 'NULL' :( "'" . substr($Educator, 0, $Constants['MaxEducatorLength']) . "'");
 
@@ -47,17 +47,17 @@ function Callback($SQL, $POST, $UserID)
                      DELETE FROM `Changes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index) AND (`Title` IS NULL) AND (`Place` IS NULL) AND (`Educator` IS NULL);";
     };
 
-    if (isset($POST['UserFields']))
+    if (isset($GLOBALS['_POST']['UserFields']))
     {
-        if ($POST['UserFields'] === 'null')
+        if ($GLOBALS['_POST']['UserFields'] === 'null')
         {
             $Request .= "DELETE FROM `Changes_Fields` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index)";
         }
         else
         {
-            foreach (array_keys($POST['UserFields']) as &$FieldID)
+            foreach (array_keys($GLOBALS['_POST']['UserFields']) as &$FieldID)
             {
-                $Text = $POST['UserFields'][$FieldID];
+                $Text = $GLOBALS['_POST']['UserFields'][$FieldID];
 
                 if ($Text === 'null')
                     $Request .= "DELETE FROM `Changes_Fields` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Index` = $Index) AND (`FieldID` = $FieldID)";

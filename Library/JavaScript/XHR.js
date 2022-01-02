@@ -15,7 +15,7 @@ function SendRequest(sURL, oData, bCallback)
         (
             (Resolve) =>
             {
-                XHR.onreadystatechange = () =>
+                XHR.onload = () =>
                 {
                     Resolve
                     ({

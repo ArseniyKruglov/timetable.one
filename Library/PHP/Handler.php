@@ -7,7 +7,7 @@ function Handler($Callback)
     $UserID = $SQL->query("SELECT `UserID` FROM `Users` WHERE `Link_FullAccess` = '$URL'");
 
     if ($UserID->num_rows === 1)
-        $Callback($SQL, $_POST, ($UserID->fetch_row()[0]));
+        $Callback($SQL, ($UserID->fetch_row()[0]));
     else
         http_response_code(403);
 };

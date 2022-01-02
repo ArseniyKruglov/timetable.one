@@ -129,7 +129,7 @@ class Lesson_UI
                                     <a href='https://527010.selcdn.ru/timetable.one Dev/${loop_oAttachment.Folder}/${loop_oAttachment.Filename}' target='_blank'>
                                         <span>${loop_oAttachment.Filename}</span>
                                     </a>
-                                    ${_iAccessLevel === 2 ? `<custom-round-button icon='RemoveForever'></custom-round-button>` : ''}
+                                    ${_iAccessLevel === 2 ? `<custom-round-button icon='RemoveForever' onclick='RemoveAttachments(${this.Date}, "${this.Title}", "${loop_oAttachment.Folder}", true, true, true, _Lesson_UI.oInRecords)'></custom-round-button>` : ''}
                                  </div>`;
 
                     return HTML;

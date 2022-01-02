@@ -2,12 +2,12 @@
 include '../Library/PHP/Handler.php';
 include '../Library/PHP/Timestamp.php';
 
-function Callback($SQL, $POST, $UserID)
+function Callback($SQL, $UserID)
 {
     include '../Library/PHP/Constants.php';
 
-    $Date = IntToDate((int) $POST['Date']);
-    $Note = substr($POST['Note'], 0, $Constants['MaxNoteLength']);
+    $Date = IntToDate((int) $GLOBALS['_POST']['Date']);
+    $Note = substr($GLOBALS['_POST']['Note'], 0, $Constants['MaxNoteLength']);
 
     $SQL->query("DELETE FROM `Notes` WHERE (`UserID` = $UserID) AND (`Date` = '$Date') AND (`Title` IS NULL)");
     if ($Note !== '')
