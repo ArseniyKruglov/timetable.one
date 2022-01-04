@@ -1,5 +1,6 @@
 Passwords.php
 vendor
+composer.*
 node_modules
 swiped-events.js
 focus-visible

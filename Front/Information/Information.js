@@ -27,14 +27,14 @@ class Information
                     else
                         this.Warning = true;
 
-                for (let loop_oChange of _Records.Changes.selectWhere({ 'Date': iDate }))
+                for (let loop_oChange of _Records.Changes.selectWhere({ Date: iDate }))
                     if (loop_oChange.Title === '')
                     {
-                        aTimetable.removeWhere({ 'Index': loop_oChange.Index }, true);
+                        aTimetable.removeWhere({ Index: loop_oChange.Index }, true);
                     }
                     else
                     {
-                        const oInTimetable = aTimetable.selectWhere({ 'Index': loop_oChange.Index }, true);
+                        const oInTimetable = aTimetable.selectWhere({ Index: loop_oChange.Index }, true);
 
                         if (oInTimetable)
                         {

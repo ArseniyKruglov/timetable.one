@@ -3,7 +3,7 @@ class Day_UI
     constructor(iDate, bAnimation)
     {
         this.Date = iDate;
-        this.oInRecords_Note = _Records.Notes.selectWhere({ 'Date': this.Date, 'Title': undefined }, true) || null;
+        this.oInRecords_Note = _Records.Notes.selectWhere({ Date: this.Date, Title: undefined }, true) || null;
 
 
 
@@ -65,21 +65,21 @@ class Day_UI
                                 _Router.Forward(`/Day?Date=${this.Date}/Add?Date=${this.Date}`);
                             }
                         ],
-                        [
-                            'Attach',
-                            ['Attach files', 'Приложить файлы'][_iLanguage],
-                            () =>
-                            {
-                                const eInput = document.createElement('input');
-                                eInput.setAttribute('type', 'file');
-                                eInput.setAttribute('multiple', '');
-                                eInput.click();
-                                eInput.addEventListener('change', (Event) =>
-                                {
-                                    UploadAttachments(this.Date, this.Title, Event.target.files, this.oInRecords_Note);
-                                });
-                            }
-                        ]
+                        // [
+                        //     'Attach',
+                        //     ['Attach files', 'Приложить файлы'][_iLanguage],
+                        //     () =>
+                        //     {
+                        //         const eInput = document.createElement('input');
+                        //         eInput.setAttribute('type', 'file');
+                        //         eInput.setAttribute('multiple', '');
+                        //         eInput.click();
+                        //         eInput.addEventListener('change', (Event) =>
+                        //         {
+                        //             UploadFiles(this.Date, this.Title, Event.target.files, this.oInRecords_Note);
+                        //         });
+                        //     }
+                        // ]
                     ]
                 );
             });

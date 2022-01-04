@@ -15,13 +15,13 @@ class Lesson_UI
             if (oInTimetable)
                 this.oInTimetable = oInTimetable;
 
-            this.oInRecords_Change = _Records.Changes.selectWhere({ 'Date': this.Date, 'Index': this.Index }, true) || null;
+            this.oInRecords_Change = _Records.Changes.selectWhere({ Date: this.Date, Index: this.Index }, true) || null;
 
 
 
             if (this.oInTimetable || this.oInRecords_Change)
             {
-                this.oInRecords_Note = _Records.Notes.selectWhere({ 'Date': this.Date, 'Title': this.Title }, true) || null;
+                this.oInRecords_Note = _Records.Notes.selectWhere({ Date: this.Date, Title: this.Title }, true) || null;
 
                 this.Draw();
 
@@ -76,7 +76,7 @@ class Lesson_UI
             if (this.oInRecords_Change && 'UserFields' in this.oInRecords_Change)
                 for (let loop_aField of this.oInRecords_Change.UserFields)
                 {
-                    const oField = aFilelds.selectWhere({ 'FieldID': loop_aField[0] }, true);
+                    const oField = aFilelds.selectWhere({ FieldID: loop_aField[0] }, true);
 
                     if (oField)
                         oField.Change = loop_aField[1];
@@ -117,19 +117,19 @@ class Lesson_UI
             return HTML;
         }
 
-        this.GetAttachmentsIHTML = () =>
+        this.GetFilesIHTML = () =>
         {
             if (this.oInRecords_Note)
-                if ('Attachments' in this.oInRecords_Note)
+                if ('Files' in this.oInRecords_Note)
                 {
                     let HTML = '';
 
-                    for (let loop_oAttachment of this.oInRecords_Note.Attachments)
+                    for (let loop_oFile of this.oInRecords_Note.Files)
                         HTML += `<div>
-                                    <a href='https://527010.selcdn.ru/timetable.one Dev/${loop_oAttachment.Folder}/${loop_oAttachment.Filename}' target='_blank'>
-                                        <span>${loop_oAttachment.Filename}</span>
+                                    <a href='https://527010.selcdn.ru/timetable.one Dev/${loop_oFile.Folder}/${loop_oFile.Filename}' target='_blank'>
+                                        <span>${loop_oFile.Filename}</span>
                                     </a>
-                                    ${_iAccessLevel === 2 ? `<custom-round-button icon='RemoveForever' onclick='RemoveAttachments(${this.Date}, "${this.Title}", "${loop_oAttachment.Folder}", true, true, true, _Lesson_UI.oInRecords)'></custom-round-button>` : ''}
+                                    ${_iAccessLevel === 2 ? `<custom-round-button icon='RemoveForever' onclick='if (confirm("${['Remove', 'Удалить'][_iLanguage]} ${loop_oFile.Filename}?")) RemoveFiles(${this.Date}, "${this.Title}", "${loop_oFile.Folder}", true, true, true, _Lesson_UI.oInRecords)'></custom-round-button>` : ''}
                                  </div>`;
 
                     return HTML;
@@ -143,7 +143,7 @@ class Lesson_UI
                         <span><custom-round-button icon='More'></custom-round-button></span>
                     </div>
 
-                    <custom-textarea class='Title ${this.IsSudden ? 'Sudden' : (this.IsChanged ? 'Change' : '')}' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength} oninput='Lesson_SetChange(${this.Date}, ${this.Index}, { "Title": this.value.trim() }, true, true, true, false, _Lesson_UI.oInRecords_Change, _Lesson_UI.OriginalTitle)'>${this.IsCanceled ? '' : this.Title}</custom-textarea>
+                    <custom-textarea class='Title ${this.IsSudden ? 'Sudden' : (this.IsChanged ? 'Change' : '')}' placeholder='${this.oInTimetable ? this.oInTimetable.Title : ''}' ${(_iAccessLevel < 2) ? 'readonly' : ''} maxlength=${_iMaxTitleLength} oninput='this.value = this.value.replace(/(\\r\\n|\\n|\\r)/gm, ""); if (_Lesson_UI.Title !== this.value) Lesson_SetChange(${this.Date}, ${this.Index}, { "Title": this.value.trim() }, true, true, true, false, _Lesson_UI.oInRecords_Change, _Lesson_UI.OriginalTitle)'>${this.IsCanceled ? '' : this.Title}</custom-textarea>
 
                     <div class='Info'>
                         ${this.GetInfoIHTML()}
@@ -151,9 +151,13 @@ class Lesson_UI
 
                     <custom-textarea placeholder='${['Note', 'Заметка'][_iLanguage]}' class='Note' ${(_iAccessLevel < 2) ? 'readonly' : ''} ${(_iAccessLevel === 0) ? 'hidden' : ''} maxlength=${_iMaxNoteLength} oninput='SetNote(${this.Date}, "${this.Title}", this.value.trim(), true, true, true, false, false, _Lesson_UI.oInRecords_Note);'>${this.Note}</custom-textarea>
 
-                    <div class='Attachments EmptyHidden'>${this.GetAttachmentsIHTML()}</div>`;
+                    <div class='Files EmptyHidden'>${this.GetFilesIHTML()}</div>`;
 
         this.Overlay.Body.innerHTML = HTML;
+
+        if ('_Uploads' in window)
+            for (let loop_oUpload of _Uploads.selectWhere({ 'Date': this.Date, 'Title': this.Title }))
+                this.Overlay.GetUIElement('.Files').append(loop_oUpload.Element);
 
 
 
@@ -186,8 +190,9 @@ class Lesson_UI
                         eInput.click();
                         eInput.addEventListener('change', (Event) =>
                         {
-                            UploadAttachments(this.Date, this.Title, Event.target.files, this.oInRecords_Note);
-                        });
+                            UploadFiles(this.Date, this.Title, Event.target.files, this.oInRecords_Note);
+                            eInput.remove();
+                        }, { once: true });
                     }
                 ]);
 
@@ -199,7 +204,7 @@ class Lesson_UI
                         ['Remove lesson', 'Удалить занятие'][_iLanguage],
                         () =>
                         {
-                            Lesson_SetChange(this.Date, this.Index, { 'Title': null, 'Place': null, 'Educator': null, 'UserFields': null }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                            Lesson_SetChange(this.Date, this.Index, { Title: null, Place: null, Educator: null, UserFields: null }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             this.Overlay.Close();
                         }
                     ]);
@@ -213,7 +218,7 @@ class Lesson_UI
                             ['Undo cancellation', 'Отменить отмену'][_iLanguage],
                                 () =>
                             {
-                                Lesson_SetChange(this.Date, this.Index, { 'Title': this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                                Lesson_SetChange(this.Date, this.Index, { Title: this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             }
                         ]);
                     else
@@ -223,7 +228,7 @@ class Lesson_UI
                             ['Remove replacement', 'Убрать замену'][_iLanguage],
                             () =>
                             {
-                                Lesson_SetChange(this.Date, this.Index, { 'Title': this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                                Lesson_SetChange(this.Date, this.Index, { Title: this.OriginalTitle }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                             }
                         ]);
                 }
@@ -235,7 +240,7 @@ class Lesson_UI
                         ['Cancel lesson', 'Отменить занятие'][_iLanguage],
                         () =>
                         {
-                            Lesson_SetChange(this.Date, this.Index, { 'Title': '' }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
+                            Lesson_SetChange(this.Date, this.Index, { Title: '' }, true, true, true, true, this.oInRecords_Change, this.OriginalTitle);
                         }
                     ]);
                 };

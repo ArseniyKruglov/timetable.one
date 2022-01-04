@@ -147,7 +147,7 @@ class SuddenLesson_UI
 
     Send()
     {
-        Lesson_SetChange(this.Date, this.Index, { 'Title': this.Title }, true, true, true, false);
+        Lesson_SetChange(this.Date, this.Index, { Title: this.Title }, true, true, true, false);
 
         this.Overlay.Close();
     }

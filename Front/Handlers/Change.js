@@ -1,6 +1,6 @@
 function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert, oInRecords_Change, sOriginalTitle)
 {
-    oInRecords_Change = oInRecords_Change || _Records.Changes.selectWhere({ 'Date': iDate, 'Index': iIndex }, true);
+    oInRecords_Change = oInRecords_Change === undefined ? _Records.Changes.selectWhere({ Date: iDate, Index: iIndex }, true) : oInRecords_Change;
 
     if (sOriginalTitle === undefined)
     {
@@ -14,7 +14,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
 
     let oInRecords_Note;
     if (oChange.hasOwnProperty('Title'))
-        oInRecords_Note = _Records.Notes.selectWhere({ 'Date': iDate, 'Title': (oChange.Title || sOriginalTitle) }, true) || null;
+        oInRecords_Note = _Records.Notes.selectWhere({ Date: iDate, Title: (oChange.Title || sOriginalTitle) }, true) || null;
 
 
 
@@ -67,7 +67,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
             oInRecords_Change = CleanUp(oInRecords_Change);
 
             if (!oInRecords_Change)
-                _Records.Changes.removeWhere({ 'Date': iDate, 'Index': iIndex }, true);
+                _Records.Changes.removeWhere({ Date: iDate, Index: iIndex }, true);
         }
         else
         {
@@ -145,7 +145,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     _Lesson_UI.oInRecords_Note = oInRecords_Note;
                     _Lesson_UI.Overlay.GetUIElement('.Title').className = `Title ${_Lesson_UI.IsSudden ? 'Sudden' : (_Lesson_UI.IsChanged ? 'Change' : '')}`;
                     _Lesson_UI.Overlay.GetUIElement('.Note').value = _Lesson_UI.Note;
-                    _Lesson_UI.Overlay.GetUIElement('.Attachments').innerHTML = _Lesson_UI.GetAttachmentsIHTML();
+                    _Lesson_UI.Overlay.GetUIElement('.Files').innerHTML = _Lesson_UI.GetFilesIHTML();
                 };
 
 
@@ -241,7 +241,7 @@ function Lesson_SetChange(iDate, iIndex, oChange, bDraw, bSend, bRecord, bInsert
                     else
                     {
                         eDay = document.createElement('div');
-                        eDay.className = `Day ${ (iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '') } ${ _Records.Notes.selectWhere({ 'Date': iDate, 'Title': undefined }, true) ? 'Note' : '' }`;
+                        eDay.className = `Day ${ (iDate === _iToday) ? 'Today' : ((iDate === _iToday + 1) ? 'Tomorrow' : '') } ${ _Records.Notes.selectWhere({ Date: iDate, Title: undefined }, true) ? 'Note' : '' }`;
                         eDay.innerHTML = `<a href='${location.pathname}?Date=${iDate}' onclick="event.preventDefault(); _Router.Forward('/Day?Date=${iDate}');">
                                             <div>${Date_Format(IntToDate(iDate))}</div>
                                             <div class='EmptyHidden'>${_Timetable.DateToAlarmsPeriod(iDate)}</div>

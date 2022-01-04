@@ -228,7 +228,7 @@ class Timetable
     {
         function GetOverflow()
         {
-            return { 'Width': (eGrid.scrollWidth > eGrid.clientWidth), 'Body_Height': (eGrid.parentElement.scrollHeight > eGrid.parentElement.clientHeight) };
+            return { Width: (eGrid.scrollWidth > eGrid.clientWidth), Height: (eGrid.parentElement.scrollHeight > eGrid.parentElement.clientHeight) };
         }
 
         function SetGrid(iColumns, iRows)
@@ -256,14 +256,14 @@ class Timetable
             {
                 SetGrid(1);
             }
-            else if (oOverflow.Body_Height)
+            else if (oOverflow.Height)
             {
                 SetGrid(null, 2);
 
                 oOverflow = GetOverflow();
                 if (oOverflow.Width)
                     SetGrid(2);
-                else if (oOverflow.Body_Height)
+                else if (oOverflow.Height)
                     SetGrid(null, 1);
             };
         };
@@ -517,7 +517,7 @@ class Timetable
         for (let loop_oChange of _Records.Changes)
             if (this.WeekPeriod[0] <= loop_oChange.Date && loop_oChange.Date <= this.WeekPeriod[1])
                 if ('Title' in loop_oChange)
-                    Lesson_SetChange(loop_oChange.Date, loop_oChange.Index, { 'Title': loop_oChange.Title }, true, false, false, false);
+                    Lesson_SetChange(loop_oChange.Date, loop_oChange.Index, { Title: loop_oChange.Title }, true, false, false, false);
 
         for (let loop_oNote of _Records.Notes)
             if (this.WeekPeriod[0] <= loop_oNote.Date && loop_oNote.Date <= this.WeekPeriod[1])

@@ -2,11 +2,11 @@ function SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oInRecord
 {
     if (bRecord)
     {
-        oInRecords = oInRecords || _Records.Notes.selectWhere({ 'Date': iDate, 'Title': sTitle }, true);
+        oInRecords = oInRecords === undefined ? _Records.Notes.selectWhere({ Date: iDate, Title: sTitle }, true) : oInRecords;
 
         if (oInRecords)
         {
-            if (sNote || 'Attachments' in oInRecords)
+            if (sNote || 'Files' in oInRecords)
             {
                 if (sNote)
                     oInRecords.Note = sNote;
@@ -17,7 +17,20 @@ function SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oInRecord
             {
                 oInRecords = null;
 
-                _Records.Notes.removeWhere({ 'Date': iDate, 'Title': sTitle }, true);       // TO DO: удаление через .indexOf
+                _Records.Notes.removeWhere({ Date: iDate, Title: sTitle }, true);       // TO DO: удаление через .indexOf
+
+                if (sTitle)
+                {
+                    if (window._Lesson_UI)
+                        if (_Lesson_UI.Date === iDate && _Lesson_UI.Title === sTitle)
+                            _Lesson_UI.oInRecords_Note = oInRecords;
+                }
+                else
+                {
+                    if (window._Day_UI)
+                        if (_Day_UI.Date === iDate)
+                            _Day_UI.oInRecords_Note = oInRecords;
+                };
             };
         }
         else
@@ -39,20 +52,20 @@ function SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oInRecord
                     };
 
                 _Records.Notes.push(oInRecords);
-            };
-        };
 
-        if (sTitle)
-        {
-            if (window._Lesson_UI)
-                if (_Lesson_UI.Date === iDate && _Lesson_UI.Title === sTitle)
-                    _Lesson_UI.oInRecords_Note = oInRecords;
-        }
-        else
-        {
-            if (window._Day_UI)
-                if (_Day_UI.Date === iDate)
-                    _Day_UI.oInRecords_Note = oInRecords;
+                if (sTitle)
+                {
+                    if (window._Lesson_UI)
+                        if (_Lesson_UI.Date === iDate && _Lesson_UI.Title === sTitle)
+                            _Lesson_UI.oInRecords_Note = oInRecords;
+                }
+                else
+                {
+                    if (window._Day_UI)
+                        if (_Day_UI.Date === iDate)
+                            _Day_UI.oInRecords_Note = oInRecords;
+                };
+            };
         };
 
         if (bSend)
@@ -82,7 +95,7 @@ function SetNote(iDate, sTitle, sNote, bDraw, bSend, bRecord, bInsert, oInRecord
     if (bDraw)
     {
         const eDay = _Timetable.DaySelector(iDate);
-        const bPoint = oInRecords === undefined ? (sNote || _Records.Notes.selectWhere({ 'Date': iDate, 'Title': sTitle }, true)) : oInRecords;
+        const bPoint = oInRecords === undefined ? (sNote || _Records.Notes.selectWhere({ Date: iDate, Title: sTitle }, true)) : oInRecords;
 
         if (eDay)
             if (sTitle)

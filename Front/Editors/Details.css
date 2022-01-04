@@ -54,46 +54,59 @@
 
 
 
-.Details .Attachments
+.Details .Files
 {
     display: grid;
     border-radius: 5px;
     border: var(--Border);
 }
 
-.Details .Attachments > *
+.Details .Files > *
 {
     display: grid;
     grid-template-columns: 1fr auto;
 }
 
-.Details .Attachments > :not(:last-child)
+.Details .Files > :not(:last-child)
 {
     border-bottom: var(--Border);
 }
 
 
 
-.Details .Attachments > * > custom-round-button
+.Details .Files > * > custom-round-button
 {
     margin: 12px;
     aspect-ratio: 1;
     --Icon-Color: var(--Accent70);
+}
+
+.Details .Files > :not(.Uploading) > custom-round-button
+{
     --Hover-Color: var(--Caution);
 }
 
-.Details .Attachments > * > a
+.Details .Files > * > a
 {
     display: flex;
     align-items: center;
-    text-decoration: none;
     font-size: 16px;
     padding: 12px 14px;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.Details .Attachments > * > a > span
+.Details .Files > * > a:not(:hover)
+{
+    text-decoration: none;
+}
+
+.Details .Files > .Uploading > a
+{
+    background: linear-gradient(90deg, var(--Accent05) 0%, var(--Accent05) var(--Progress), var(--Accent02-5) var(--Progress), var(--Accent02-5) 100%);
+}
+
+.Details .Files > * > a > span
 {
     text-overflow: ellipsis;
     width: 100%;
@@ -101,7 +114,7 @@
     white-space: nowrap;
 }
 
-.Details .Attachments > * > a:hover
+.Details .Files > * > a:hover
 {
     background-color: var(--Accent02-5);
 }

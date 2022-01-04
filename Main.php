@@ -68,7 +68,7 @@
                 foreach ($SQL->query("SELECT `TimetableID`, `Begin`, `End`, `AnchorDate`, `Days` FROM `Timetables` WHERE `UserID` = $User[0]")->fetch_all() as &$aTimetable)
                 {
                     $aLessons = array_fill(0, strlen($aTimetable[4]), []);
-                    foreach ($SQL->query("SELECT `DayOfTimetable`, `Index`, `Title`, `Place`, `Educator`, `UserFieldsAI` FROM `Lessons` WHERE `TimetableID` = $User[0] ORDER BY `DayOfTimetable`, `Index`")->fetch_all() as &$aLesson)
+                    foreach ($SQL->query("SELECT `DayOfTimetable`, `Index`, `Title`, `Place`, `Educator`, `UserFieldsAI` FROM `Lessons` WHERE (`UserID` = $User[0]) AND (`TimetableID` = $aTimetable[0]) ORDER BY `DayOfTimetable`, `Index`")->fetch_all() as &$aLesson)
                     {
                         $UserFields = $SQL->query("SELECT `FieldID`, `Text` FROM `Fields` WHERE (`UserID` = $User[0]) AND (`TimetableID` = $aTimetable[0]) AND (`DayOfTimetable` = $aLesson[0]) AND (`Index` = $aLesson[1])")->fetch_all();
                         foreach ($UserFields as &$UserField)
@@ -148,23 +148,23 @@
                         array_push($aNotes, $Note);
                     };
 
-                    foreach ($SQL->query("SELECT `Date`, `Title`, `Folder`, `Filename` FROM `Attachments` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aAttachment)
+                    foreach ($SQL->query("SELECT `Date`, `Title`, `Folder`, `Filename` FROM `Files` WHERE `UserID` = $User[0] ORDER BY Date DESC")->fetch_all() as &$aFile)
                     {
-                        $aAttachment[0] = DateToInt($aAttachment[0]);
-                        $aAttachment[1] = $aAttachment[1] === 'NULL' ? NULL : $aAttachment[1];
-                        $aBody = ['Folder' => $aAttachment[2], 'Filename' => $aAttachment[3]];
+                        $aFile[0] = DateToInt($aFile[0]);
+                        $aFile[1] = $aFile[1] === 'NULL' ? NULL : $aFile[1];
+                        $aBody = ['Folder' => $aFile[2], 'Filename' => $aFile[3]];
 
 
 
                         $Found = false;
 
                         foreach ($aNotes as &$aNote)
-                            if ($aNote['Date'] === $aAttachment[0] && $aNote['Title'] === $aAttachment[1])
+                            if ($aNote['Date'] === $aFile[0] && $aNote['Title'] === $aFile[1])
                             {
-                                if (!array_key_exists('Attachments', $aNote))
-                                    $aNote['Attachments'] = [];
+                                if (!array_key_exists('Files', $aNote))
+                                    $aNote['Files'] = [];
 
-                                array_push($aNote['Attachments'], $aBody);
+                                array_push($aNote['Files'], $aBody);
 
 
 
@@ -173,10 +173,10 @@
                             };
 
                         if (!$Found)
-                            if ($aAttachment[1] === NULL)
-                                array_push($aNotes, ['Date' => $aAttachment[0], 'Attachments' => [$aBody]]);
+                            if ($aFile[1] === NULL)
+                                array_push($aNotes, ['Date' => $aFile[0], 'Files' => [$aBody]]);
                             else
-                                array_push($aNotes, ['Date' => $aAttachment[0], 'Title' => $aAttachment[1], 'Attachments' => [$aBody]]);
+                                array_push($aNotes, ['Date' => $aFile[0], 'Title' => $aFile[1], 'Files' => [$aBody]]);
                     };
                 };
 

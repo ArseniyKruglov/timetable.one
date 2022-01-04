@@ -1,4 +1,4 @@
-function SendRequest(sURL, oData, bCallback)
+function SendRequest(sURL, oData)
 {
     const FD = new FormData();
     for (let loop_sField in oData)
@@ -8,22 +8,4 @@ function SendRequest(sURL, oData, bCallback)
     const XHR = new XMLHttpRequest();
     XHR.open('POST', sURL);
     XHR.send(FD);
-
-    if (bCallback === true)
-    {
-        return new Promise
-        (
-            (Resolve) =>
-            {
-                XHR.onload = () =>
-                {
-                    Resolve
-                    ({
-                        'Status': XHR.status,
-                        'Text': XHR.responseText
-                    })
-                };
-            }
-        )
-    };
 }

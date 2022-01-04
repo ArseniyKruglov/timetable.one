@@ -1,9 +1,9 @@
 <?
 include '../Library/PHP/Handler.php';
-include '../Library/PHP/Timestamp.php';
 
 function Callback($SQL, $UserID)
 {
+    include '../Library/PHP/Timestamp.php';
     include '../Library/PHP/Constants.php';
 
     $Date = IntToDate((int) $GLOBALS['_POST']['Date']);

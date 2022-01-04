@@ -1,4 +1,6 @@
 <?
+header('Status: 200');
+
 mail
 (
     'arseniy.krugloff@gmail.com',
