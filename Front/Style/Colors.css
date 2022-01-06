@@ -2,15 +2,12 @@
 {
     --Main: HSL(210, 100%, 56%);
     --Secondary: HSL(348, 83%, 47%);
-
     --Main-Transparent: HSLA(210, 100%, 45%, 7.5%);
     --Secondary-Transparent: HSLA(348, 83%, 47%, 25%);
-
     --Accent-Hue: 20;
-    --Accent-Saturation: 0%;
-
+    --Accent-Saturation: 10%;
     --Border: 1px solid var(--Accent20);
-    --Shadow: 0 1px 2px 0 RGB(0 0 0 / 17.5%), 0 1px 3px 1px RGB(0 0 0 / 7.5%);
+    --Shadow: 0 1px 1px 0 RGB(0 0 0 / 20%), 0 1px 2px 1px RGB(0 0 0 / 10%);
 }
 
 body
@@ -19,7 +16,7 @@ body
 
     --Text: #000000;
 
-    --Background00: HSL(0, 0%, 95%);
+    --Background00: HSL(0, 0%, 96.5%);
     --Background01: #FFFFFF;
     --Background02: #FFFFFF;
 

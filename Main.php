@@ -28,7 +28,8 @@
         function GetFiles($Path)
         {
             foreach (glob($Path . '*', GLOB_ONLYDIR) as &$Folder)
-                GetFiles(str_replace((__DIR__ . '/'), '', $Folder) . '/');
+                if (!str_contains($Folder, 'vendor'))
+                    GetFiles(str_replace((__DIR__ . '/'), '', $Folder) . '/');
 
             global $Files_JS;
             global $Main;
