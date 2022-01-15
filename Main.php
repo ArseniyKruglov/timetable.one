@@ -195,7 +195,8 @@
                     array_push($aAlarms, [(int) $aAlarm[0], [TimeToInt($aAlarm[1]), TimeToInt($aAlarm[2])]]);
                 echo json_encode($aAlarms, JSON_UNESCAPED_UNICODE);
             ?>));
+
+            Main();
         </script>
-        <script>Main()</script>
     </body>
 </html>

@@ -33,7 +33,7 @@ custom-round-button > button > custom-icon
 {
     --Color: var(--Icon-Color);
     --Scale: var(--this-Scale);
-    transition: fill 250ms;
+    /* transition: fill 250ms; */
 }
 
 custom-round-button > button:hover > custom-icon

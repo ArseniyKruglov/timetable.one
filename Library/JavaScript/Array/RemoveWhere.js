@@ -14,7 +14,7 @@ Array.prototype.removeWhere = function(oObject, bSingle)
 
             if (bRemove === true)
             {
-                this.splice(i, 1);
+                this.splice(i--, 1);
                 break;
             };
         };
@@ -32,7 +32,7 @@ Array.prototype.removeWhere = function(oObject, bSingle)
                 };
 
             if (bRemove === true)
-                this.splice(i, 1);
+                this.splice(i--, 1);
         };
     };
 }

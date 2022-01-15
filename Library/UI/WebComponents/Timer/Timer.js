@@ -34,12 +34,12 @@ class Timer extends HTMLElement
 
 
 
-            function DoubleDigits(i)
+            function Double(i)
             {
                 return ((i < 10) ? '0' : '') + i;
             }
 
-            this.innerHTML = `${iDays > 0 ? `${iDays}:` : ''}${iDays > 0 || iHours > 0 ? `${DoubleDigits(iHours)}:` : ''}${DoubleDigits(iMinutes)}:${DoubleDigits(iSeconds)}`;
+            this.innerHTML = `${iDays > 0 ? `${iDays}:` : ''}${iDays > 0 || iHours > 0 ? `${Double(iHours)}:` : ''}${Double(iMinutes)}:${Double(iSeconds)}`;
         };
     }
 }
